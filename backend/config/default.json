@@ -1,0 +1,15 @@
+{
+  "port": 5000,
+  "settings": {
+    "debug": false,
+    "loggerFormat": "tiny"
+  },
+  "database": {
+    "database": "./db.sqlite3",
+    "synchronize": true,
+    "dropSchema": false
+  },
+  "gpio": {
+    "managerUrl": "http://localhost:5050/gpio/:id"
+  }
+}
