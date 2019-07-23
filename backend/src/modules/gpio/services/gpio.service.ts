@@ -1,31 +1,39 @@
-import { HttpService, Injectable } from '@nestjs/common';
-import Config from 'config';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Environment } from '../../environment/entities/environment.entity';
-import { tap } from 'rxjs/operators';
-import { Logger } from '../../../Logger';
 import { sleep } from '../../lib';
-
-const GPIO_PLACEHOLDER = ':id';
+import { ManagerService } from './manager.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Gpio } from '../entities/gpio.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class GpioService {
-  private baseUrl: string = Config.get('gpio.managerUrl');
-
   constructor(
-    private readonly http: HttpService,
+    @InjectRepository(Gpio)
+    private readonly repository: Repository<Gpio>,
+    private readonly manager: ManagerService,
   ) {}
 
-  private composeUrl(id: number) {
-    return this.baseUrl
-      .replace(GPIO_PLACEHOLDER, id.toString());
+  async ensureUnique(pin: number) {
+    const existing = await this.repository.createQueryBuilder()
+      .where('pin = :pin', {pin})
+      .getOne();
+
+    if (existing) {
+      throw new BadRequestException(`Gpio with pin ${pin} already exists`);
+    }
   }
 
-  private callManager(id: number, command: 'ON' | 'OFF') {
-    return this.http.post(this.composeUrl(id), {
-      command: command.toUpperCase(),
-    }).pipe(
-      tap(() => Logger.debug(`Sent ${command} command to pin ${id}`, 'GpioService')),
-    );
+  async ensureGpio(pin: number) {
+    const existing = await this.repository.createQueryBuilder()
+      .where('pin = :pin', {pin})
+      .getOne();
+
+    if (existing) {
+      return existing;
+    }
+    // TODO validate pin range
+    return this.repository.save({pin});
   }
 
   async exec(environment: Environment) {
@@ -33,19 +41,11 @@ export class GpioService {
       return;
     }
     for (const gpio of environment.gpios) {
-      await this.sendOn(gpio).toPromise()
+      await this.manager.sendOn(gpio.pin).toPromise()
         .then(() => {
           sleep(environment.rule.wateringSeconds * 1000)
-            .then(() => this.sendOff(gpio));
+            .then(() => this.manager.sendOff(gpio.pin).toPromise());
         });
     }
-  }
-
-  sendOn(id: number) {
-    return this.callManager(id, 'ON');
-  }
-
-  sendOff(id: number) {
-    return this.callManager(id, 'OFF');
   }
 }

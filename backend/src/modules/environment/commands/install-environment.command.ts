@@ -6,6 +6,7 @@ import { Connection, Repository } from 'typeorm';
 import { Rule } from '../../rule/entities/rule.entity';
 import { FreshOption } from '../../../commands/FreshOption';
 import { BaseCommand } from '../../../commands/base.command';
+import { Gpio } from '../../gpio/entities/gpio.entity';
 
 @Injectable()
 export class InstallEnvironmentCommand extends BaseCommand {
@@ -15,6 +16,7 @@ export class InstallEnvironmentCommand extends BaseCommand {
     title: 'My environment',
     description: 'This is an example environment, you can edit or delete it',
     boardId: 'exampleId123',
+    gpios: [],
   };
 
   constructor(
@@ -22,6 +24,8 @@ export class InstallEnvironmentCommand extends BaseCommand {
     protected readonly repository: Repository<Environment>,
     @InjectRepository(Rule)
     private readonly ruleRepository: Repository<Rule>,
+    @InjectRepository(Gpio)
+    private readonly gpioRepository: Repository<Gpio>,
     @InjectConnection()
     protected readonly connection: Connection,
   ) {
@@ -40,17 +44,33 @@ export class InstallEnvironmentCommand extends BaseCommand {
       await this.deleteOldRecords();
     }
 
-    const rule = await this.ruleRepository.createQueryBuilder()
-      .limit(1)
-      .getOne();
+    const rule = await this.getRule();
 
     if (rule) {
       this.logger.debug('Found a rule, attaching it');
       this.defaultEnvironment.rule = rule;
     }
 
+    const gpio = await this.getGpio();
+
+    if (gpio) {
+      this.logger.debug('Found a GPIO, attaching it');
+      this.defaultEnvironment.gpios.push(gpio);
+    }
+
     await this.repository.save(this.defaultEnvironment);
 
     this.logger.log('Example environment created');
+  }
+
+  private getRule() {
+    return this.ruleRepository.createQueryBuilder()
+      .getOne();
+  }
+
+  private getGpio() {
+    return this.gpioRepository.createQueryBuilder()
+      .where('pin = :pin', {pin: 17})
+      .getOne();
   }
 }

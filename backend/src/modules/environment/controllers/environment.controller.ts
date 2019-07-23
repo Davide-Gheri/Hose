@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Environment } from '../entities/environment.entity';
 import { Repository } from 'typeorm';
 import { Rule } from '../../rule/entities/rule.entity';
+import { GpioService } from '../../gpio/services/gpio.service';
 
 @Controller('environments')
 export class EnvironmentController {
@@ -12,6 +13,7 @@ export class EnvironmentController {
     private readonly repository: Repository<Environment>,
     @InjectRepository(Rule)
     private readonly ruleRepository: Repository<Rule>,
+    private readonly gpioService: GpioService,
   ) {}
 
   @Get()
@@ -37,6 +39,13 @@ export class EnvironmentController {
     if (createDto.rule) {
       createDto.rule = await this.getRule((createDto as any).rule as string);
     }
+
+    if (createDto.gpios && createDto.gpios.length) {
+      for (const idx of createDto.gpios.keys()) {
+        (createDto as any).gpios[idx] = await this.gpioService.ensureGpio((createDto as any).gpios[idx] as number);
+      }
+    }
+
     return this.repository.save(createDto);
   }
 

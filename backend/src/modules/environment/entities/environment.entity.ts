@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
 import { Rule } from '../../rule/entities/rule.entity';
+import { Gpio } from '../../gpio/entities/gpio.entity';
 
 @Entity()
 export class Environment {
@@ -19,10 +20,6 @@ export class Environment {
   @Column({nullable: true})
   description?: string;
 
-  @IsNumber({}, {each: true})
-  @Column('simple-array', {nullable: true})
-  gpios: number[];
-
   @IsString()
   @MaxLength(255)
   @Column({nullable: true})
@@ -36,4 +33,8 @@ export class Environment {
 
   @ManyToOne(type => Rule, rule => rule.environments, {eager: true})
   rule: Rule;
+
+  @ManyToMany(type => Gpio, gpio => gpio.environments, {eager: true})
+  @JoinTable()
+  gpios: Gpio[];
 }
