@@ -92,4 +92,8 @@ export class RecordSeedCommand extends BaseCommand {
     }
     return builder.getMany();
   }
+
+  protected deleteOldRecords(): Promise<any> {
+    return this.influx.delete();
+  }
 }

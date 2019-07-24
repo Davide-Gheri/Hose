@@ -40,4 +40,8 @@ export class InfluxService implements OnModuleInit {
   find(query: string) {
     return this.instance.query(query);
   }
+
+  delete(whereQuery?: string) {
+    return this.instance.query(`DELETE from ${Config.get('influx.schema.table')} ${whereQuery ? 'where ' + whereQuery : ''}`);
+  }
 }
