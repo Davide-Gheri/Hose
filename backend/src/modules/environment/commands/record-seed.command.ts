@@ -1,24 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { Command, Option, Positional } from 'nestjs-command';
-import { Record } from '../entities/record.entity';
+import { Record } from '../entities/record';
 import * as faker from 'faker';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import { Environment } from '../entities/environment.entity';
 import { FreshOption } from '../../../commands/FreshOption';
 import { BaseCommand } from '../../../commands/base.command';
+import { InfluxService } from '../../influx/services/influx.service';
+import Config from 'config';
 
 @Injectable()
 export class RecordSeedCommand extends BaseCommand {
   protected logNamespace = 'RecordSeedCommand';
 
   constructor(
-    @InjectRepository(Record)
-    protected readonly repository: Repository<Record>,
     @InjectRepository(Environment)
-    private readonly envRepository: Repository<Environment>,
+    protected readonly repository: Repository<Environment>,
     @InjectConnection()
     protected readonly connection: Connection,
+    private readonly influx: InfluxService,
   ) {
     super();
   }
@@ -27,14 +28,9 @@ export class RecordSeedCommand extends BaseCommand {
     return faker.random.number(800);
   }
 
-  get randomDate(): Date {
-    return faker.date.recent();
-  }
-
   get randomRecord(): Partial<Record> {
     return {
       reading: this.randomReading,
-      createdAt: this.randomDate,
     };
   }
 
@@ -72,17 +68,22 @@ export class RecordSeedCommand extends BaseCommand {
 
     for (const env of environments) {
       const records = [...(new Array(num)).keys()].map(() => ({
-        ...this.randomRecord,
-        boardId: env.boardId,
+        measurement: Config.get<string>('influx.schema.table'),
+        fields: {
+          record: this.randomRecord.reading,
+        },
+        tags: {
+          boardId: env.boardId,
+        },
       }));
-      await this.repository.insert(records);
+      await this.influx.insert(records);
     }
 
     this.logger.log('Random Records seeded');
   }
 
   private getEnvironments(envIds: string[]) {
-    const builder = this.envRepository.createQueryBuilder();
+    const builder = this.repository.createQueryBuilder();
     builder.where('boardId is not null');
     if (envIds.length) {
       this.logger.debug('Filtering environments by ids');
@@ -90,5 +91,9 @@ export class RecordSeedCommand extends BaseCommand {
       builder.andWhereInIds(envIds);
     }
     return builder.getMany();
+  }
+
+  protected deleteOldRecords(): Promise<any> {
+    return this.influx.delete();
   }
 }

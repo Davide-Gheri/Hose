@@ -2,5 +2,9 @@
   "settings": {
     "debug": true,
     "loggerFormat": "dev"
+  },
+  "influx": {
+    "host": "influx",
+    "database": "hose_records"
   }
 }

@@ -1,33 +1,36 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import Config from 'config';
 import { Environment } from '../entities/environment.entity';
-import { FindManyOptions, Repository } from 'typeorm';
-import { Record } from '../entities/record.entity';
 import { Logger } from '../../../Logger';
 import { GpioService } from '../../gpio/services/gpio.service';
+import { InfluxService } from '../../influx/services/influx.service';
+import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
+import { Record } from '../entities/record';
 
 @Injectable()
 export class EnvironmentService {
   constructor(
     @InjectRepository(Environment)
     private readonly repository: Repository<Environment>,
-    @InjectRepository(Record)
-    private readonly recordRepository: Repository<Record>,
     private readonly gpioService: GpioService,
+    private readonly influx: InfluxService,
   ) {}
 
-  async getRecords(envId: string, option?: FindManyOptions) {
+  async getRecords(envId: string, options: PaginationQueryDto) {
     const env = await this.repository.findOneOrFail(envId);
-    return this.getRecordsByBoard(env.boardId, option);
+    return this.getRecordsByBoard(env.boardId, options);
   }
 
-  getRecordsByBoard(boardId: string, option?: FindManyOptions) {
-    return this.recordRepository.find({...option, boardId});
-  }
-
-  async getEnvRecord(envId: string, id: string) {
-    await this.repository.findOneOrFail(envId);
-    return this.recordRepository.findOneOrFail(id);
+  getRecordsByBoard(boardId: string, {skip, take}: PaginationQueryDto) {
+    const query = `
+      select * from ${Config.get('influx.schema.table')}
+      where boardId = ${this.influx.escape.stringLit(boardId)}
+      order by time desc
+      ${(skip && take) ? `offset ${skip} limit ${take}` : ''}
+      `;
+    return this.influx.find(query);
   }
 
   async checkBoardId(envId, boardId) {
@@ -40,11 +43,17 @@ export class EnvironmentService {
   async addRecord(envId: string, payload: Record | Partial<Record>) {
     await this.checkBoardId(envId, payload.boardId);
 
-    const record = await this.recordRepository.save(payload);
+    await this.influx.insert({
+      measurement: Config.get('influx.schema.table'),
+      fields: {
+        record: payload.reading,
+      },
+      tags: {
+        boardId: payload.boardId,
+      },
+    });
 
-    this.checkLevel(envId, record);
-
-    return record;
+    this.checkLevel(envId, payload as Record);
   }
 
   async checkLevel(envId: string, record: Record) {

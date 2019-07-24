@@ -1,68 +1,40 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Record } from '../entities/record.entity';
-import { Repository } from 'typeorm';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Record } from '../entities/record';
 import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
+import { InfluxService } from '../../influx/services/influx.service';
+import Config from 'config';
 
 @Controller('records')
 export class RecordController {
   constructor(
-    @InjectRepository(Record)
-    private readonly repository: Repository<Record>,
+    private readonly influx: InfluxService,
   ) {}
 
   @Get()
   async index(
-    @Query() paginationQuery?: PaginationQueryDto,
+    @Query() options?: PaginationQueryDto,
   ) {
-    const options = paginationQuery || {};
-
-    return this.repository.find(options);
-  }
-
-  @Get('/:recordId')
-  async show(
-    @Param('recordId') id: string,
-  ) {
-    return this.repository.findOneOrFail(id);
+    const { skip = null, take = null } = options || {};
+    const query = `
+      select * from ${Config.get('influx.schema.table')}
+      order by time desc
+      ${(skip && take) ? `offset ${skip} limit ${take}` : ''}
+      `;
+    return this.influx.find(query);
   }
 
   @Post()
   async create(
     @Body() createDto: Record,
   ) {
-    return this.repository.save(createDto);
-  }
-
-  @Patch('/:recordId')
-  async update(
-    @Param('recordId') id: string,
-    @Body() updateDto: any,
-  ) {
-    const record = await this.repository.findOneOrFail(id);
-
-    Object.assign(record, updateDto);
-
-    await this.repository.save(record);
-
-    return record;
-  }
-
-  @Put('/:recordId')
-  async replace(
-    @Param('recordId') id: string,
-    @Body() replaceDto: Record,
-  ) {
-    return this.update(id, replaceDto);
-  }
-
-  @Delete('/:recordId')
-  async delete(
-    @Param('recordId') id: string,
-  ) {
-    await this.repository.findOneOrFail(id);
-    await this.repository.delete(id);
-
-    return null;
+    return this.influx.insert({
+      measurement: Config.get('influx.schema.table'),
+      fields: {
+        record: createDto.reading,
+      },
+      tags: {
+        boardId: createDto.boardId,
+      },
+    });
   }
 }
