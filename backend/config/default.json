@@ -9,6 +9,13 @@
     "synchronize": true,
     "dropSchema": false
   },
+  "influx": {
+    "host": "influx",
+    "database": "hose_records",
+    "schema": {
+      "table": "humidity"
+    }
+  },
   "gpio": {
     "managerUrl": "http://localhost:5050/gpio/:id"
   }
