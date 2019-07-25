@@ -9,8 +9,8 @@ const Api = modelApi<EnvironmentModel>('http://localhost:5000/environments', [
   parseDates(),
 ]);
 
-const setLoading = (bool: boolean): PayloadAction<Types['SET_LOADING'], boolean> => ({
-  type: types.SET_LOADING,
+const setLoading = (bool: boolean): PayloadAction<Types['SET_ENVS_LOADING'], boolean> => ({
+  type: types.SET_ENVS_LOADING,
   payload: bool,
 });
 

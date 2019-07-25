@@ -6,7 +6,7 @@ export interface EnvironmentModel extends BaseModel<string> {
   title: string;
   description?: string;
   boardId?: string;
-  updatedAt: any;
+  updatedAt: Date;
   gpios: GpioModel[];
   rule: RuleModel;
 }

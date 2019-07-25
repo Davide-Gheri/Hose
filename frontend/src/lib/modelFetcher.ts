@@ -9,33 +9,47 @@ export interface PaginationOptions {
 const ID_PLACEHOLDER = ':id';
 const PARENT_PLACEHOLDER = ':parentId';
 
-const replacePlaceholders = (baseUrl: string, id: string | null, parentId?: string): string => {
-  let replaced = baseUrl;
-  if (id) {
-    replaced = replaced.replace(ID_PLACEHOLDER, id);
-  }
+const removeTrailingSlash = (str: string) => str.replace(/\/+$/, '');
+
+const formatUrl = (baseUrl: string, id: string | null | undefined, parentId?: string, trailing?: string): string => {
+  let base  = baseUrl;
   if (parentId) {
-    replaced = replaced.replace(PARENT_PLACEHOLDER, parentId);
+    base = base.replace(PARENT_PLACEHOLDER, parentId);
   }
-  return replaced;
+  if (id) {
+    base = removeTrailingSlash(base) + '/' + id;
+  }
+  return removeTrailingSlash(base) + (trailing ? `/${removeTrailingSlash(trailing)}` : '');
 };
 
 const addQuerystring = (url: string, options?: PaginationOptions): string => {
-  if (!options) {
+  console.log(options)
+
+  if (!options || !Object.keys(options).length) {
     return url;
   }
   const toString = qs.stringify(options);
-  return `${url}?${toString}`;
+
+  return `${url}${toString ? `?${toString}` : ''}`;
 };
 
 export const modelApi = <T = any>(baseUrl: string, pipes: Function[] = []) => {
   const pipesCallback = runPipes(pipes);
   return {
-    getMany: (options?: PaginationOptions, parentId?: string) => get<T[]>(addQuerystring(replacePlaceholders(baseUrl, null, parentId), options)).then(pipesCallback) as Promise<T[]>,
-    get: (id: string, parentId?: string) => get<T>(replacePlaceholders(baseUrl, id, parentId)).then(pipesCallback) as Promise<T>,
-    create: (body: any, parentId?: string) => post<T>(replacePlaceholders(baseUrl, null, parentId)).then(pipesCallback) as Promise<T>,
-    update: (id: string, body: any, parentId?: string) => patch<T>(replacePlaceholders(baseUrl, id, parentId), body).then(pipesCallback) as Promise<T>,
-    delete: (id: string, parentId?: string) => del(replacePlaceholders(baseUrl, id, parentId)).then(pipesCallback),
+    getMany: (options?: PaginationOptions, parentId?: string) =>
+      get<T[]>(addQuerystring(formatUrl(baseUrl, null, parentId), options)).then(pipesCallback) as Promise<T[]>,
+
+    get: (id: string, parentId?: string) =>
+      get<T>(formatUrl(baseUrl, id, parentId)).then(pipesCallback) as Promise<T>,
+
+    create: (body: any, parentId?: string) =>
+      post<T>(formatUrl(baseUrl, null, parentId)).then(pipesCallback) as Promise<T>,
+
+    update: (id: string, body: any, parentId?: string) =>
+      patch<T>(formatUrl(baseUrl, id, parentId), body).then(pipesCallback) as Promise<T>,
+
+    delete: (id: string, parentId?: string) =>
+      del(formatUrl(baseUrl, id, parentId)).then(pipesCallback),
   }
 };
 

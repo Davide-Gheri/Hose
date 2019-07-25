@@ -1,3 +1,4 @@
+import { sleep } from './sleep';
 
 const debug = true; // TODO from env or config
 
@@ -30,6 +31,7 @@ const callFetch = <T = any>(url: string, options?: RequestInit) => (
     },
   })
   .then(logResponse)
+  .then(sleep()) // TODO remove this
   .then(parseResponse) as Promise<T>
 );
 

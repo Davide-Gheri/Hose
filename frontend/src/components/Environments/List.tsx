@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { List, ListItem, ListItemText } from '@material-ui/core';
+import { List, ListItemText } from '@material-ui/core';
 import { asArray, getEnvironments } from '../../store/environments';
 import { getLoading } from '../../store/selectors';
 import { Loading } from '../Loading';
-import { Link } from 'react-router-dom';
 import { ListItemLink } from '../common';
 
 export interface EnvListProps {

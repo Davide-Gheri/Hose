@@ -7,3 +7,9 @@ export const asArray = createSelector(
   environmentsSelector,
   envs => Object.keys(envs).map(id => envs[id]),
 );
+
+export const makeByIdSelector = () => createSelector(
+  environmentsSelector,
+  (_: any, id: string) => id,
+  (envs, id) => envs[id]
+);

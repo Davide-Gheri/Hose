@@ -11,7 +11,7 @@ export interface EnvironmentState {
 }
 
 export const types = {
-  SET_LOADING: 'SET_LOADING',
+  SET_ENVS_LOADING: 'SET_ENVS_LOADING',
   GET_ENVS_SUCCESS: 'GET_ENVS_SUCCESS',
   GET_ENVS_ERROR: 'GET_ENVS_ERROR',
   GET_ENV_SUCCESS: 'GET_ENV_SUCCESS',
@@ -29,7 +29,7 @@ const initialState: EnvironmentState = {
 export function reducer(state: EnvironmentState = initialState, action: PayloadAction) {
   return produce(state, draft => {
     switch (action.type) {
-      case types.SET_LOADING:
+      case types.SET_ENVS_LOADING:
         draft.loading = action.payload;
         break;
       case types.GET_ENVS_SUCCESS:

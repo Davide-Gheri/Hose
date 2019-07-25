@@ -7,6 +7,7 @@ import { asyncLoader } from './asyncLoader';
 
 const AsyncDashboard = asyncLoader(() => import('./Dashboard'));
 const AsyncEnvironments = asyncLoader(() => import('./Environments'));
+const AsyncEnvironment = asyncLoader(() => import('./Environments/Environment'));
 
 export const Main: React.FC = () => {
   const classes = useStyles();
@@ -22,6 +23,7 @@ export const Main: React.FC = () => {
       <main className={classes.content}>
         <div className={classes.toolbar}/>
         <Switch>
+          <Route path="/environments/:id" component={AsyncEnvironment}/>
           <Route path="/environments" component={AsyncEnvironments}/>
           <Route path="/" component={AsyncDashboard}/>
         </Switch>
