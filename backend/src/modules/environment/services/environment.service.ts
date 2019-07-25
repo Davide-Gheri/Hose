@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { isNil } from '@nestjs/common/utils/shared.utils';
 import { Repository } from 'typeorm';
 import Config from 'config';
 import { Environment } from '../entities/environment.entity';
@@ -23,12 +24,12 @@ export class EnvironmentService {
     return this.getRecordsByBoard(env.boardId, options);
   }
 
-  getRecordsByBoard(boardId: string, {skip, take}: PaginationQueryDto) {
+  getRecordsByBoard(boardId: string, {skip = 0, take = 10}: PaginationQueryDto) {
     const query = `
       select * from ${Config.get('influx.schema.table')}
       where boardId = ${this.influx.escape.stringLit(boardId)}
       order by time desc
-      ${(skip && take) ? `offset ${skip} limit ${take}` : ''}
+      ${(!isNil(skip) && take) ? `limit ${take} offset ${skip}` : ''}
       `;
     return this.influx.find(query);
   }

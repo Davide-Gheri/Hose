@@ -6,4 +6,7 @@ export class PaginationQueryDto {
 
   @IsOptional()
   take?: number;
+
+  @IsOptional()
+  orderBy?: string;
 }

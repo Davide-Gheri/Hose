@@ -41,10 +41,10 @@ export class GpioService {
       return;
     }
     for (const gpio of environment.gpios) {
-      await this.manager.sendOn(gpio.pin).toPromise()
+      await this.manager.sendOn(gpio.pin)
         .then(() => {
           sleep(environment.rule.wateringSeconds * 1000)
-            .then(() => this.manager.sendOff(gpio.pin).toPromise());
+            .then(() => this.manager.sendOff(gpio.pin));
         });
     }
   }

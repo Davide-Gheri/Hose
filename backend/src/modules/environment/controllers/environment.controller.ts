@@ -2,7 +2,7 @@ import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post,
 import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Environment } from '../entities/environment.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Rule } from '../../rule/entities/rule.entity';
 import { GpioService } from '../../gpio/services/gpio.service';
 
@@ -20,9 +20,23 @@ export class EnvironmentController {
   async index(
     @Query() paginationQuery?: PaginationQueryDto,
   ) {
-    const options = paginationQuery || {};
 
-    return this.repository.find(options);
+    const options = {
+      orderBy: 'createdAt|ASC',
+      ...paginationQuery,
+    };
+
+    const finalOptions = Object.keys(options).reduce((obj, k) => {
+      if (k === 'orderBy') {
+        const [field, order] = options[k].split('|');
+        obj.order = {[field]: order};
+      } else {
+        obj[k] = options[k];
+      }
+      return obj;
+    }, {} as FindManyOptions<Environment>);
+
+    return this.repository.find(finalOptions);
   }
 
   @Get('/:environmentId')

@@ -23,7 +23,11 @@ export class ManagerService {
       command: command.toUpperCase(),
     }).pipe(
       tap(() => Logger.debug(`Sent ${command} command to pin ${pin}`, 'GpioService')),
-    );
+    ).toPromise()
+      .catch(err => {
+        Logger.error('Cannot call gpio manager', 'ManagerService');
+        Logger.debug(err, 'ManagerService');
+      });
   }
 
   sendOn(pin: number) {
