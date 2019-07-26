@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@davidegheri/lru": "^0.1.0",
     "@jasperdunn/react-form-hooks": "^4.1.5",
     "@material-ui/core": "^4.2.1",
     "@material-ui/icons": "^4.2.1",
