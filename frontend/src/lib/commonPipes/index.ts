@@ -7,6 +7,8 @@ export const parseDates = (...fields: string[]) => (res: any | any[]) => {
     const parsed = entity;
     fieldsToCheck.forEach(field => {
       if (entity[field]) {
+        let parsed = parseISO(entity[field]);
+        if ()
         parsed[field] = parseISO(entity[field]);
       }
     });

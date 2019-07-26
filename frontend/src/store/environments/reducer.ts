@@ -26,7 +26,7 @@ const initialState: EnvironmentState = {
   error: null,
 };
 
-export function reducer(state: EnvironmentState = initialState, action: PayloadAction) {
+export function reducer(state: EnvironmentState = initialState, action: PayloadAction): EnvironmentState {
   return produce(state, draft => {
     switch (action.type) {
       case types.SET_ENVS_LOADING:

@@ -7,6 +7,8 @@ import { dashboardReducer } from './dashboard';
 import { DashboardState } from './dashboard/reducer';
 import { recordsReducer } from './records';
 import { RecordsState } from './records/reducer';
+import { rulesReducer } from './rules';
+import { RulesState } from './rules/reducer';
 
 export interface AppAction<T extends string = any> extends AnyAction {
   type: T;
@@ -25,12 +27,14 @@ const rootReducer = combineReducers({
   environments: environmentsReducer,
   dashboard: dashboardReducer,
   records: recordsReducer,
+  rules: rulesReducer,
 });
 
 export interface AppState {
   environments: EnvironmentState;
   dashboard: DashboardState;
   records: RecordsState;
+  rules: RulesState;
   [key: string]: any;
 }
 

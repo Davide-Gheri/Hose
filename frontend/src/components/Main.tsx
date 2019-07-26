@@ -5,6 +5,8 @@ import { createStyles, makeStyles } from '@material-ui/core';
 import { Route, Switch } from 'react-router';
 import { asyncLoader } from './asyncLoader';
 
+const uuidregexp = '[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}';
+
 const AsyncDashboard = asyncLoader(() => import('./Dashboard'));
 const AsyncEnvironments = asyncLoader(() => import('./Environments'));
 const AsyncEnvironment = asyncLoader(() => import('./Environments/Environment'));
@@ -23,7 +25,7 @@ export const Main: React.FC = () => {
       <main className={classes.content}>
         <div className={classes.toolbar}/>
         <Switch>
-          <Route path="/environments/:id" component={AsyncEnvironment}/>
+          <Route path={`/environments/:id(${uuidregexp})`} component={AsyncEnvironment}/>
           <Route path="/environments" component={AsyncEnvironments}/>
           <Route path="/" component={AsyncDashboard}/>
         </Switch>

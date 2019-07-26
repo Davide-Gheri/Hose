@@ -4,25 +4,25 @@ import { FormValues } from './useFormValues';
 
 export type ValidationFn = (value: string) => string | undefined;
 
-export interface FormValidations {
-  [key: string]: ValidationFn[];
+export type FormValidations<F = any> = {
+  [K in keyof F]: ValidationFn[];
 }
 
-export interface FormErrors {
-  [key: string]: string[];
+export type FormErrors<F = any> = {
+  [K in keyof F]: string[];
 }
 
-export function useFormErrors(formValidations: FormValidations = {}) {
+export function useFormErrors<F = any>(formValidations: FormValidations<F> = {} as any) {
   const initialFormErrors = useMemo(
     () => getInitialFormErrors(formValidations),
     [],
   );
 
-  const [formErrors, setFormErrors] = useState<FormErrors>(initialFormErrors);
+  const [formErrors, setFormErrors] = useState<FormErrors<F>>(initialFormErrors);
 
   return {
     formErrors,
-    numberOfErrors: Object.values(formErrors).filter(value => value.length > 0).length,
+    numberOfErrors: Object.values<string[]>(formErrors).filter(value => value.length > 0).length,
     validateForm: (formValues: FormValues) => validateForm(formValues, setFormErrors, formValidations),
     validateInputValue: (event: ChangeEvent<HTMLInputElement>) => validateInputValue(event, setFormErrors, formValidations),
     clearFormErrors: () => setFormErrors(initialFormErrors),

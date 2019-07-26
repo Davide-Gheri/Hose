@@ -6,7 +6,6 @@ export interface PaginationOptions {
   take?: number;
 }
 
-const ID_PLACEHOLDER = ':id';
 const PARENT_PLACEHOLDER = ':parentId';
 
 const removeTrailingSlash = (str: string) => str.replace(/\/+$/, '');

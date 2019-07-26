@@ -1,0 +1,51 @@
+
+export function required(value: string) {
+  if (value === null || value === undefined || value === '') {
+    return 'Field required';
+  }
+}
+
+export function email(value: string) {
+  const message = 'Invalid email';
+  const lengthValid = value.length >= 1 && value.length <= 255;
+  if (!lengthValid) {
+    return message;
+  }
+  if (!/^.+@.+\..+$/.test(value)) {
+    return message;
+  }
+}
+
+export function makeMinLength(min: number) {
+  return function minLength(value: string) {
+    if (value.length < min) {
+      return `Field must be at least ${min} characters`;
+    }
+  }
+}
+
+export function makeMaxLength(max: number) {
+  return function maxLength(value: string) {
+    if (value.length > max) {
+      return `Field must be maximum ${max} characters`;
+    }
+  }
+}
+
+export function numeric(value: string) {
+  if (!/[0-9]/.test(value)) {
+    return 'Field must be numeric';
+  }
+}
+
+export function alpha(value: string) {
+  if (!/[a-zA-Z]/.test(value)) {
+    return 'Field must be only letters';
+  }
+}
+
+export function comfirmed(value: string, check: string) {
+  if (value !== check) {
+    return 'Field does not match';
+  }
+}
