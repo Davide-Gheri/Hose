@@ -1,4 +1,4 @@
-import { parseISO } from 'date-fns';
+import { parseISO, isDate } from 'date-fns';
 
 export const parseDates = (...fields: string[]) => (res: any | any[]) => {
   const fieldsToCheck = fields.length ? fields : ['createdAt', 'updatedAt'];
@@ -7,9 +7,9 @@ export const parseDates = (...fields: string[]) => (res: any | any[]) => {
     const parsed = entity;
     fieldsToCheck.forEach(field => {
       if (entity[field]) {
-        let parsed = parseISO(entity[field]);
-        if ()
-        parsed[field] = parseISO(entity[field]);
+        if (!isDate(entity[field])) {
+          parsed[field] = parseISO(entity[field]);
+        }
       }
     });
     return parsed;

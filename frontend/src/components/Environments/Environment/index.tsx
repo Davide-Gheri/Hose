@@ -5,8 +5,11 @@ import { getEnvironment, makeByIdSelector } from '../../../store/environments';
 import { AppState } from '../../../store';
 import { getLoading } from '../../../store/selectors';
 import { Loading } from '../../Loading';
+import { RecordsChart } from '../../Records/Chart';
+import { createStyles, makeStyles, Paper } from '@material-ui/core';
 
 export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = props => {
+  const classes = useStyles();
   const getById = useMemo(makeByIdSelector, []);
   const id = props.match.params.id;
 
@@ -27,10 +30,17 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
   }
 
   return (
-    <div>
-      env
-    </div>
+    <Paper className={classes.chartContainer}>
+      {environment ? <RecordsChart environment={environment} take={20}/> : <Loading/>}
+    </Paper>
   );
 };
 
 export default EnvironmentPage;
+
+const useStyles = makeStyles(theme => createStyles({
+  chartContainer: {
+    height: 300,
+    padding: theme.spacing(2),
+  },
+}));
