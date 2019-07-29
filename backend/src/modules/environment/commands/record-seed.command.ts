@@ -25,7 +25,7 @@ export class RecordSeedCommand extends BaseCommand {
   }
 
   get randomReading(): number {
-    return faker.random.number(800);
+    return faker.random.number(1023);
   }
 
   get randomRecord(): Partial<Record> {
@@ -76,7 +76,9 @@ export class RecordSeedCommand extends BaseCommand {
           boardId: env.boardId,
         },
       }));
-      await this.influx.insert(records);
+      for (const record of records) {
+        await this.influx.insert(record);
+      }
     }
 
     this.logger.log('Random Records seeded');

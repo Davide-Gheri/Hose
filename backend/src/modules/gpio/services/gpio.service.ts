@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Environment } from '../../environment/entities/environment.entity';
-import { sleep } from '../../lib';
+import { sleep } from '../../../lib';
 import { ManagerService } from './manager.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gpio } from '../entities/gpio.entity';

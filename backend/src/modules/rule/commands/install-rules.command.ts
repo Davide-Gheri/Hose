@@ -13,17 +13,17 @@ export class InstallRulesCommand extends BaseCommand {
   private defaultRules: Array<Partial<Rule>> = [
     {
       title: 'Mediterranean',
-      minHumidity: 10,
+      minHumidity: 700,
       wateringSeconds: 20,
     },
     {
       title: 'Tropical',
-      minHumidity: 15,
+      minHumidity: 800,
       wateringSeconds: 20,
     },
     {
       title: 'Middle east',
-      minHumidity: 5,
+      minHumidity: 200,
       wateringSeconds: 10,
     },
   ];
