@@ -5,6 +5,7 @@ import { Environment } from '../entities/environment.entity';
 import { FindManyOptions, Repository } from 'typeorm';
 import { Rule } from '../../rule/entities/rule.entity';
 import { GpioService } from '../../gpio/services/gpio.service';
+import { EnvironmentService } from '../services/environment.service';
 
 @Controller('environments')
 export class EnvironmentController {
@@ -14,6 +15,7 @@ export class EnvironmentController {
     @InjectRepository(Rule)
     private readonly ruleRepository: Repository<Rule>,
     private readonly gpioService: GpioService,
+    private readonly service: EnvironmentService,
   ) {}
 
   @Get()
@@ -74,6 +76,12 @@ export class EnvironmentController {
       updateDto.rule = await this.getRule(updateDto.rule as string);
     }
 
+    if (updateDto.gpios && updateDto.gpios.length) {
+      for (const idx of updateDto.gpios.keys()) {
+        (updateDto as any).gpios[idx] = await this.gpioService.ensureGpio((updateDto as any).gpios[idx] as number);
+      }
+    }
+
     Object.assign(environment, updateDto);
 
     await this.repository.save(environment);
@@ -93,8 +101,10 @@ export class EnvironmentController {
   async delete(
     @Param('environmentId') id: string,
   ) {
-    await this.repository.findOneOrFail(id);
+    const env = await this.repository.findOneOrFail(id);
     await this.repository.delete(id);
+
+    await this.service.deleteRecordsByBoard(env.boardId);
 
     return null;
   }

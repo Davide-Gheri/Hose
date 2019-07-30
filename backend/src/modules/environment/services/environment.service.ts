@@ -65,4 +65,9 @@ export class EnvironmentService {
       this.gpioService.exec(env);
     }
   }
+
+  async deleteRecordsByBoard(boardId: string) {
+    const query = `boardId = ${this.influx.escape.stringLit(boardId)}`;
+    return this.influx.delete(query);
+  }
 }

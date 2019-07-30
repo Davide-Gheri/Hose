@@ -35,7 +35,7 @@ export class RecordSeedCommand extends BaseCommand {
   }
 
   @Command({
-    command: 'record:seed',
+    command: 'record:seed <number>',
     aliases: 're:s',
     describe: 'Seed db with fake records',
   })
