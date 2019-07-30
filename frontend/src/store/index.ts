@@ -1,4 +1,4 @@
-import { AnyAction, combineReducers, createStore, applyMiddleware } from 'redux';
+import { AnyAction, combineReducers, createStore, applyMiddleware, StoreEnhancer } from 'redux';
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 import { environmentsReducer } from './environments';
@@ -9,6 +9,8 @@ import { recordsReducer } from './records';
 import { RecordsState } from './records/reducer';
 import { rulesReducer } from './rules';
 import { RulesState } from './rules/reducer';
+import { gpiosReducer } from './gpios';
+import { GpiosState } from './gpios/reducer';
 
 export interface AppAction<T extends string = any> extends AnyAction {
   type: T;
@@ -28,6 +30,7 @@ const rootReducer = combineReducers({
   dashboard: dashboardReducer,
   records: recordsReducer,
   rules: rulesReducer,
+  gpios: gpiosReducer,
 });
 
 export interface AppState {
@@ -35,13 +38,23 @@ export interface AppState {
   dashboard: DashboardState;
   records: RecordsState;
   rules: RulesState;
+  gpios: GpiosState;
   [key: string]: any;
 }
 
+const LOG_ENABLED = true;
+
 export const configureStore = () => {
-  const logger = createLogger();
+  let middleware: StoreEnhancer<any, any>;
+  if (LOG_ENABLED) {
+    const logger = createLogger();
+    middleware = applyMiddleware(thunk, logger);
+  } else {
+    middleware = applyMiddleware(thunk);
+  }
+
   return createStore(
     rootReducer,
-    applyMiddleware(thunk, logger),
+    middleware,
   );
 };

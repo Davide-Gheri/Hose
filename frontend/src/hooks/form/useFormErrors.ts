@@ -2,7 +2,7 @@ import { ChangeEvent, useMemo, useState } from 'react';
 import { clearInputErrors, getInitialFormErrors, validateForm, validateInputValue } from './utils';
 import { FormValues } from './useFormValues';
 
-export type ValidationFn = (value: string) => string | undefined;
+export type ValidationFn = (value: any) => string | undefined;
 
 export type FormValidations<F = any> = {
   [K in keyof F]: ValidationFn[];

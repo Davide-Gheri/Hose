@@ -5,7 +5,7 @@ import { Widget } from '../Widget';
 import { RecordsTable } from '../../Records/Table';
 import { Loading } from '../../Loading';
 import { CardActions } from '@material-ui/core';
-import { AppLink } from '../../common/AppLink';
+import { AppLink } from '../../common';
 
 export const PreferredEnvReadings: React.FC = () => {
   const environment = useSelector(getPreferredEnv);

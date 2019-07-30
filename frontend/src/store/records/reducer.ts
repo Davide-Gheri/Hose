@@ -5,9 +5,7 @@ import { PayloadAction } from '../index';
 export interface RecordsState {
   loading: boolean;
   error: any;
-  records: {
-    [key: string]: RecordModel[];
-  };
+  records: Record<string, RecordModel[]>;
 }
 
 export const types = {

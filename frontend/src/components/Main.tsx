@@ -4,8 +4,7 @@ import { SideBar } from './Navigation/SideBar';
 import { createStyles, makeStyles } from '@material-ui/core';
 import { Route, Switch } from 'react-router';
 import { asyncLoader } from './asyncLoader';
-
-const uuidregexp = '[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}';
+import { uuidregexp } from '../lib/pathRegexp';
 
 const AsyncDashboard = asyncLoader(() => import('./Dashboard'));
 const AsyncEnvironments = asyncLoader(() => import('./Environments'));

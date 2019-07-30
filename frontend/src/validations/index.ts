@@ -1,3 +1,4 @@
+import { ValidationFn } from '../hooks/form';
 
 export function required(value: string) {
   if (value === null || value === undefined || value === '') {
@@ -47,5 +48,20 @@ export function alpha(value: string) {
 export function comfirmed(value: string, check: string) {
   if (value !== check) {
     return 'Field does not match';
+  }
+}
+
+export function array(...validators: ValidationFn[]) {
+  return function validateArray(value: string[]) {
+    const errors = value.map(val => {
+      for (const validator of validators) {
+        const res = validator(val);
+        if (res) {
+          return res;
+        }
+      }
+    }).filter(Boolean);
+
+    return errors.length ? errors[0] : undefined;
   }
 }

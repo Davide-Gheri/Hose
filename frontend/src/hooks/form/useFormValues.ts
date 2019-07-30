@@ -13,6 +13,6 @@ export function useFormValues<F = any>(initialValues: FormValues<F>) {
     resetFormValues: () => setFormValues(initialValues),
     resetInputValue: (name: string) => resetInputValue(name, setFormValues, initialValues),
     updateInputValue: (event: ChangeEvent<HTMLInputElement>) => updateInputValue(event, setFormValues),
-    setInputValue: (name: string, value: string) => setFormValues(prevState => ({...prevState, [name]: value})),
+    setInputValue: (name: string, value: any) => setFormValues(prevState => ({...prevState, [name]: value})),
   };
 }

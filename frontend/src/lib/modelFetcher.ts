@@ -42,7 +42,7 @@ export const modelApi = <T = any>(baseUrl: string, pipes: Function[] = []) => {
       get<T>(formatUrl(baseUrl, id, parentId)).then(pipesCallback) as Promise<T>,
 
     create: (body: any, parentId?: string) =>
-      post<T>(formatUrl(baseUrl, null, parentId)).then(pipesCallback) as Promise<T>,
+      post<T>(formatUrl(baseUrl, null, parentId), body).then(pipesCallback) as Promise<T>,
 
     update: (id: string, body: any, parentId?: string) =>
       patch<T>(formatUrl(baseUrl, id, parentId), body).then(pipesCallback) as Promise<T>,

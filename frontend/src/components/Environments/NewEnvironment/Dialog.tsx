@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
-import { NewEnvironmentForm } from './Form';
+import { EnvironmentForm } from '../Form';
 import { RouteComponentProps } from 'react-router';
 
 export const NewEnvironmentDialog: React.FC<RouteComponentProps> = ({history}) => {
@@ -24,7 +24,7 @@ export const NewEnvironmentDialog: React.FC<RouteComponentProps> = ({history}) =
           <br/>
           Add a Rule and 1 or more GPIO pins to activate auto irrigation
         </DialogContentText>
-        <NewEnvironmentForm onSubmit={onClose} onCancel={onClose}/>
+        <EnvironmentForm onSubmit={onClose} onCancel={onClose}/>
       </DialogContent>
     </Dialog>
   );

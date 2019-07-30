@@ -1,7 +1,7 @@
 import React from 'react';
 import { Widget } from '../Widget';
 import { EnvList } from '../../Environments/List';
-import { AppLink } from '../../common/AppLink';
+import { AppLink } from '../../common';
 import { CardActions } from '@material-ui/core';
 
 export const Environments: React.FC = () => {

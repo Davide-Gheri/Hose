@@ -11,13 +11,14 @@ export const setCache = (url: string, method: string) => (res: any) => {
   if (method === 'GET') { // Cache only GET calls
     cache.set(url, res);
   } else { // Remove from cache for POST, PUT, PATCH, DELETE calls
+    console.log('removing')
     cache.delete(url);
   }
   return res;
 };
 
-export const getFromCache = (url: string) => new Promise(((resolve, reject) => {
-  if (CACHE_ENABLED && cache.has(url)) {
+export const getFromCache = (url: string, options: RequestInit = {method: 'GET'}) => new Promise(((resolve, reject) => {
+  if (CACHE_ENABLED && options.method === 'GET' && cache.has(url)) {
     const cached = cache.get(url);
     resolve(cached);
   } else {

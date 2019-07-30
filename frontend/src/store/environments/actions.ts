@@ -49,3 +49,21 @@ export const getEnvironment = (id: string): ThunkAction<Promise<any>, {}, {}, Pa
     .catch(err => dispatch(getEnvironmentError(err)))
     .finally(() => dispatch(setLoading(false)));
 };
+
+export const createEnvironment = (data: Partial<EnvironmentModel>): ThunkAction<Promise<any>, {}, {}, PayloadAction> => dispatch => {
+  return Api.create(data)
+    .then(env => dispatch(getEnvironmentSuccess(env)))
+    .catch(err => {
+      dispatch(getEnvironmentError(err));
+      throw err;
+    });
+};
+
+export const updateEnvironment = (id: string, data: Partial<EnvironmentModel>): ThunkAction<Promise<any>, {}, {}, PayloadAction> => dispatch => {
+  return Api.update(id, data)
+    .then(env => dispatch(getEnvironmentSuccess(env)))
+    .catch(err => {
+      dispatch(getEnvironmentError(err));
+      throw err;
+    });
+};

@@ -3,13 +3,15 @@ import { getFromCache, setCache } from './cache';
 
 const debug = true; // TODO from env or config
 
-const headers = new Headers();
+const headers: Record<string, string> = {
+  'content-type': 'application/json'
+};
 
 export const setHeader = (name: string, value: string | null) => {
   if (value) {
-    headers.set(name, value);
+    headers[name] = value;
   } else {
-    headers.delete(name);
+    delete headers[name];
   }
 };
 
@@ -24,7 +26,7 @@ export const put = <T = any>(url: string, body?: any) => callFetch<T>(url, optio
 export const del = (url: string) => callFetch(url, {method: 'DELETE'});
 
 const callFetch = <T = any>(url: string, options?: RequestInit) => {
-  return getFromCache(url)
+  return getFromCache(url, options)
     .then(res => {
       console.log('Cache HIT');
       console.log({...res});
