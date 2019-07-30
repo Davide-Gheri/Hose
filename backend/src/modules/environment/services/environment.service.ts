@@ -8,13 +8,16 @@ import { Logger } from '../../../Logger';
 import { GpioService } from '../../gpio/services/gpio.service';
 import { InfluxService } from '../../influx/services/influx.service';
 import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
-import { Record } from '../entities/record';
+import { Record } from '../entities/record.entity';
+import { Watering } from '../entities/watering.entity';
 
 @Injectable()
 export class EnvironmentService {
   constructor(
     @InjectRepository(Environment)
     private readonly repository: Repository<Environment>,
+    @InjectRepository(Watering)
+    private readonly wateringRepository: Repository<Watering>,
     private readonly gpioService: GpioService,
     private readonly influx: InfluxService,
   ) {}
@@ -60,9 +63,24 @@ export class EnvironmentService {
   async checkLevel(envId: string, record: Record) {
     const env = await this.repository.findOneOrFail(envId);
     const { minHumidity } = env.rule;
+
+    const scheduledWatering = await this.wateringRepository.createQueryBuilder()
+      .where('environmentId = :envId', {envId}) // TODO use relations
+      .andWhere('processedAt is null')
+      .getMany();
+
     if (record.reading <= minHumidity) {
-      Logger.log('HUMIDITY TOO LOW, NEED WATER', 'EnvironmentService');
-      this.gpioService.exec(env);
+      Logger.log('HUMIDITY TOO LOW, SCHEDULING WATER', 'EnvironmentService');
+      if (!scheduledWatering || scheduledWatering.length === 0) {
+        Logger.debug('Adding a new watering schedule', 'EnvironmentService');
+        await this.wateringRepository.save({
+          environment: env,
+        });
+      }
+      // this.gpioService.exec(env);
+    } else {
+      Logger.debug('An old scheduled watering is no more necessary', 'EnvironmentService');
+      await this.wateringRepository.delete(scheduledWatering.map(w => w.id));
     }
   }
 

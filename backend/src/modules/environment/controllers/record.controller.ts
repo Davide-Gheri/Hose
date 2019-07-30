@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { Record } from '../entities/record';
+import { Record } from '../entities/record.entity';
 import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
 import { InfluxService } from '../../influx/services/influx.service';
 import Config from 'config';

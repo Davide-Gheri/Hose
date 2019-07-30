@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Record } from '../entities/record';
+import { Record } from '../entities/record.entity';
 import { Repository } from 'typeorm';
 import { Environment } from '../entities/environment.entity';
 import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';

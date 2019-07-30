@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Command, Option, Positional } from 'nestjs-command';
-import { Record } from '../entities/record';
+import { Record } from '../entities/record.entity';
 import * as faker from 'faker';
 import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';

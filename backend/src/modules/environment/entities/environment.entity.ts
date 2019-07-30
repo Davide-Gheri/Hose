@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
 import { Rule } from '../../rule/entities/rule.entity';
 import { Gpio } from '../../gpio/entities/gpio.entity';
+import { Watering } from './watering.entity';
 
 @Entity()
 export class Environment {
@@ -37,4 +38,7 @@ export class Environment {
   @ManyToMany(type => Gpio, gpio => gpio.environments, {eager: true})
   @JoinTable()
   gpios: Gpio[];
+
+  @OneToMany(type => Watering, watering => watering.environment)
+  watering: Watering[];
 }

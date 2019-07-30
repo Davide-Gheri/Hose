@@ -6,5 +6,8 @@
   "influx": {
     "host": "influx",
     "database": "hose_records"
+  },
+  "watering": {
+    "cron": "* * * * *"
   }
 }

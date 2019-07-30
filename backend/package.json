@@ -33,6 +33,7 @@
     "helmet": "^3.19.0",
     "influx": "^5.4.0",
     "morgan": "^1.9.1",
+    "nest-schedule": "^0.6.3",
     "nestjs-command": "^1.2.0",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
