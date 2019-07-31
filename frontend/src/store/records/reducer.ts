@@ -22,7 +22,7 @@ const initialState: RecordsState = {
   records: {},
 };
 
-export function reducer(state: RecordsState = initialState, action: PayloadAction) {
+export function reducer(state: RecordsState = initialState, action: PayloadAction): RecordsState {
   return produce(state, draft => {
     switch (action.type) {
       case types.SET_RECORDS_LOADING:
@@ -35,7 +35,10 @@ export function reducer(state: RecordsState = initialState, action: PayloadActio
       case types.GET_RECORDS_SUCCESS:
         draft.loading = false;
         draft.error = null;
-        draft.records[action.payload.id] = action.payload.records;
+        draft.records[action.payload.id] = [
+          ...draft.records[action.payload.id] || [],
+          ...action.payload.records,
+        ];
         break;
     }
   })

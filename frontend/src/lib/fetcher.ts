@@ -29,7 +29,6 @@ const callFetch = <T = any>(url: string, options?: RequestInit) => {
   return getFromCache(url, options)
     .then(res => {
       console.log('Cache HIT');
-      console.log({...res});
       return res;
     })
     .catch(() => {

@@ -22,8 +22,6 @@ const formatUrl = (baseUrl: string, id: string | null | undefined, parentId?: st
 };
 
 const addQuerystring = (url: string, options?: PaginationOptions): string => {
-  console.log(options)
-
   if (!options || !Object.keys(options).length) {
     return url;
   }

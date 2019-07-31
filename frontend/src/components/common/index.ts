@@ -4,3 +4,4 @@ export * from './AppLink';
 export * from './AppSelect';
 export * from './AppTextField';
 export * from './ConfirmButton';
+export * from './VirtualTable';

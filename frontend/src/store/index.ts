@@ -1,4 +1,4 @@
-import { AnyAction, combineReducers, createStore, applyMiddleware, StoreEnhancer } from 'redux';
+import { AnyAction, combineReducers, createStore, applyMiddleware, StoreEnhancer, compose } from 'redux';
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 import { environmentsReducer } from './environments';
@@ -11,6 +11,8 @@ import { rulesReducer } from './rules';
 import { RulesState } from './rules/reducer';
 import { gpiosReducer } from './gpios';
 import { GpiosState } from './gpios/reducer';
+import { wateringsReducer } from './waterings';
+import { WateringState } from './waterings/reducer';
 
 export interface AppAction<T extends string = any> extends AnyAction {
   type: T;
@@ -31,6 +33,7 @@ const rootReducer = combineReducers({
   records: recordsReducer,
   rules: rulesReducer,
   gpios: gpiosReducer,
+  waterings: wateringsReducer,
 });
 
 export interface AppState {
@@ -39,12 +42,15 @@ export interface AppState {
   records: RecordsState;
   rules: RulesState;
   gpios: GpiosState;
+  waterings: WateringState;
   [key: string]: any;
 }
 
-const LOG_ENABLED = true;
+const LOG_ENABLED = false;
 
 export const configureStore = () => {
+  const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
   let middleware: StoreEnhancer<any, any>;
   if (LOG_ENABLED) {
     const logger = createLogger();
@@ -55,6 +61,6 @@ export const configureStore = () => {
 
   return createStore(
     rootReducer,
-    middleware,
+    composeEnhancers(middleware),
   );
 };
