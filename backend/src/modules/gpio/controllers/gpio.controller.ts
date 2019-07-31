@@ -19,7 +19,10 @@ export class GpioController {
   ) {
     const options = paginationQuery || {};
 
-    return this.repository.find(options);
+    return this.repository.find({
+      ...options,
+      relations: ['environments'],
+    });
   }
 
   @Get('/:gpioId')
@@ -66,6 +69,6 @@ export class GpioController {
     await this.repository.findOneOrFail(id);
     await this.repository.delete(id);
 
-    return null;
+    return {};
   }
 }
