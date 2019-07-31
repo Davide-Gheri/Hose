@@ -17,7 +17,7 @@
     }
   },
   "gpio": {
-    "managerUrl": "http://localhost:5050/gpio/:id"
+    "managerUrl": "http://gpio:5050/gpio/:id"
   },
   "watering": {
     "cron": "0 20 * * *"

@@ -6,6 +6,7 @@ import { Environment } from '../entities/environment.entity';
 import { Connection, Repository } from 'typeorm';
 import { Logger } from '../../../Logger';
 import { Watering } from '../entities/watering.entity';
+import { GpioService } from '../../gpio/services/gpio.service';
 
 @Injectable()
 export class ScheduleService extends NestSchedule {
@@ -16,39 +17,42 @@ export class ScheduleService extends NestSchedule {
     private readonly repository: Repository<Environment>,
     @InjectRepository(Watering)
     private readonly wateringRepository: Repository<Watering>,
-    @InjectConnection()
-    private readonly connection: Connection,
+    private readonly gpioService: GpioService,
   ) {
     super();
   }
 
   @Cron(Config.get('watering.cron'))
   async runWatering() {
-    this.logger.debug('Running watering cron');
-    const environments = await this.getEnvironments();
-    if (environments.length === 0) {
-      this.logger.debug('No environments found', 'ScheduleService');
+    this.logger.log('Running watering cron');
+    const waterings = await this.getWatering();
+
+    if (waterings.length === 0) {
+      this.logger.log('No scheduled watering');
       return;
     }
-    const waterings = await this.getWatering(environments);
 
-    console.log(waterings);
+    const wateringPromises = waterings.map(watering => this.waterEnvironment(watering));
 
-    for (const watering of waterings) {
-      watering.processedAt = new Date();
-      await this.wateringRepository.save(watering);
-    }
+    Promise.all(wateringPromises).then(() => this.logger.log('All watering completed'));
   }
 
-  getEnvironments() {
-    return this.repository.createQueryBuilder('environments')
-      .getMany();
+  getWatering() {
+    return this.wateringRepository
+      .find({
+        relations: ['environment'],
+        where: {processedAt: null},
+      });
   }
 
-  getWatering(envs: Environment[]) {
-    return this.wateringRepository.createQueryBuilder()
-      .where('environmentId in (:...envIds)', {envIds: envs.map(e => e.id)})
-      .andWhere('processedAt is null')
-      .getMany();
+  async waterEnvironment(watering: Watering) {
+    this.logger.debug(`Processing scheduled watering for env ${watering.environment.title} on pin(s) ${
+      watering.environment.gpios.map(g => g.pin).join(', ')
+    }`);
+    return this.gpioService.exec(watering.environment)
+      .then(() => {
+        watering.processedAt = new Date();
+        return this.wateringRepository.save(watering);
+      });
   }
 }
