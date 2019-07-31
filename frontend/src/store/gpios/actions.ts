@@ -21,10 +21,21 @@ const getGpiosError = (error: any): PayloadAction<Types['GET_GPIOS_ERROR'], any>
   payload: error,
 });
 
+const deleteGpioSuccess = (id: string): PayloadAction<Types['DELETE_GPIO_SUCCESS'], string> => ({
+  type: types.DELETE_GPIO_SUCCESS,
+  payload: id,
+});
+
 export const getGpios = (options?: PaginationOptions): ThunkAction<Promise<any>, {}, {}, PayloadAction> => dispatch => {
   dispatch(setLoading(true));
   return Api.getMany(options)
-  .then(rules => dispatch(getGpiosSuccess(rules)))
-  .catch(err => dispatch(getGpiosError(err)))
-  .finally(() => dispatch(setLoading(false)));
+    .then(rules => dispatch(getGpiosSuccess(rules)))
+    .catch(err => dispatch(getGpiosError(err)))
+    .finally(() => dispatch(setLoading(false)));
+};
+
+export const deleteGpio = (id: string): ThunkAction<Promise<any>, {}, {}, PayloadAction> => dispatch => {
+  dispatch(setLoading(true));
+  return Api.delete(id)
+    .then(() => dispatch(deleteGpioSuccess(id)))
 };

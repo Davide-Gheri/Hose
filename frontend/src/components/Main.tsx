@@ -7,8 +7,11 @@ import { asyncLoader } from './asyncLoader';
 import { uuidregexp } from '../lib/pathRegexp';
 
 const AsyncDashboard = asyncLoader(() => import('./Dashboard'));
+
 const AsyncEnvironments = asyncLoader(() => import('./Environments'));
 const AsyncEnvironment = asyncLoader(() => import('./Environments/Environment'));
+
+const AsyncGpios = asyncLoader(() => import('./Gpios'));
 
 export const Main: React.FC = () => {
   const classes = useStyles();
@@ -26,6 +29,7 @@ export const Main: React.FC = () => {
         <Switch>
           <Route path={`/environments/:id(${uuidregexp})`} component={AsyncEnvironment}/>
           <Route path="/environments" component={AsyncEnvironments}/>
+          <Route path="/gpios" component={AsyncGpios}/>
           <Route path="/" component={AsyncDashboard}/>
         </Switch>
       </main>

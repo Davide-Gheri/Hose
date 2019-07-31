@@ -22,7 +22,7 @@ interface FormData {
   gpios: string[];
 }
 
-export interface NewEnvironmentFormProps {
+export interface EnvironmentFormProps {
   onSubmit?: (e: SyntheticEvent) => void;
   onCancel?: (e: SyntheticEvent) => void;
   environment?: EnvironmentModel;
@@ -36,7 +36,7 @@ const commonNotificationOpts: Partial<Message> = {
   autoHide: 2000,
 };
 
-export const EnvironmentForm: React.FC<NewEnvironmentFormProps> = ({onSubmit, onCancel, environment}) => {
+export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCancel, environment}) => {
   const classes = useStyles();
 
   const [submit, setSubmit] = useState(false);

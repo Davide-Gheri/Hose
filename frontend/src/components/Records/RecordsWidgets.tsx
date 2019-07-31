@@ -5,7 +5,6 @@ import { RecordsChart } from './Chart';
 import { createStyles, makeStyles, Slider } from '@material-ui/core';
 import { Loading } from '../Loading';
 import { InfiniteRecordTable } from './InfiniteTable';
-import { WidgetArea } from '../Dashboard/WidgetArea';
 import { getRecords, makeGetByEnvSelector } from '../../store/records';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState, PayloadAction } from '../../store';
@@ -29,12 +28,13 @@ export const RecordsWidget: React.FC<RecordsWidgetsProps> = ({environment}) => {
   const records = useSelector((state: AppState) => getByEnv(state, environment.id));
   const loading = useSelector(getLoading('records'));
   const dispatch = useDispatch<ThunkDispatch<{}, {}, PayloadAction<any>>>();
+
   const loadMore = useCallback(() => {
     return dispatch(getRecords(environment.id, {take, skip}))
     .then(() => {
       setSkip(take + skip);
     });
-  }, [take, skip, setSkip, environment.id]);
+  }, [take, skip, setSkip, environment.id, dispatch]);
 
   const onSliderChange = useCallback((e: ChangeEvent<{}>, value: any) => {
     setChartShow(value as number);

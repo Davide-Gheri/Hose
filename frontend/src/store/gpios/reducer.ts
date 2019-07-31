@@ -12,6 +12,7 @@ export const types = {
   SET_GPIOS_LOADING: 'SET_GPIOS_LOADING',
   GET_GPIOS_SUCCESS: 'GET_GPIOS_SUCCESS',
   GET_GPIOS_ERROR: 'GET_GPIOS_ERROR',
+  DELETE_GPIO_SUCCESS: 'DELETE_GPIO_SUCCESS',
 };
 
 export type Types = typeof types;
@@ -38,6 +39,11 @@ export function reducer(state: GpiosState = initialState, action: PayloadAction)
         action.payload.forEach((gpio: GpioModel) => {
           draft.gpios[gpio.id] = gpio;
         });
+        break;
+      case types.DELETE_GPIO_SUCCESS:
+        draft.loading = false;
+        draft.error = false;
+        delete draft.gpios[action.payload];
         break;
     }
   })

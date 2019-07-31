@@ -33,6 +33,14 @@ export function makeMaxLength(max: number) {
   }
 }
 
+export function makeOneOf(toCheck: any[]) {
+  return function onOf(value: string) {
+    if (!toCheck.includes(value)) {
+      return `Field must be one of: ${toCheck.join(', ')}`;
+    }
+  }
+}
+
 export function numeric(value: string) {
   if (!/[0-9]/.test(value)) {
     return 'Field must be numeric';
@@ -45,7 +53,7 @@ export function alpha(value: string) {
   }
 }
 
-export function comfirmed(value: string, check: string) {
+export function confirmed(value: string, check: string) {
   if (value !== check) {
     return 'Field does not match';
   }

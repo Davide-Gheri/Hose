@@ -7,6 +7,7 @@ export interface ConfirmButtonProps extends ButtonProps {
   confirmText?: string;
   cancelButtonText?: string;
   confirmButtonText?: string;
+  renderButton?: (props: any) => any;
 }
 
 export const ConfirmButton: React.FC<ConfirmButtonProps> = (
@@ -16,6 +17,7 @@ export const ConfirmButton: React.FC<ConfirmButtonProps> = (
     cancelButtonText = 'Cancel',
     confirmText,
     onClick,
+    renderButton,
     ...rest
   }) => {
   const [open, setOpen] = useState(false);
@@ -35,9 +37,12 @@ export const ConfirmButton: React.FC<ConfirmButtonProps> = (
     }
   }, [onClick]);
 
+  const renderedButton = typeof renderButton === 'function' ?
+    renderButton({...rest, onClick: onButtonClick}) : <Button {...rest} onClick={onButtonClick}/>;
+
   return (
     <>
-      <Button {...rest} onClick={onButtonClick}/>
+      {renderedButton}
       <Dialog
         disableBackdropClick
         disableEscapeKeyDown

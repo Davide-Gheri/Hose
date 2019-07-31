@@ -11,7 +11,7 @@ import {
   ListItemText,
   makeStyles
 } from '@material-ui/core';
-import { ChevronLeft, Dashboard, Place } from '@material-ui/icons';
+import { ChevronLeft, Dashboard, Place, DeveloperBoard } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 
 export interface SideBarProps {
@@ -35,6 +35,11 @@ const links: LinkItem[] = [
     title: 'Environments',
     icon: <Place/>,
     href: '/environments',
+  },
+  {
+    title: 'Gpios',
+    icon: <DeveloperBoard/>,
+    href: '/gpios',
   },
 ];
 

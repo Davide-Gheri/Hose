@@ -4,7 +4,7 @@ import { createStyles, makeStyles, Paper, Typography, Grid, Button } from '@mate
 import { Add } from '@material-ui/icons';
 import { Route } from 'react-router';
 import { asyncLoader } from '../asyncLoader';
-import { AppLink } from '../common/AppLink';
+import { AppLink } from '../common';
 
 const AsyncNewEnvironment = asyncLoader(() => import('./NewEnvironment/Dialog'));
 
