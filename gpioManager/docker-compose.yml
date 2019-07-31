@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  gpio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/usr/src/app
+    networks:
+      - backend_shared
+    ports:
+      - 5050:5050
+networks:
+  backend_shared:
+    external: true

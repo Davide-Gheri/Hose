@@ -2,7 +2,6 @@ from flask import Flask
 from flask import request, abort
 import threading
 import time
-
 from gpio import Gpio
 
 app = Flask(__name__)
@@ -12,10 +11,27 @@ availableCommands = ['ON', 'OFF']
 MAX_ON_SECONDS = 60
 
 
-def async_op():
-    print("Async start")
-    time.sleep(10)
-    print("Async end")
+def run_thread(pin, command):
+    if command == "ON":
+        send_on(pin)
+        time.sleep(MAX_ON_SECONDS)
+        send_off(pin)
+    if command == "OFF":
+        send_off(pin)
+
+
+def send_on(pin):
+    gpio = get_gpio(pin)
+    app.logger.debug("Sending ON to {}".format(pin))
+    gpio.on()
+    gpio.close()
+
+
+def send_off(pin):
+    gpio = get_gpio(pin)
+    app.logger.debug("Sending OFF to {}".format(pin))
+    gpio.off()
+    gpio.close()
 
 
 def get_gpio(pin):
@@ -43,17 +59,7 @@ def run_for_time(pin):
     if command not in availableCommands:
         abort(400)
 
-    gpio = get_gpio(pin)
-    if command == "ON":
-        gpio.on()
-    if command == "OFF":
-        gpio.off()
-
-    gpio.close()
-
-    app.logger.debug("Before async")
-    threading.Thread(target=async_op).start()
-    app.logger.debug("After async")
+    threading.Thread(target=run_thread, args=[pin, command]).start()
 
     return {
         "message": "New status: {}".format(command)
@@ -61,4 +67,4 @@ def run_for_time(pin):
 
 
 if __name__ == '__main__':
-    app.run(port=5050)
+    app.run(port=5050, host="0.0.0.0")
