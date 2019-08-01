@@ -2,12 +2,10 @@ import React, { ChangeEvent, SyntheticEvent, useCallback, useState } from 'react
 import { Button, CircularProgress, createStyles, DialogActions, makeStyles } from '@material-ui/core';
 import { useFormErrors, useFormValues } from '../../hooks/form';
 import { numeric, required } from '../../validations';
-import { AppTextField, ConfirmButton } from '../common';
-import { GpioModel } from '../../store/models';
-import { createEnvironment, updateEnvironment } from '../../store/environments';
-import { useDispatch } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { PayloadAction } from '../../store';
+import { AppTextField } from '../common';
+import { useThunkDispatch } from '../../store';
+import { createGpio } from '../../store/gpios';
+import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
 
 interface FormData {
   pin: string;
@@ -16,10 +14,9 @@ interface FormData {
 export interface GpioFormProps {
   onSubmit?: (e: SyntheticEvent) => void;
   onCancel?: (e: SyntheticEvent) => void;
-  gpio?: GpioModel;
 }
 
-export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel, gpio}) => {
+export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel}) => {
   const classes = useStyles();
   const [submit, setSubmit] = useState(false);
 
@@ -31,7 +28,7 @@ export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel, gpio}) =>
     pin: [required, numeric],
   });
 
-  const dispatch = useDispatch<ThunkDispatch<{}, {}, PayloadAction<any>>>();
+  const dispatch = useThunkDispatch();
 
   const onInputChange = useCallback((event: ChangeEvent<HTMLInputElement | any>) => {
     updateInputValue(event);
@@ -43,33 +40,23 @@ export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel, gpio}) =>
     clearFormErrors();
   }, [resetFormValues, clearFormErrors]);
 
+  const { openNotification } = useNotifications();
+
   const onFormSubmit = useCallback((e: SyntheticEvent) => {
     e.preventDefault();
     setSubmit(true);
 
     if (validateForm(formValues)) {
-      let submitPromise: Promise<any>;
-      if (gpio) {
-        // submitPromise = dispatch(updateEnvironment(environment!.id, formValues)).then(() => {
-        //   openNotification({
-        //     ...commonNotificationOpts,
-        //     text: 'Environment updated',
-        //   });
-        // });
-      } else {
-        // submitPromise = dispatch(createEnvironment(formValues)).then(() => {
-        //   openNotification({
-        //     ...commonNotificationOpts,
-        //     text: 'Environment created',
-        //   });
-        // });
-      }
-      // submitPromise.then(() => {
-      //   setSubmit(false);
-      //   if (typeof onSubmit === 'function') {
-      //     onSubmit(e);
-      //   }
-      // });
+      dispatch(createGpio(formValues)).then(() => {
+        openNotification({
+          ...commonNotificationOpts,
+          text: 'Gpio created',
+        });
+        setSubmit(false);
+        if (typeof onSubmit === 'function') {
+          onSubmit(e);
+        }
+      }).catch(console.error); // TODO show errors
     }
   }, [validateForm, formValues, onSubmit]);
 
@@ -96,11 +83,6 @@ export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel, gpio}) =>
         />
       </fieldset>
       <DialogActions>
-        {gpio && (
-          <ConfirmButton color="secondary" className={classes.deleteBtn} disabled={submit}>
-            Delete
-          </ConfirmButton>
-        )}
         <Button color="primary" onClick={onFormCancel} disabled={submit}>
           Cancel
         </Button>
@@ -122,9 +104,6 @@ const useStyles = makeStyles(theme => createStyles({
   textField: {
     marginBottom: theme.spacing(2),
   },
-  deleteBtn: {
-    marginRight: 'auto',
-  },
   confirmButtonWrapper: {
     position: 'relative',
   },
@@ -134,12 +113,5 @@ const useStyles = makeStyles(theme => createStyles({
     left: '50%',
     marginTop: -12,
     marginLeft: -12,
-  },
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    margin: 2,
   },
 }));

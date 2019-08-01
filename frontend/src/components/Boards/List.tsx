@@ -1,37 +1,37 @@
 import React, { useCallback, useEffect } from 'react';
-import { Button, List, ListItem, ListItemSecondaryAction, ListItemText, IconButton } from '@material-ui/core';
-import { DeleteForever } from '@material-ui/icons';
-import { AppLink, ConfirmButton, ListItemLink } from '../common';
 import { useSelector } from 'react-redux';
-import { asArray, deleteGpio, getGpios } from '../../store/gpios';
+import { asArray, getBoards, deleteBoard } from '../../store/boards';
 import { getLoadingError } from '../../store/selectors';
+import { useThunkDispatch } from '../../store';
 import { Loading } from '../Loading';
 import { Error } from '../Error';
-import { useThunkDispatch } from '../../store';
+import { Button, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
+import { AppLink, ConfirmButton, ListItemLink } from '../common';
+import { DeleteForever } from '@material-ui/icons';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
 
-export interface GpioListProps {
+export interface BoardListProps {
   take?: number;
 }
 
-export const GpioList: React.FC<GpioListProps> = ({take}) => {
-  const gpios = useSelector(asArray);
-  const {loading, error} = useSelector(getLoadingError('gpios'));
+export const BoardList: React.FC<BoardListProps> = ({take}) => {
+  const boards = useSelector(asArray);
+  const {loading, error} = useSelector(getLoadingError('boards'));
 
   const dispatch = useThunkDispatch();
 
   const {openNotification} = useNotifications();
 
   useEffect(() => {
-    dispatch(getGpios({take})).catch(console.error);
+    dispatch(getBoards({take})).catch(console.error);
   }, [dispatch]);
 
   const onDelete = useCallback((id: string) => {
-    dispatch(deleteGpio(id))
+    dispatch(deleteBoard(id))
       .then(() => {
         openNotification({
           ...commonNotificationOpts,
-          text: 'GPIO deleted',
+          text: 'Board deleted',
         });
       });
   }, [dispatch]);
@@ -46,32 +46,31 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
 
   return (
     <List dense>
-      {gpios.length === 0 && (
+      {boards.length === 0 && (
         <ListItem>
-          <ListItemText primary="No GPIOs set"/>
+          <ListItemText primary="No Boards set"/>
           <ListItemSecondaryAction>
-            <Button color="primary" component={AppLink} to="/gpios/new">
+            <Button color="primary" component={AppLink} to="/boards/new">
               Create new
             </Button>
           </ListItemSecondaryAction>
         </ListItem>
       )}
-      {gpios.map((gpio, i) => (
-        <ListItem key={gpio.id} divider={i < gpios.length - 1}>
+      {boards.map((board, i) => (
+        <ListItemLink key={board.id} to={`/boards/${board.id}`} divider={i < boards.length - 1}>
           <ListItemText
-            primary={`Pin ${gpio.pin}`}
-            secondary={gpio.environments.length ? gpio.environments.map(env => env.title).join(', ') : 'No associated environments'}
+            primary={`${board.id}`}
           />
           <ListItemSecondaryAction>
             <ConfirmButton
               renderButton={props => <IconButton {...props}/>}
-              onClick={() => onDelete(gpio.id)}
+              onClick={() => onDelete(board.id)}
             >
               <DeleteForever/>
             </ConfirmButton>
           </ListItemSecondaryAction>
-        </ListItem>
+        </ListItemLink>
       ))}
     </List>
   )
-};
+}

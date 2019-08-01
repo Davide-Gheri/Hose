@@ -1,4 +1,5 @@
 import lru from '@davidegheri/lru';
+import { sleep } from './sleep';
 
 const CACHE_ENABLED = true;
 
@@ -11,7 +12,6 @@ export const setCache = (url: string, method: string) => (res: any) => {
   if (method === 'GET') { // Cache only GET calls
     cache.set(url, res);
   } else { // Remove from cache for POST, PUT, PATCH, DELETE calls
-    console.log('removing')
     cache.delete(url);
   }
   return res;
@@ -24,4 +24,4 @@ export const getFromCache = (url: string, options: RequestInit = {method: 'GET'}
   } else {
     reject();
   }
-}));
+})).then(sleep(100));

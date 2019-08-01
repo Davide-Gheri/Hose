@@ -12,6 +12,8 @@ export const types = {
   SET_GPIOS_LOADING: 'SET_GPIOS_LOADING',
   GET_GPIOS_SUCCESS: 'GET_GPIOS_SUCCESS',
   GET_GPIOS_ERROR: 'GET_GPIOS_ERROR',
+  GET_GPIO_SUCCESS: 'GET_GPIO_SUCCESS',
+  GET_GPIO_ERROR: 'GET_GPIO_ERROR',
   DELETE_GPIO_SUCCESS: 'DELETE_GPIO_SUCCESS',
 };
 
@@ -32,6 +34,7 @@ export function reducer(state: GpiosState = initialState, action: PayloadAction)
       case types.GET_GPIOS_ERROR:
         draft.loading = false;
         draft.error = action.payload;
+        draft.gpios = {};
         break;
       case types.GET_GPIOS_SUCCESS:
         draft.loading = false;
@@ -39,6 +42,15 @@ export function reducer(state: GpiosState = initialState, action: PayloadAction)
         action.payload.forEach((gpio: GpioModel) => {
           draft.gpios[gpio.id] = gpio;
         });
+        break;
+      case types.GET_GPIO_SUCCESS:
+        draft.loading = false;
+        draft.error = null;
+        draft.gpios[action.payload.id] = action.payload;
+        break;
+      case types.GET_GPIO_ERROR:
+        draft.loading = false;
+        draft.error = action.payload;
         break;
       case types.DELETE_GPIO_SUCCESS:
         draft.loading = false;

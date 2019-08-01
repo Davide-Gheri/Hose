@@ -35,10 +35,14 @@ export function reducer(state: RecordsState = initialState, action: PayloadActio
       case types.GET_RECORDS_SUCCESS:
         draft.loading = false;
         draft.error = null;
-        draft.records[action.payload.id] = [
-          ...draft.records[action.payload.id] || [],
-          ...action.payload.records,
-        ];
+        if (action.payload.reset) {
+          draft.records[action.payload.id] = action.payload.records;
+        } else {
+          draft.records[action.payload.id] = [
+            ...draft.records[action.payload.id] || [],
+            ...action.payload.records,
+          ];
+        }
         break;
     }
   })

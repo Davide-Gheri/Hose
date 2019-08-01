@@ -29,6 +29,9 @@ export const getWaterings = (envId: string, options?: PaginationOptions): ThunkA
   dispatch(setLoading(true));
   return Api.getMany(options, envId)
     .then(waterings => dispatch(getWateringsSuccess(envId, waterings)))
-    .catch(err => dispatch(getWateringsError(err)))
+    .catch(err => {
+      dispatch(getWateringsError(err));
+      throw err;
+    })
     .finally(() => dispatch(setLoading(false)));
 };

@@ -6,9 +6,8 @@ import { createStyles, makeStyles, Slider } from '@material-ui/core';
 import { Loading } from '../Loading';
 import { InfiniteRecordTable } from './InfiniteTable';
 import { getRecords, makeGetByEnvSelector } from '../../store/records';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppState, PayloadAction } from '../../store';
-import { ThunkDispatch } from 'redux-thunk';
+import { useSelector } from 'react-redux';
+import { AppState, useThunkDispatch } from '../../store';
 import { getLoading } from '../../store/selectors';
 
 export interface RecordsWidgetsProps {
@@ -27,13 +26,13 @@ export const RecordsWidget: React.FC<RecordsWidgetsProps> = ({environment}) => {
 
   const records = useSelector((state: AppState) => getByEnv(state, environment.id));
   const loading = useSelector(getLoading('records'));
-  const dispatch = useDispatch<ThunkDispatch<{}, {}, PayloadAction<any>>>();
+  const dispatch = useThunkDispatch();
 
   const loadMore = useCallback(() => {
     return dispatch(getRecords(environment.id, {take, skip}))
     .then(() => {
       setSkip(take + skip);
-    });
+    }).catch(console.error);
   }, [take, skip, setSkip, environment.id, dispatch]);
 
   const onSliderChange = useCallback((e: ChangeEvent<{}>, value: any) => {

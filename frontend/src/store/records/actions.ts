@@ -14,9 +14,9 @@ const setLoading = (bool: boolean): PayloadAction<Types['SET_RECORDS_LOADING'], 
   payload: bool,
 });
 
-const getRecordsSuccess = (id: string, records: RecordModel[]): PayloadAction<Types['GET_RECORDS_SUCCESS']> => ({
+const getRecordsSuccess = (id: string, records: RecordModel[], reset?: boolean): PayloadAction<Types['GET_RECORDS_SUCCESS']> => ({
   type: types.GET_RECORDS_SUCCESS,
-  payload: {id, records},
+  payload: {id, records, reset},
 });
 
 const getRecordsError = (error: any): PayloadAction<Types['GET_RECORDS_ERROR'], any> => ({
@@ -28,6 +28,11 @@ export const getRecords = (envId: string, options?: PaginationOptions): ThunkAct
   dispatch(setLoading(true));
   return Api.getMany(options, envId)
     .then(records => dispatch(getRecordsSuccess(envId, records)))
-    .catch(err => dispatch(getRecordsError(err)))
+    .catch(err => {
+      dispatch(getRecordsError(err));
+      throw err;
+    })
     .finally(() => dispatch(setLoading(false)));
 };
+
+export const resetRecords = (id: string) => getRecordsSuccess(id, [], true);

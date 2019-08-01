@@ -1,6 +1,8 @@
-import { AnyAction, combineReducers, createStore, applyMiddleware, StoreEnhancer, compose } from 'redux';
+import { AnyAction, combineReducers, createStore, applyMiddleware, compose } from 'redux';
 import { createLogger } from 'redux-logger';
-import thunk from 'redux-thunk';
+import thunk, { ThunkDispatch } from 'redux-thunk';
+import { useDispatch } from 'react-redux';
+import { makeLogger } from '../lib/logger';
 import { environmentsReducer } from './environments';
 import { EnvironmentState } from './environments/reducer';
 import { dashboardReducer } from './dashboard';
@@ -13,6 +15,8 @@ import { gpiosReducer } from './gpios';
 import { GpiosState } from './gpios/reducer';
 import { wateringsReducer } from './waterings';
 import { WateringState } from './waterings/reducer';
+import { boardsReducer } from './boards';
+import { BoardsState } from './boards/reducer';
 
 export interface AppAction<T extends string = any> extends AnyAction {
   type: T;
@@ -34,6 +38,7 @@ const rootReducer = combineReducers({
   rules: rulesReducer,
   gpios: gpiosReducer,
   waterings: wateringsReducer,
+  boards: boardsReducer,
 });
 
 export interface AppState {
@@ -43,24 +48,22 @@ export interface AppState {
   rules: RulesState;
   gpios: GpiosState;
   waterings: WateringState;
+  boards: BoardsState;
   [key: string]: any;
 }
 
-const LOG_ENABLED = false;
+const logger = makeLogger('redux', true);
 
 export const configureStore = () => {
   const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-  let middleware: StoreEnhancer<any, any>;
-  if (LOG_ENABLED) {
-    const logger = createLogger();
-    middleware = applyMiddleware(thunk, logger);
-  } else {
-    middleware = applyMiddleware(thunk);
-  }
-
+  const loggerMiddleware = createLogger({
+    logger,
+  });
+  const middleware = applyMiddleware(thunk, loggerMiddleware);
   return createStore(
     rootReducer,
     composeEnhancers(middleware),
   );
 };
+
+export const useThunkDispatch = () => useDispatch<ThunkDispatch<{}, {}, PayloadAction>>();

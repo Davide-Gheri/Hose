@@ -1,7 +1,9 @@
-import { sleep } from './sleep';
 import { getFromCache, setCache } from './cache';
+import { makeLogger } from './logger';
 
 const debug = true; // TODO from env or config
+
+const logger = makeLogger('fetcher', true);
 
 const headers: Record<string, string> = {
   'content-type': 'application/json'
@@ -28,11 +30,11 @@ export const del = (url: string) => callFetch(url, {method: 'DELETE'});
 const callFetch = <T = any>(url: string, options?: RequestInit) => {
   return getFromCache(url, options)
     .then(res => {
-      console.log('Cache HIT');
+      logger.log('Cache HIT');
       return res;
     })
     .catch(() => {
-      console.log('Cache miss');
+      logger.log('Cache miss');
       return fetch(url, {
         ...options,
         headers: {
@@ -52,7 +54,7 @@ const optionsWithBody = (method: string, body?: any) => Object.assign({
 }, body && {body: JSON.stringify(body)});
 
 const logResponse = (res: Response) => {
-  if (debug) console.log(res);
+  if (debug) logger.log(res);
   return res;
 };
 

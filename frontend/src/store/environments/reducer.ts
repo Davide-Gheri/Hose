@@ -16,6 +16,7 @@ export const types = {
   GET_ENVS_ERROR: 'GET_ENVS_ERROR',
   GET_ENV_SUCCESS: 'GET_ENV_SUCCESS',
   GET_ENV_ERROR: 'GET_ENV_ERROR',
+  DELETE_ENV_SUCCESS: 'DELETE_ENV_SUCCESS',
 };
 
 export type Types = typeof types;

@@ -41,6 +41,11 @@ const links: LinkItem[] = [
     icon: <DeveloperBoard/>,
     href: '/gpios',
   },
+  {
+    title: 'Boards',
+    icon: <DeveloperBoard/>,
+    href: '/boards',
+  },
 ];
 
 

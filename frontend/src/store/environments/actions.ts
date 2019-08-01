@@ -34,11 +34,19 @@ const getEnvironmentError = (error: any): PayloadAction<Types['GET_ENV_ERROR'], 
   payload: error,
 });
 
+const deleteEnvironmentSuccess = (id: string): PayloadAction<Types['DELETE_ENV_SUCCESS'], string> => ({
+  type: types.DELETE_ENV_SUCCESS,
+  payload: id,
+});
+
 export const getEnvironments = (options?: PaginationOptions): ThunkAction<Promise<any>, {}, {}, PayloadAction> => dispatch => {
   dispatch(setLoading(true));
   return Api.getMany(options)
     .then(envs => dispatch(getEnvironmentsSuccess(envs)))
-    .catch(err => dispatch(getEnvironmentsError(err)))
+    .catch(err => {
+      dispatch(getEnvironmentsError(err));
+      throw err;
+    })
     .finally(() => dispatch(setLoading(false)));
 };
 
@@ -46,7 +54,10 @@ export const getEnvironment = (id: string): ThunkAction<Promise<any>, {}, {}, Pa
   dispatch(setLoading(true));
   return Api.get(id)
     .then(env => dispatch(getEnvironmentSuccess(env)))
-    .catch(err => dispatch(getEnvironmentError(err)))
+    .catch(err => {
+      dispatch(getEnvironmentError(err));
+      throw err;
+    })
     .finally(() => dispatch(setLoading(false)));
 };
 
@@ -66,4 +77,11 @@ export const updateEnvironment = (id: string, data: Partial<EnvironmentModel>): 
       dispatch(getEnvironmentError(err));
       throw err;
     });
+};
+
+export const deleteEnvironment = (id: string): ThunkAction<Promise<any>, {}, {}, PayloadAction> => dispatch => {
+  dispatch(setLoading(true));
+  return Api.delete(id)
+    .then(() => dispatch(deleteEnvironmentSuccess(id)))
+    .finally(() => setLoading(false));
 };

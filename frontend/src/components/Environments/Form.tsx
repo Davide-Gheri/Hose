@@ -1,23 +1,25 @@
 import React, { ChangeEvent, SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { FormValidations, useFormErrors, useFormValues } from '../../hooks/form';
+import { FormValidations, useFormErrors, useFormValues, useFormStyles, safeValue } from '../../hooks/form';
 import { alpha, array, makeMaxLength, numeric, required } from '../../validations';
 import { createStyles, makeStyles, Button, DialogActions, MenuItem, CircularProgress, Chip } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { asArray as rulesAsArray, getRules } from '../../store/rules';
 import { asArray as gpiosAsArray, getGpios } from '../../store/gpios';
+import { asArray as boardsAsArray } from '../../store/boards';
 import { getLoading } from '../../store/selectors';
 import { OverlayLoading } from '../Loading';
 import { AppSelect, AppTextField, ConfirmButton } from '../common';
 import { EnvironmentModel } from '../../store/models';
-import { createEnvironment, updateEnvironment } from '../../store/environments';
-import { ThunkDispatch } from 'redux-thunk';
-import { PayloadAction } from '../../store';
-import { Message, useNotifications } from '../../contexts/Notifications';
+import { createEnvironment, deleteEnvironment, updateEnvironment } from '../../store/environments';
+import { useThunkDispatch } from '../../store';
+import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
+import { getBoards } from '../../store/boards';
+import { boardCheckingMessage } from '../../lib/messages';
 
 interface FormData {
   title: string;
   description: string;
-  boardId: string;
+  board: string;
   rule: string;
   gpios: string[];
 }
@@ -28,16 +30,8 @@ export interface EnvironmentFormProps {
   environment?: EnvironmentModel;
 }
 
-const safeValue = (env: any, field: any, def: any = ''): any => env ? typeof env[field] === 'string' ? env[field] : env[field].id || def : def;
-
-const commonNotificationOpts: Partial<Message> = {
-  horizontal: 'left',
-  vertical: 'bottom',
-  autoHide: 2000,
-};
-
 export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCancel, environment}) => {
-  const classes = useStyles();
+  const classes = useFormStyles();
 
   const [submit, setSubmit] = useState(false);
 
@@ -48,15 +42,15 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
   } = useFormValues<FormData>({
     title: safeValue(environment, 'title'),
     description: safeValue(environment, 'description'),
-    boardId: safeValue(environment, 'boardId'),
+    board: (environment && environment.board) ? environment.board.id : '',
     rule: safeValue(environment, 'rule'),
     gpios: environment ? environment.gpios.map(gpio => gpio.pin) : [],
   });
 
-  const formValidations = useMemo<FormValidations<Omit<FormData, ''>>>(() => ({
+  const formValidations = useMemo<FormValidations<FormData>>(() => ({
     title: [required, alpha, makeMaxLength(255)],
     description: [alpha, makeMaxLength(255)],
-    boardId: [required, alpha, makeMaxLength(255)],
+    board: [alpha, makeMaxLength(255)],
     rule: [alpha],
     gpios: [array(numeric)],
   }), []);
@@ -66,13 +60,15 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
     validateForm,
     validateInputValue,
     clearFormErrors,
-  } = useFormErrors<Omit<FormData, ''>>(formValidations);
+  } = useFormErrors<FormData>(formValidations);
 
   const rules = useSelector(rulesAsArray);
   const gpios = useSelector(gpiosAsArray);
+  const boards = useSelector(boardsAsArray);
   const rulesLoading = useSelector(getLoading('rules'));
   const gpiosLoading = useSelector(getLoading('gpios'));
-  const dispatch = useDispatch<ThunkDispatch<{}, {}, PayloadAction<any>>>();
+  const boardsLoading = useSelector(getLoading('boards'));
+  const dispatch = useThunkDispatch();
 
   const {openNotification} = useNotifications();
 
@@ -112,7 +108,7 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
         if (typeof onSubmit === 'function') {
           onSubmit(e);
         }
-      });
+      }).catch(console.error); //TODO show errors
     }
   }, [validateForm, formValues, onSubmit, environment]);
 
@@ -124,14 +120,27 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
     }
   }, [onFormReset, onCancel]);
 
+  const onDelete = useCallback(() => {
+    if (environment) {
+      dispatch(deleteEnvironment(environment.id))
+        .then(() => {
+          openNotification({
+            ...commonNotificationOpts,
+            text: 'Environment deleted',
+          })
+        })
+    }
+  }, [environment]);
+
   useEffect(() => {
-    dispatch(getRules());
-    dispatch(getGpios());
+    dispatch(getRules()).catch(console.error);
+    dispatch(getGpios()).catch(console.error);
+    dispatch(getBoards()).catch(console.error);
   }, [dispatch]);
 
   return (
     <form onSubmit={onSubmit} noValidate>
-      {(rulesLoading || gpiosLoading) && <OverlayLoading/>}
+      {(rulesLoading || gpiosLoading || boardsLoading) && <OverlayLoading/>}
       <fieldset disabled={submit}>
         <AppTextField
           className={classes.textField}
@@ -155,16 +164,23 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
           multiline
           rowsMax="4"
         />
-        <AppTextField
+        <AppSelect
           className={classes.textField}
           variant="outlined"
-          value={formValues.boardId}
-          name="boardId"
-          label="Board id"
-          errors={formErrors.boardId}
+          value={formValues.board}
           onChange={onInputChange}
+          label="Board"
+          id="boardSelect"
           fullWidth
-        />
+          inputProps={{
+            name: 'board',
+          }}
+        >
+          <MenuItem value="">Select a board</MenuItem>
+          {boards.map(board => (
+            <MenuItem key={board.id} value={board.id}>{board.id} ({boardCheckingMessage(board)})</MenuItem>
+          ))}
+        </AppSelect>
         <AppSelect
           className={classes.textField}
           variant="outlined"
@@ -211,7 +227,12 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
       </fieldset>
       <DialogActions>
         {environment && (
-          <ConfirmButton color="secondary" className={classes.deleteBtn} disabled={submit}>
+          <ConfirmButton
+            color="secondary"
+            className={classes.deleteBtn}
+            disabled={submit}
+            onClick={onDelete}
+          >
             Delete
           </ConfirmButton>
         )}
@@ -228,32 +249,3 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
     </form>
   );
 };
-
-const useStyles = makeStyles(theme => createStyles({
-  form: {
-    position: 'relative',
-  },
-  textField: {
-    marginBottom: theme.spacing(2),
-  },
-  deleteBtn: {
-    marginRight: 'auto',
-  },
-  confirmButtonWrapper: {
-    position: 'relative',
-  },
-  confirmButtonLoader: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12,
-  },
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  chip: {
-    margin: 2,
-  },
-}));

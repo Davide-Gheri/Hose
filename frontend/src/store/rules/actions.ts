@@ -25,6 +25,9 @@ export const getRules = (options?: PaginationOptions): ThunkAction<Promise<any>,
   dispatch(setLoading(true));
   return Api.getMany(options)
     .then(rules => dispatch(getRulesSuccess(rules)))
-    .catch(err => dispatch(getRulesError(err)))
+    .catch(err => {
+      dispatch(getRulesError(err));
+      throw err;
+    })
     .finally(() => dispatch(setLoading(false)));
 };

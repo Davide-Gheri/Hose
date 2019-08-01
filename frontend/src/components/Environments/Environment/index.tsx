@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Route, RouteComponentProps } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getEnvironment, makeByIdSelector } from '../../../store/environments';
-import { AppState } from '../../../store';
+import { AppState, useThunkDispatch } from '../../../store';
 import { getLoading } from '../../../store/selectors';
 import { Loading } from '../../Loading';
 import { createStyles, makeStyles, Typography, Button, Chip } from '@material-ui/core';
@@ -22,13 +22,13 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
 
   const environment = useSelector((state: AppState) => getById(state, id));
   const loading = useSelector(getLoading('environments'));
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
 
   const [take, setTake] = useState(20);
 
   useEffect(() => {
     if (!environment) {
-      dispatch(getEnvironment(id));
+      dispatch(getEnvironment(id)).catch(console.error);
     }
   }, [id, environment]);
 

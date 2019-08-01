@@ -12,6 +12,7 @@ const AsyncEnvironments = asyncLoader(() => import('./Environments'));
 const AsyncEnvironment = asyncLoader(() => import('./Environments/Environment'));
 
 const AsyncGpios = asyncLoader(() => import('./Gpios'));
+const AsyncBoards = asyncLoader(() => import('./Boards'));
 
 export const Main: React.FC = () => {
   const classes = useStyles();
@@ -30,6 +31,7 @@ export const Main: React.FC = () => {
           <Route path={`/environments/:id(${uuidregexp})`} component={AsyncEnvironment}/>
           <Route path="/environments" component={AsyncEnvironments}/>
           <Route path="/gpios" component={AsyncGpios}/>
+          <Route path="/boards" component={AsyncBoards}/>
           <Route path="/" component={AsyncDashboard}/>
         </Switch>
       </main>

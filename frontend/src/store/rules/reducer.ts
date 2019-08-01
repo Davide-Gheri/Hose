@@ -1,13 +1,11 @@
+import produce from 'immer';
 import { RuleModel } from '../models';
 import { PayloadAction } from '../index';
-import produce from 'immer';
 
 export interface RulesState {
-  rules: {
-    [key: string]: RuleModel;
-  };
   loading: boolean;
   error: any;
+  rules: Record<string, RuleModel>;
 }
 
 export const types = {

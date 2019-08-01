@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { NotificationsContext } from './NotificationsContext';
+import { Message, NotificationsContext } from './NotificationsContext';
 
 export * from './NotificationsProvider';
 export * from './NotificationsContext';
@@ -12,3 +12,9 @@ export const withNotifications = (Comp: React.ComponentType) => (
     return <Comp {...props} {...ctx}/>
   }
 );
+
+export const commonNotificationOpts: Partial<Message> = {
+  horizontal: 'left',
+  vertical: 'bottom',
+  autoHide: 2000,
+};

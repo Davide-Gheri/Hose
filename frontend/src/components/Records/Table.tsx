@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { getRecords, makeGetByEnvSelector } from '../../store/records';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppState } from '../../store';
+import { useSelector } from 'react-redux';
+import { AppState, useThunkDispatch } from '../../store';
 import { getLoading } from '../../store/selectors';
 import { Loading } from '../Loading';
 import { createStyles, makeStyles, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
@@ -20,10 +20,10 @@ export const RecordsTable: React.FC<RecordsTableProps> = ({environment, take}) =
 
   const records = useSelector((state: AppState) => getByEnv(state, environment.id));
   const loading = useSelector(getLoading('records'));
-  const dispatch = useDispatch();
+  const dispatch = useThunkDispatch();
 
   useEffect(() => {
-    dispatch(getRecords(environment.id, {take}));
+    dispatch(getRecords(environment.id, {take})).catch(console.error);
   }, [environment.id]);
 
   const isError = useCallback((record: RecordModel) => {
