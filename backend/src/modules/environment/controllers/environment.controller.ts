@@ -6,6 +6,7 @@ import { FindManyOptions, Repository } from 'typeorm';
 import { Rule } from '../../rule/entities/rule.entity';
 import { GpioService } from '../../gpio/services/gpio.service';
 import { EnvironmentService } from '../services/environment.service';
+import { Board } from '../../board/entities/board.entity';
 
 @Controller('environments')
 export class EnvironmentController {
@@ -14,6 +15,8 @@ export class EnvironmentController {
     private readonly repository: Repository<Environment>,
     @InjectRepository(Rule)
     private readonly ruleRepository: Repository<Rule>,
+    @InjectRepository(Board)
+    private readonly boardRepository: Repository<Board>,
     private readonly gpioService: GpioService,
     private readonly service: EnvironmentService,
   ) {}
@@ -56,6 +59,10 @@ export class EnvironmentController {
       createDto.rule = await this.getRule((createDto as any).rule as string);
     }
 
+    if (createDto.board) {
+      createDto.board = await this.getBoard((createDto as any).board as string);
+    }
+
     if (createDto.gpios && createDto.gpios.length) {
       for (const idx of createDto.gpios.keys()) {
         (createDto as any).gpios[idx] = await this.gpioService.ensureGpio((createDto as any).gpios[idx] as number);
@@ -74,6 +81,10 @@ export class EnvironmentController {
 
     if (updateDto.rule) {
       updateDto.rule = await this.getRule(updateDto.rule as string);
+    }
+
+    if (updateDto.board) {
+      updateDto.board = await this.getBoard(updateDto.board as string);
     }
 
     if (updateDto.gpios && updateDto.gpios.length) {
@@ -104,12 +115,16 @@ export class EnvironmentController {
     const env = await this.repository.findOneOrFail(id);
     await this.repository.delete(id);
 
-    await this.service.deleteRecordsByBoard(env.boardId);
+    await this.service.deleteRecordsByBoard(env.board);
 
-    return null;
+    return {};
   }
 
   private getRule(ruleId: string) {
     return this.ruleRepository.findOneOrFail(ruleId);
+  }
+
+  private getBoard(boardId: string) {
+    return this.boardRepository.findOneOrFail(boardId);
   }
 }

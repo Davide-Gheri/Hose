@@ -3,6 +3,7 @@ import { Record } from '../entities/record.entity';
 import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
 import { InfluxService } from '../../influx/services/influx.service';
 import Config from 'config';
+import { isNil } from '@nestjs/common/utils/shared.utils';
 
 @Controller('records')
 export class RecordController {
@@ -14,11 +15,11 @@ export class RecordController {
   async index(
     @Query() options?: PaginationQueryDto,
   ) {
-    const { skip = null, take = null } = options || {};
+    const { skip = 0, take = 10 } = options || {};
     const query = `
       select * from ${Config.get('influx.schema.table')}
       order by time desc
-      ${(skip && take) ? `offset ${skip} limit ${take}` : ''}
+      ${(!isNil(skip) && take) ? `limit ${take} offset ${skip}` : ''}
       `;
     return this.influx.find(query);
   }

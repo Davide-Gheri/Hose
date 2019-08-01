@@ -10,6 +10,7 @@ import { InfluxService } from '../../influx/services/influx.service';
 import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
 import { Record } from '../entities/record.entity';
 import { Watering } from '../entities/watering.entity';
+import { Board } from '../../board/entities/board.entity';
 
 @Injectable()
 export class EnvironmentService {
@@ -24,13 +25,16 @@ export class EnvironmentService {
 
   async getRecords(envId: string, options: PaginationQueryDto) {
     const env = await this.repository.findOneOrFail(envId);
-    return this.getRecordsByBoard(env.boardId, options);
+    return this.getRecordsByBoard(env.board, options);
   }
 
-  getRecordsByBoard(boardId: string, {skip = 0, take = 10}: PaginationQueryDto) {
+  getRecordsByBoard(board: Board, {skip = 0, take = 10}: PaginationQueryDto) {
+    if (!board) {
+      return [];
+    }
     const query = `
       select * from ${Config.get('influx.schema.table')}
-      where boardId = ${this.influx.escape.stringLit(boardId)}
+      where boardId = ${this.influx.escape.stringLit(board.id)}
       order by time desc
       ${(!isNil(skip) && take) ? `limit ${take} offset ${skip}` : ''}
       `;
@@ -39,7 +43,7 @@ export class EnvironmentService {
 
   async checkBoardId(envId, boardId) {
     const env = await this.repository.findOneOrFail(envId);
-    if (env.boardId !== boardId) {
+    if (env.board.id !== boardId) {
       throw new BadRequestException('BoardId does not match');
     }
   }
@@ -84,8 +88,8 @@ export class EnvironmentService {
     }
   }
 
-  async deleteRecordsByBoard(boardId: string) {
-    const query = `boardId = ${this.influx.escape.stringLit(boardId)}`;
+  async deleteRecordsByBoard(board: Board) {
+    const query = `boardId = ${this.influx.escape.stringLit(board.id)}`;
     return this.influx.delete(query);
   }
 }

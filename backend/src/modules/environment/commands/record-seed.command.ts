@@ -73,7 +73,7 @@ export class RecordSeedCommand extends BaseCommand {
           record: this.randomRecord.reading,
         },
         tags: {
-          boardId: env.boardId,
+          boardId: env.board.id,
         },
       }));
       for (const record of records) {
@@ -85,7 +85,8 @@ export class RecordSeedCommand extends BaseCommand {
   }
 
   private getEnvironments(envIds: string[]) {
-    const builder = this.repository.createQueryBuilder();
+    const builder = this.repository.createQueryBuilder('environment')
+      .leftJoinAndSelect('environment.board', 'board');
     builder.where('boardId is not null');
     if (envIds.length) {
       this.logger.debug('Filtering environments by ids');

@@ -16,11 +16,12 @@ import { ScheduleService } from './services/schedule.service';
 import { ScheduleModule } from 'nest-schedule';
 import { Watering } from './entities/watering.entity';
 import { EnvironmentWateringController } from './controllers/environment-watering.controller';
+import { Board } from '../board/entities/board.entity';
 
 @Module({
   imports: [
     ScheduleModule.register(),
-    TypeOrmModule.forFeature([Environment, Rule, Gpio, Watering]),
+    TypeOrmModule.forFeature([Environment, Rule, Gpio, Watering, Board]),
     CommandModule,
     GpioModule,
     InfluxModule,

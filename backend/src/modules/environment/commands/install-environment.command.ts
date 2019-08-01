@@ -7,6 +7,7 @@ import { Rule } from '../../rule/entities/rule.entity';
 import { FreshOption } from '../../../commands/FreshOption';
 import { BaseCommand } from '../../../commands/base.command';
 import { Gpio } from '../../gpio/entities/gpio.entity';
+import { Board } from '../../board/entities/board.entity';
 
 @Injectable()
 export class InstallEnvironmentCommand extends BaseCommand {
@@ -15,7 +16,6 @@ export class InstallEnvironmentCommand extends BaseCommand {
   private defaultEnvironment: Partial<Environment> = {
     title: 'My environment',
     description: 'This is an example environment, you can edit or delete it',
-    boardId: 'exampleId123',
     gpios: [],
   };
 
@@ -24,6 +24,8 @@ export class InstallEnvironmentCommand extends BaseCommand {
     protected readonly repository: Repository<Environment>,
     @InjectRepository(Rule)
     private readonly ruleRepository: Repository<Rule>,
+    @InjectRepository(Board)
+    private readonly boardRepository: Repository<Board>,
     @InjectRepository(Gpio)
     private readonly gpioRepository: Repository<Gpio>,
     @InjectConnection()
@@ -51,6 +53,13 @@ export class InstallEnvironmentCommand extends BaseCommand {
       this.defaultEnvironment.rule = rule;
     }
 
+    const board = await this.getBoard();
+
+    if (board) {
+      this.logger.debug('Found a board, attaching it');
+      this.defaultEnvironment.board = board;
+    }
+
     const gpio = await this.getGpio();
 
     if (gpio) {
@@ -65,6 +74,11 @@ export class InstallEnvironmentCommand extends BaseCommand {
 
   private getRule() {
     return this.ruleRepository.createQueryBuilder()
+      .getOne();
+  }
+
+  private getBoard() {
+    return this.boardRepository.createQueryBuilder()
       .getOne();
   }
 

@@ -1,8 +1,20 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  Column,
+  CreateDateColumn,
+  Entity, JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { Rule } from '../../rule/entities/rule.entity';
 import { Gpio } from '../../gpio/entities/gpio.entity';
 import { Watering } from './watering.entity';
+import { Board } from '../../board/entities/board.entity';
 
 @Entity()
 export class Environment {
@@ -21,16 +33,15 @@ export class Environment {
   @Column({nullable: true})
   description?: string;
 
-  @IsString()
-  @MaxLength(255)
-  @Column({nullable: true})
-  boardId?: string;
-
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(type => Board, {eager: true, nullable: true})
+  @JoinColumn()
+  board: Board;
 
   @ManyToOne(type => Rule, rule => rule.environments, {eager: true})
   rule: Rule;

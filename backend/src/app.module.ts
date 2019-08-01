@@ -8,6 +8,7 @@ import { CommandModule } from 'nestjs-command';
 import { InstallCommand } from './commands/install.command';
 import { GpioModule } from './modules/gpio/gpio.module';
 import { InfluxModule } from './modules/influx/influx.module';
+import { BoardModule } from './modules/board/board.module';
 import Config from 'config';
 
 @Module({
@@ -26,6 +27,7 @@ import Config from 'config';
     RuleModule,
     GpioModule,
     InfluxModule,
+    BoardModule,
   ],
   controllers: [AppController],
   providers: [
