@@ -11,13 +11,13 @@ export const NewBoardDialog: React.FC<RouteComponentProps> = ({history}) => {
   }, []);
 
   const onClose = useCallback(() => {
-    history.push('/boards');
     setOpen(false);
+    history.push('/boards');
   }, [history]);
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add a new Environment</DialogTitle>
+      <DialogTitle>Add a new Board</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Register a new sensor board

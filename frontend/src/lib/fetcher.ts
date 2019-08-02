@@ -1,3 +1,4 @@
+import { sleep } from './sleep';
 import { getFromCache, setCache } from './cache';
 import { makeLogger } from './logger';
 
@@ -46,7 +47,7 @@ const callFetch = <T = any>(url: string, options?: RequestInit) => {
       .then(parseResponse)
       .then(setCache(url, options!.method || 'GET'))
     })
-    // .then(sleep(2000)) // TODO remove this
+    .then(sleep(2000)) // TODO remove this
 };
 
 const optionsWithBody = (method: string, body?: any) => Object.assign({
@@ -59,5 +60,11 @@ const logResponse = (res: Response) => {
 };
 
 const parseResponse = (res: Response) => {
-  return res.json();
+  return res.json()
+    .then(json => {
+      if (!res.ok) {
+        throw new Error(json);
+      }
+      return json;
+    });
 };

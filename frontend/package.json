@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "@davidegheri/lru": "^1.0.1",
+    "@loadable/component": "^5.10.2",
     "@material-ui/core": "^4.2.1",
     "@material-ui/icons": "^4.2.1",
     "@types/date-fns": "^2.6.0",
     "@types/jest": "24.0.15",
+    "@types/loadable__component": "^5.10.0",
     "@types/node": "12.6.8",
     "@types/qs": "^6.5.3",
     "@types/react": "16.8.23",

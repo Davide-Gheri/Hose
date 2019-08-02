@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { format, isDate } from 'date-fns';
 import { asArray, deleteBoard, getBoards } from '../../store/boards';
 import { getLoadingError } from '../../store/selectors';
 import { useThunkDispatch } from '../../store';
@@ -10,6 +11,7 @@ import { createStyles, makeStyles, Table, TableBody, TableCell, TableHead, Table
 import { DeleteForever } from '@material-ui/icons';
 import { boardCheckingMessage } from '../../lib/messages';
 import { AppLink, ConfirmButton } from '../common';
+import { formatDate } from '../../lib/dates';
 
 export interface BoardTableProps {
   take?: number;
@@ -39,7 +41,7 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
   }, []);
 
   if (loading) {
-    return <Loading/>;
+    return <div className={classes.root}><Loading/></div>;
   }
 
   if (error) {
@@ -53,6 +55,7 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
           <TableRow>
             <TableCell>Id</TableCell>
             <TableCell>Healthcheck</TableCell>
+            <TableCell>Last check</TableCell>
             <TableCell>Delete</TableCell>
           </TableRow>
         </TableHead>
@@ -64,6 +67,9 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
               </TableCell>
               <TableCell>
                 {boardCheckingMessage(board)}
+              </TableCell>
+              <TableCell>
+                {formatDate(board.lastCheckedAt) || 'Never'}
               </TableCell>
               <TableCell>
                 <ConfirmButton
@@ -84,6 +90,9 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
 const useStyles = makeStyles(theme => createStyles({
   root: {
     width: '100%',
+    minHeight: 300,
+    display: 'flex',
+    flexDirection: 'column',
   },
   table: {},
   errorCell: {

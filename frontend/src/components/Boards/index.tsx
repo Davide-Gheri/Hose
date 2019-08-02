@@ -1,15 +1,22 @@
 import React from 'react';
-import { Route, RouteComponentProps } from 'react-router';
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router';
 import { Button, createStyles, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import { AppLink } from '../common';
 import { Add } from '@material-ui/icons';
 import { BoardTable } from './Table';
 import { asyncLoader } from '../asyncLoader';
+import { useSelector } from 'react-redux';
+import { boardsSelector } from '../../store/boards';
+import { isEmpty } from '../../lib/util';
+import Error404 from '../ErrorPages/Error404';
 
 const AsyncNewBoard = asyncLoader(() => import('./NewBoard/Dialog'));
+const AsyncEditBoard = asyncLoader(() => import('./EditBoard/Dialog'));
 
 export const BoardsPage: React.FC<RouteComponentProps> = () => {
   const classes = useStyles();
+  const boards = useSelector(boardsSelector);
+
   return (
     <>
       <Grid container spacing={2}>
@@ -26,7 +33,21 @@ export const BoardsPage: React.FC<RouteComponentProps> = () => {
           </Paper>
         </Grid>
       </Grid>
-      <Route path="/boards/new" component={AsyncNewBoard}/>
+      <Switch>
+        <Route path="/boards/new" component={AsyncNewBoard}/>
+        {!isEmpty(boards) && (
+          <Route
+            path="/boards/:id"
+            render={props => {
+              const board = boards[props.match.params.id];
+              if (!board) {
+                return <Redirect to="/404"/>;
+              }
+              return <AsyncEditBoard {...props} board={board}/>;
+            }}
+          />
+        )}
+      </Switch>
     </>
   );
 };

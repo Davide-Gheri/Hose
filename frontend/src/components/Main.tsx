@@ -5,7 +5,9 @@ import { createStyles, makeStyles } from '@material-ui/core';
 import { Route, Switch } from 'react-router';
 import { asyncLoader } from './asyncLoader';
 import { uuidregexp } from '../lib/pathRegexp';
+import { ErrorBoundary } from './ErrorBoundary';
 
+const Async404 = asyncLoader(() => import('./ErrorPages/Error404'));
 const AsyncDashboard = asyncLoader(() => import('./Dashboard'));
 
 const AsyncEnvironments = asyncLoader(() => import('./Environments'));
@@ -27,13 +29,16 @@ export const Main: React.FC = () => {
       <SideBar open={open} closeDrawer={closeDrawer}/>
       <main className={classes.content}>
         <div className={classes.toolbar}/>
-        <Switch>
-          <Route path={`/environments/:id(${uuidregexp})`} component={AsyncEnvironment}/>
-          <Route path="/environments" component={AsyncEnvironments}/>
-          <Route path="/gpios" component={AsyncGpios}/>
-          <Route path="/boards" component={AsyncBoards}/>
-          <Route path="/" component={AsyncDashboard}/>
-        </Switch>
+        <ErrorBoundary>
+          <Switch>
+            <Route path={`/environments/:id(${uuidregexp})`} component={AsyncEnvironment}/>
+            <Route path="/environments" component={AsyncEnvironments}/>
+            <Route path="/gpios" component={AsyncGpios}/>
+            <Route path="/boards" component={AsyncBoards}/>
+            <Route path="/" exact component={AsyncDashboard}/>
+            <Route path={'*'} component={Async404}/>
+          </Switch>
+        </ErrorBoundary>
       </main>
     </>
   );

@@ -2,7 +2,7 @@ import React, { ChangeEvent, SyntheticEvent, useCallback, useMemo, useState } fr
 import { BoardModel } from '../../store/models';
 import { Button, CircularProgress, DialogActions } from '@material-ui/core';
 import { useFormValues, useFormErrors, useFormStyles, safeValue, FormValidations } from '../../hooks/form';
-import { makeMaxLength, required } from '../../validations';
+import { isUrl, makeMaxLength, required } from '../../validations';
 import { useThunkDispatch } from '../../store';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
 import { AppTextField, ConfirmButton } from '../common';
@@ -35,7 +35,7 @@ export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board})
 
   const formValidations = useMemo<FormValidations<FormData>>(() => ({
     id: [required, makeMaxLength(255)],
-    checkUrl: [makeMaxLength(255)],
+    checkUrl: [makeMaxLength(255), isUrl],
   }), []);
 
   const {

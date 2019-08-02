@@ -9,9 +9,9 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles
+  makeStyles, Tooltip
 } from '@material-ui/core';
-import { ChevronLeft, Dashboard, Place, DeveloperBoard } from '@material-ui/icons';
+import { ChevronLeft, Dashboard, Place, DeveloperBoard, SettingsInputComponent } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 
 export interface SideBarProps {
@@ -38,7 +38,7 @@ const links: LinkItem[] = [
   },
   {
     title: 'Gpios',
-    icon: <DeveloperBoard/>,
+    icon: <SettingsInputComponent/>,
     href: '/gpios',
   },
   {
@@ -76,7 +76,13 @@ export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer}) => {
       <List>
         {links.map(link => (
           <ListItem key={link.title} button component={Link} to={link.href}>
-            <ListItemIcon>{link.icon}</ListItemIcon>
+            {open ? (
+              <ListItemIcon>{link.icon}</ListItemIcon>
+            ) : (
+              <Tooltip title={link.title} placement="right">
+                <ListItemIcon>{link.icon}</ListItemIcon>
+              </Tooltip>
+            )}
             <ListItemText primary={link.title}/>
           </ListItem>
         ))}
