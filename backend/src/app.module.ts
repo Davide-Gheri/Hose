@@ -10,9 +10,11 @@ import { GpioModule } from './modules/gpio/gpio.module';
 import { InfluxModule } from './modules/influx/influx.module';
 import { BoardModule } from './modules/board/board.module';
 import Config from 'config';
+import { ScheduleModule } from 'nest-schedule';
 
 @Module({
   imports: [
+    ScheduleModule.register(),
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: Config.get('database.database'),

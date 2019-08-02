@@ -20,7 +20,7 @@ import { Board } from '../board/entities/board.entity';
 
 @Module({
   imports: [
-    ScheduleModule.register(),
+    ScheduleModule,
     TypeOrmModule.forFeature([Environment, Rule, Gpio, Watering, Board]),
     CommandModule,
     GpioModule,

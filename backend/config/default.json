@@ -21,5 +21,8 @@
   },
   "watering": {
     "cron": "0 20 * * *"
+  },
+  "board": {
+    "healthCheckCron": "0 20 * * *"
   }
 }

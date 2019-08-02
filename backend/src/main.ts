@@ -4,6 +4,7 @@ import Config from 'config';
 import morgan from 'morgan';
 import { Logger } from './Logger';
 import { ValidationPipe } from '@nestjs/common';
+import { NotFoundExceptionFilter } from './filters';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -12,6 +13,7 @@ async function bootstrap() {
   });
 
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new NotFoundExceptionFilter());
 
   app.use(morgan(Config.get('settings.loggerFormat')));
 

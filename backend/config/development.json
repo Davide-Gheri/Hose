@@ -9,5 +9,8 @@
   },
   "watering": {
     "cron": "* * * * *"
+  },
+  "board": {
+    "healthCheckCron": "* * * * *"
   }
 }
