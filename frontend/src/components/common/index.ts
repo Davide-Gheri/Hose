@@ -5,3 +5,5 @@ export * from './AppSelect';
 export * from './AppTextField';
 export * from './ConfirmButton';
 export * from './VirtualTable';
+export * from './PageHeader';
+export * from './PageContent';

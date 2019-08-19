@@ -11,12 +11,13 @@ import {
   ListItemText,
   makeStyles, Tooltip
 } from '@material-ui/core';
-import { ChevronLeft, Dashboard, Place, DeveloperBoard, SettingsInputComponent } from '@material-ui/icons';
+import { ChevronLeft, Dashboard, Place, DeveloperBoard, SettingsInputComponent, Menu } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 
 export interface SideBarProps {
   open: boolean;
   closeDrawer: () => void;
+  openDrawer: () => void;
 }
 
 interface LinkItem {
@@ -49,7 +50,7 @@ const links: LinkItem[] = [
 ];
 
 
-export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer}) => {
+export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer, openDrawer}) => {
   const classes = useStyles();
 
   return (
@@ -67,22 +68,31 @@ export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer}) => {
       }}
       open={open}
     >
-      <div className={classes.toolbar}>
-        <IconButton onClick={closeDrawer}>
-          <ChevronLeft/>
+      <div className={clsx(classes.toolbar, {
+        [classes.toolbarClose]: !open,
+      })}>
+        <IconButton onClick={open ? closeDrawer : openDrawer} color="inherit">
+          {open ? <ChevronLeft /> : <Menu />}
         </IconButton>
       </div>
       <Divider/>
       <List>
         {links.map(link => (
-          <ListItem key={link.title} button component={Link} to={link.href}>
-            {open ? (
-              <ListItemIcon>{link.icon}</ListItemIcon>
-            ) : (
-              <Tooltip title={link.title} placement="right">
-                <ListItemIcon>{link.icon}</ListItemIcon>
-              </Tooltip>
-            )}
+          <ListItem
+            key={link.title}
+            button
+            component={Link}
+            to={link.href}
+            className={classes.item}
+            classes={{gutters: clsx(classes.gutters)}}
+          >
+            <ListItemIcon>
+              {!open ? (
+                <Tooltip title={link.title} placement="right">
+                  {link.icon}
+                </Tooltip>
+              ) : link.icon}
+            </ListItemIcon>
             <ListItemText primary={link.title}/>
           </ListItem>
         ))}
@@ -94,6 +104,7 @@ export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer}) => {
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => createStyles({
+  gutters: theme.mixins.gutters(),
   hide: {
     display: 'none',
   },
@@ -125,6 +136,15 @@ const useStyles = makeStyles(theme => createStyles({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: '0 8px',
+    ...theme.mixins.drawerToolbar,
     ...theme.mixins.toolbar,
+  },
+  toolbarClose: {
+    justifyContent: 'center',
+  },
+  item: {
+    paddingTop: 1,
+    paddingBottom: 1,
+    ...theme.mixins.drawerItem,
   },
 }));

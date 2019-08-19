@@ -7,7 +7,7 @@ import { getLoading } from '../../../store/selectors';
 import { Loading } from '../../Loading';
 import { createStyles, makeStyles, Typography, Button, Chip } from '@material-ui/core';
 import { WidgetArea } from '../../Dashboard/WidgetArea';
-import { AppLink, PageTitle } from '../../common';
+import { AppLink, PageHeader, PageContent } from '../../common';
 import { uuidregexp } from '../../../lib/pathRegexp';
 import { asyncLoader } from '../../asyncLoader';
 import { RecordsWidget } from '../../Records/RecordsWidgets';
@@ -42,38 +42,39 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
 
   return (
     <>
-      <PageTitle title={(
+      <PageHeader title={(
         <span>Environment <b>{environment.title}</b></span>
       )}>
         <Button
-          variant="outlined" color="primary"
+          variant="outlined" color="inherit"
           component={AppLink} to={`/environments/${environment.id}/edit`}
         >Edit</Button>
-      </PageTitle>
-      <div className={classes.description}>
-        {environment.gpios.length > 0 ? (
-          <div className={classes.chips}>
-            <Typography variant="h6">GPIO pins:</Typography>
-            {environment.gpios.map(gpio => (
-              <Chip key={gpio.id} label={gpio.pin} className={classes.chip}/>
-            ))}
-          </div>
-        ) : 'This Environment does not have any associated GPIOs'}
-      </div>
-      {environment.description && (
+      </PageHeader>
+      <PageContent>
         <div className={classes.description}>
-          <Typography color="textSecondary">{environment.description}</Typography>
+          {environment.gpios.length > 0 ? (
+            <div className={classes.chips}>
+              <Typography variant="h6">GPIO pins:</Typography>
+              {environment.gpios.map(gpio => (
+                <Chip key={gpio.id} label={gpio.pin} className={classes.chip} />
+              ))}
+            </div>
+          ) : 'This Environment does not have any associated GPIOs'}
         </div>
-      )}
-
+        {environment.description && (
+          <div className={classes.description}>
+            <Typography color="textSecondary">{environment.description}</Typography>
+          </div>
+        )}
+        <WidgetArea>
+          <RecordsWidget environment={environment} />
+          <WateringsWidgets environment={environment} />
+        </WidgetArea>
+      </PageContent>
       <Route
         path={`/environments/:id(${uuidregexp})/edit`}
         render={(props) => <AsyncEditEnvironment environment={environment} {...props}/>}
       />
-      <WidgetArea>
-        <RecordsWidget environment={environment}/>
-        <WateringsWidgets environment={environment}/>
-      </WidgetArea>
     </>
   );
 };

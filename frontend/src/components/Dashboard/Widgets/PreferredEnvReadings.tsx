@@ -4,7 +4,7 @@ import { getPreferredEnv } from '../../../store/dashboard';
 import { Widget } from '../Widget';
 import { RecordsTable } from '../../Records/Table';
 import { Loading } from '../../Loading';
-import { CardActions } from '@material-ui/core';
+import { CardActions, Link } from '@material-ui/core';
 import { AppLink } from '../../common';
 import { resetRecords } from '../../../store/records';
 
@@ -27,7 +27,7 @@ export const PreferredEnvReadings: React.FC = () => {
     >
       {environment ? <RecordsTable environment={environment} take={5}/> : <Loading/>}
       <CardActions>
-        {environment && <AppLink to={`/environments/${environment.id}/records`}>See all</AppLink>}
+        {environment && <Link component={AppLink} to={`/environments/${environment.id}/records`}>See all</Link>}
       </CardActions>
     </Widget>
   );

@@ -63,8 +63,23 @@ const parseResponse = (res: Response) => {
   return res.json()
     .then(json => {
       if (!res.ok) {
-        throw new Error(json);
+        console.log(json);
+        throw new FetchError(json);
       }
       return json;
     });
 };
+
+export class FetchError extends Error {
+  public description: any;
+
+  constructor(errorObj: any) {
+    super(errorObj.message || 'An error occurred');
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, FetchError);
+    }
+    this.name = 'FetchError';
+    this.description = errorObj;
+  }
+}

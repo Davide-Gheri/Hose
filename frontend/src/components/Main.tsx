@@ -25,8 +25,8 @@ export const Main: React.FC = () => {
 
   return (
     <>
-      <TopBar open={open} openDrawer={openDrawer}/>
-      <SideBar open={open} closeDrawer={closeDrawer}/>
+      <TopBar open={open}/>
+      <SideBar open={open} closeDrawer={closeDrawer} openDrawer={openDrawer}/>
       <main className={classes.content}>
         <div className={classes.toolbar}/>
         <ErrorBoundary>
@@ -47,7 +47,7 @@ export const Main: React.FC = () => {
 const useStyles = makeStyles(theme => createStyles({
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    // padding: theme.spacing(3),
   },
   toolbar: {
     display: 'flex',

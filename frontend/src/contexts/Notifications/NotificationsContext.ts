@@ -6,7 +6,7 @@ export interface MessageAction {
 }
 
 export interface Message {
-  text: string;
+  text: React.ReactNode;
   horizontal: 'left' | 'right';
   vertical: 'top' | 'bottom';
   autoHide: number | boolean | null;

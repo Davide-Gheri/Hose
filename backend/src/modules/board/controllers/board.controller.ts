@@ -22,21 +22,7 @@ export class BoardController {
       ...filterQuery,
     };
 
-    const finalOptions = Object.keys(options).reduce((obj, k) => {
-      if (k === 'orderBy') {
-        const [field, order] = options[k].split('|');
-        obj.order = {[field]: order};
-      } else if (k !== 'onlyOrphans') {
-        obj[k] = options[k];
-      }
-      return obj;
-    }, {} as FindManyOptions<Board>);
-
-    if (options.onlyOrphans) {
-
-    }
-
-    const builder = this.repository.createQueryBuilder();
+    const builder = this.repository.createQueryBuilder('boards');
 
     if (options.take) {
       builder.take(options.take);
@@ -46,11 +32,13 @@ export class BoardController {
     }
     if (options.orderBy) {
       const [field, order] = options.orderBy.split('|');
-      builder.orderBy(field, order as 'ASC' | 'DESC');
+      builder.orderBy('boards.' + field, order as 'ASC' | 'DESC');
     }
 
     if (options.onlyOrphans) {
-      builder.where('not EXISTS (SELECT * from environment where environment.boardId = board.id)');
+      builder.where('not EXISTS (SELECT * from environment where environment.boardId = boards.id)');
+    } else {
+      builder.leftJoinAndSelect('boards.environment', 'environment');
     }
 
     return builder.getMany();

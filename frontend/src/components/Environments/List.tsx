@@ -1,6 +1,14 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { List, ListItem, ListItemSecondaryAction, ListItemText, Button } from '@material-ui/core';
+import {
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  Button,
+  makeStyles,
+  createStyles
+} from '@material-ui/core';
 import { asArray, getEnvironments } from '../../store/environments';
 import { getLoading } from '../../store/selectors';
 import { Loading } from '../Loading';
@@ -12,6 +20,7 @@ export interface EnvListProps {
 }
 
 export const EnvList: React.FC<EnvListProps> = ({take}) => {
+  const classes = useStyles();
   const environments = useSelector(asArray);
   const loading = useSelector(getLoading('environments'));
   const dispatch = useThunkDispatch();
@@ -21,7 +30,11 @@ export const EnvList: React.FC<EnvListProps> = ({take}) => {
   }, [dispatch]);
 
   if (loading) {
-    return <Loading/>;
+    return (
+      <div className={classes.loading}>
+        <Loading/>
+      </div>
+    );
   }
 
   return (
@@ -44,3 +57,12 @@ export const EnvList: React.FC<EnvListProps> = ({take}) => {
     </List>
   );
 };
+
+const useStyles = makeStyles(theme => createStyles({
+  loading: {
+    width: '100%',
+    minHeight: 200,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+}));

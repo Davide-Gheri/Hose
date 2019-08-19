@@ -1,7 +1,15 @@
 import React, { useCallback, useEffect } from 'react';
-import { Button, List, ListItem, ListItemSecondaryAction, ListItemText, IconButton } from '@material-ui/core';
+import {
+  Button,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  IconButton,
+  makeStyles, createStyles
+} from '@material-ui/core';
 import { DeleteForever } from '@material-ui/icons';
-import { AppLink, ConfirmButton, ListItemLink } from '../common';
+import { AppLink, ConfirmButton } from '../common';
 import { useSelector } from 'react-redux';
 import { asArray, deleteGpio, getGpios } from '../../store/gpios';
 import { getLoadingError } from '../../store/selectors';
@@ -9,21 +17,24 @@ import { Loading } from '../Loading';
 import { Error } from '../Error';
 import { useThunkDispatch } from '../../store';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
+import { useErrorHandler } from '../../hooks/error';
 
 export interface GpioListProps {
   take?: number;
 }
 
 export const GpioList: React.FC<GpioListProps> = ({take}) => {
+  const classes = useStyles();
   const gpios = useSelector(asArray);
   const {loading, error} = useSelector(getLoadingError('gpios'));
 
   const dispatch = useThunkDispatch();
 
   const {openNotification} = useNotifications();
+  const errorHandler = useErrorHandler();
 
   useEffect(() => {
-    dispatch(getGpios({take})).catch(console.error);
+    dispatch(getGpios({take})).catch(errorHandler);
   }, [dispatch]);
 
   const onDelete = useCallback((id: string) => {
@@ -33,11 +44,15 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
           ...commonNotificationOpts,
           text: 'GPIO deleted',
         });
-      });
+      }).catch(errorHandler);
   }, [dispatch]);
 
   if (loading) {
-    return <Loading/>;
+    return (
+      <div className={classes.loading}>
+        <Loading/>
+      </div>
+    );
   }
 
   if (error) {
@@ -75,3 +90,12 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
     </List>
   )
 };
+
+const useStyles = makeStyles(theme => createStyles({
+  loading: {
+    width: '100%',
+    minHeight: 200,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+}));

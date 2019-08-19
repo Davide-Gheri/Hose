@@ -5,16 +5,18 @@ import { getLoadingError } from '../../store/selectors';
 import { useThunkDispatch } from '../../store';
 import { Loading } from '../Loading';
 import { Error } from '../Error';
-import { Button, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
+import { Button, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, makeStyles, createStyles } from '@material-ui/core';
 import { AppLink, ConfirmButton, ListItemLink } from '../common';
 import { DeleteForever } from '@material-ui/icons';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
+import { DisabledDeleteButton } from './DisabledDeleteButton';
 
 export interface BoardListProps {
   take?: number;
 }
 
 export const BoardList: React.FC<BoardListProps> = ({take}) => {
+  const classes = useStyles();
   const boards = useSelector(asArray);
   const {loading, error} = useSelector(getLoadingError('boards'));
 
@@ -37,7 +39,7 @@ export const BoardList: React.FC<BoardListProps> = ({take}) => {
   }, [dispatch]);
 
   if (loading) {
-    return <Loading/>;
+    return <div className={classes.loading}><Loading/></div>;
   }
 
   if (error) {
@@ -62,15 +64,27 @@ export const BoardList: React.FC<BoardListProps> = ({take}) => {
             primary={`${board.id}`}
           />
           <ListItemSecondaryAction>
-            <ConfirmButton
-              renderButton={props => <IconButton {...props}/>}
-              onClick={() => onDelete(board.id)}
-            >
-              <DeleteForever/>
-            </ConfirmButton>
+            {!!board.environment ? 
+              <DisabledDeleteButton board={board}/> :
+              <ConfirmButton
+                renderButton={props => <IconButton {...props}/>}
+                onClick={() => onDelete(board.id)}
+              >
+                <DeleteForever/>
+              </ConfirmButton>
+            }
           </ListItemSecondaryAction>
         </ListItemLink>
       ))}
     </List>
   )
 }
+
+const useStyles = makeStyles(theme => createStyles({
+  loading: {
+    width: '100%',
+    minHeight: 300,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+}));
