@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, Index, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, OneToOne, PrimaryColumn, RelationId } from 'typeorm';
 import { Environment } from '../../environment/entities/environment.entity';
 
 @Entity()
@@ -21,4 +21,7 @@ export class Board {
 
   @OneToOne(type => Environment, env => env.board, {nullable: true})
   environment: Environment;
+
+  @RelationId((board: Board) => board.environment)
+  environmentId: string;
 }

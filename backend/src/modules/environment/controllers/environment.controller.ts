@@ -1,5 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
-import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Environment } from '../entities/environment.entity';
 import { FindManyOptions, Repository } from 'typeorm';
@@ -7,6 +6,7 @@ import { Rule } from '../../rule/entities/rule.entity';
 import { GpioService } from '../../gpio/services/gpio.service';
 import { EnvironmentService } from '../services/environment.service';
 import { Board } from '../../board/entities/board.entity';
+import { ParsedQuery } from '../../../decorators';
 
 @Controller('environments')
 export class EnvironmentController {
@@ -23,25 +23,9 @@ export class EnvironmentController {
 
   @Get()
   async index(
-    @Query() paginationQuery?: PaginationQueryDto,
+    @ParsedQuery() query: FindManyOptions,
   ) {
-
-    const options = {
-      orderBy: 'createdAt|ASC',
-      ...paginationQuery,
-    };
-
-    const finalOptions = Object.keys(options).reduce((obj, k) => {
-      if (k === 'orderBy') {
-        const [field, order] = options[k].split('|');
-        obj.order = {[field]: order};
-      } else {
-        obj[k] = options[k];
-      }
-      return obj;
-    }, {} as FindManyOptions<Environment>);
-
-    return this.repository.find(finalOptions);
+    return this.repository.find(query);
   }
 
   @Get('/:environmentId')

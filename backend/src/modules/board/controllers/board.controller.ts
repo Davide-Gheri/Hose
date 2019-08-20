@@ -37,8 +37,6 @@ export class BoardController {
 
     if (options.onlyOrphans) {
       builder.where('not EXISTS (SELECT * from environment where environment.boardId = boards.id)');
-    } else {
-      builder.leftJoinAndSelect('boards.environment', 'environment');
     }
 
     return builder.getMany();

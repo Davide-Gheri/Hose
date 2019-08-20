@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Rule } from '../entities/rule.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
+import { ParsedQuery } from '../../../decorators';
 
 @Controller('rules')
 export class RuleController {
@@ -13,11 +13,9 @@ export class RuleController {
 
   @Get()
   async index(
-    @Query() paginationQuery?: PaginationQueryDto,
+    @ParsedQuery() query: FindManyOptions,
   ) {
-    const options = paginationQuery || {};
-
-    return this.repository.find(options);
+    return this.repository.find(query);
   }
 
   @Get('/:ruleId')

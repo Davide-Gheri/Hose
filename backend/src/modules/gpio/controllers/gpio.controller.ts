@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gpio } from '../entities/gpio.entity';
-import { Repository } from 'typeorm';
-import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
+import { FindManyOptions, Repository } from 'typeorm';
 import { GpioService } from '../services/gpio.service';
+import { ParsedQuery } from '../../../decorators';
 
 @Controller('gpios')
 export class GpioController {
@@ -15,14 +15,9 @@ export class GpioController {
 
   @Get()
   async index(
-    @Query() paginationQuery?: PaginationQueryDto,
+    @ParsedQuery({relations: ['environments']}) query: FindManyOptions,
   ) {
-    const options = paginationQuery || {};
-
-    return this.repository.find({
-      ...options,
-      relations: ['environments'],
-    });
+    return this.repository.find(query);
   }
 
   @Get('/:gpioId')

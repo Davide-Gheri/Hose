@@ -7,7 +7,6 @@ import { Logger } from './Logger';
 import { ValidationPipe } from '@nestjs/common';
 import { NotFoundExceptionFilter } from './filters';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {

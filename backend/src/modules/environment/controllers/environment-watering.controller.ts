@@ -1,9 +1,9 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Environment } from '../entities/environment.entity';
 import { FindManyOptions, Repository } from 'typeorm';
 import { PaginationQueryDto } from '../../../validation/PaginationQuery.dto';
 import { Watering } from '../entities/watering.entity';
+import { ParsedQuery } from '../../../decorators';
 
 @Controller('environments/:environmentId/waterings')
 export class EnvironmentWateringController {
@@ -15,25 +15,17 @@ export class EnvironmentWateringController {
   @Get()
   async index(
     @Param('environmentId') envId: string,
+    @ParsedQuery() query: FindManyOptions,
     @Query() paginationQuery?: PaginationQueryDto,
   ) {
-
-    const options = {
-      orderBy: 'createdAt|ASC',
-      environmentId: envId,
-      ...paginationQuery,
+    const finalQuery: FindManyOptions = {
+      ...query,
+      where: {
+        ...query.where as object,
+        environmentId: envId,
+      },
     };
 
-    const finalOptions = Object.keys(options).reduce((obj, k) => {
-      if (k === 'orderBy') {
-        const [field, order] = options[k].split('|');
-        obj.order = {[field]: order};
-      } else {
-        obj[k] = options[k];
-      }
-      return obj;
-    }, {} as FindManyOptions<Watering>);
-
-    return this.repository.find(finalOptions);
+    return this.repository.find(finalQuery);
   }
 }

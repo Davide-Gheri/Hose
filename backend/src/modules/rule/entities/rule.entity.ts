@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString, MaxLength } from 'class-validator';
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, RelationId } from 'typeorm';
 import { Environment } from '../../environment/entities/environment.entity';
 
 @Entity()
@@ -31,4 +31,7 @@ export class Rule {
 
   @OneToMany(type => Environment, environment => environment.rule)
   environments: Environment[];
+
+  @RelationId((rule: Rule) => rule.environments)
+  environmentIds: string[];
 }
