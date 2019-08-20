@@ -7,6 +7,7 @@ import { useThunkDispatch } from '../../store';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
 import { AppTextField, ConfirmButton } from '../common';
 import { createBoard, updateBoard } from '../../store/boards';
+import { useTranslation } from 'react-i18next';
 
 interface FormData {
   id: string;
@@ -21,6 +22,7 @@ export interface BoardFormProps {
 
 export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board}) => {
   const classes = useFormStyles();
+  const { t } = useTranslation();
 
   const [submit, setSubmit] = useState(false);
 
@@ -67,14 +69,14 @@ export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board})
         submitPromise = dispatch(updateBoard(board!.id, formValues)).then(() => {
           openNotification({
             ...commonNotificationOpts,
-            text: 'Board updated',
+            text: t('board:updated'),
           });
         });
       } else {
         submitPromise = dispatch(createBoard(formValues)).then(() => {
           openNotification({
             ...commonNotificationOpts,
-            text: 'Board created',
+            text: t('board:created'),
           });
         });
       }
@@ -85,7 +87,7 @@ export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board})
         }
       }).catch(console.error); //TODO show errors
     }
-  }, [validateForm, formValues, onSubmit, board]);
+  }, [validateForm, formValues, onSubmit, board, t]);
 
   const onFormCancel = useCallback((e: SyntheticEvent) => {
     e.preventDefault();
@@ -103,7 +105,7 @@ export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board})
           variant="outlined"
           value={formValues.id}
           name="id"
-          label="Board id"
+          label={t("board:id")}
           errors={formErrors.id}
           onChange={onInputChange}
           fullWidth
@@ -113,7 +115,7 @@ export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board})
           variant="outlined"
           value={formValues.checkUrl}
           name="checkUrl"
-          label="Board IP address"
+          label={t("board:ip")}
           errors={formErrors.checkUrl}
           onChange={onInputChange}
           fullWidth
@@ -126,19 +128,24 @@ export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board})
             className={classes.deleteBtn}
             disabled={submit}
           >
-            Delete
+            {t("common:delete")}
           </ConfirmButton>
         )}
         <Button color="primary" onClick={onFormCancel} disabled={submit}>
-          Cancel
+          {t('common:cancel')}
         </Button>
         <div className={classes.confirmButtonWrapper}>
           <Button color="primary" onClick={onFormSubmit} disabled={submit}>
-            Submit
+            {t('common:submit')}
           </Button>
-          {submit && <CircularProgress size={24} className={classes.confirmButtonLoader}/>}
+          {submit && (
+            <CircularProgress
+              size={24}
+              className={classes.confirmButtonLoader}
+            />
+          )}
         </div>
       </DialogActions>
     </form>
-  )
+  );
 };

@@ -10,6 +10,7 @@ import { AppLink, ConfirmButton, ListItemLink } from '../common';
 import { DeleteForever } from '@material-ui/icons';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
 import { DisabledDeleteButton } from './DisabledDeleteButton';
+import { useTranslation } from 'react-i18next';
 
 export interface BoardListProps {
   take?: number;
@@ -17,6 +18,7 @@ export interface BoardListProps {
 
 export const BoardList: React.FC<BoardListProps> = ({take}) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const boards = useSelector(asArray);
   const {loading, error} = useSelector(getLoadingError('boards'));
 
@@ -33,10 +35,10 @@ export const BoardList: React.FC<BoardListProps> = ({take}) => {
       .then(() => {
         openNotification({
           ...commonNotificationOpts,
-          text: 'Board deleted',
+          text: t('board:deleted'),
         });
       });
-  }, [dispatch]);
+  }, [dispatch, t]);
 
   if (loading) {
     return <div className={classes.loading}><Loading/></div>;
@@ -50,10 +52,10 @@ export const BoardList: React.FC<BoardListProps> = ({take}) => {
     <List dense>
       {boards.length === 0 && (
         <ListItem>
-          <ListItemText primary="No Boards set"/>
+          <ListItemText primary={t('board:no_boards_set')}/>
           <ListItemSecondaryAction>
             <Button color="primary" component={AppLink} to="/boards/new">
-              Create new
+              {t('common:create_new')}
             </Button>
           </ListItemSecondaryAction>
         </ListItem>

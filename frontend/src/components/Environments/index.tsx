@@ -5,16 +5,19 @@ import { Add } from '@material-ui/icons';
 import { Route } from 'react-router';
 import { asyncLoader } from '../asyncLoader';
 import { AppLink, PageHeader, PageContent } from '../common';
+import { useTranslation } from 'react-i18next';
 
 const AsyncNewEnvironment = asyncLoader(() => import('./NewEnvironment/Dialog'));
 
 export const EnvironmentsPage: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <>
-      <PageHeader title="Environments">
+      <PageHeader title={t('environment:environment', {count: 100})}>
         <Button variant="outlined" color="inherit" component={AppLink} to="/environments/new">
           <Add />
-          Add new
+          {t('common:add_new')}
         </Button>
       </PageHeader>
       <PageContent>

@@ -18,6 +18,7 @@ import { Error } from '../Error';
 import { useThunkDispatch } from '../../store';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
 import { useErrorHandler } from '../../hooks/error';
+import { useTranslation } from 'react-i18next';
 
 export interface GpioListProps {
   take?: number;
@@ -25,6 +26,7 @@ export interface GpioListProps {
 
 export const GpioList: React.FC<GpioListProps> = ({take}) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const gpios = useSelector(asArray);
   const {loading, error} = useSelector(getLoadingError('gpios'));
 
@@ -42,10 +44,10 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
       .then(() => {
         openNotification({
           ...commonNotificationOpts,
-          text: 'GPIO deleted',
+          text: t('gpio:deleted'),
         });
       }).catch(errorHandler);
-  }, [dispatch]);
+  }, [dispatch, t]);
 
   if (loading) {
     return (
@@ -63,10 +65,10 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
     <List dense>
       {gpios.length === 0 && (
         <ListItem>
-          <ListItemText primary="No GPIOs set"/>
+          <ListItemText primary={t('gpio:no_gpio_set')}/>
           <ListItemSecondaryAction>
             <Button color="primary" component={AppLink} to="/gpios/new">
-              Create new
+              {t('common:create_new')}
             </Button>
           </ListItemSecondaryAction>
         </ListItem>
@@ -74,8 +76,8 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
       {gpios.map((gpio, i) => (
         <ListItem key={gpio.id} divider={i < gpios.length - 1}>
           <ListItemText
-            primary={`Pin ${gpio.pin}`}
-            secondary={gpio.environments.length ? gpio.environments.map(env => env.title).join(', ') : 'No associated environments'}
+            primary={`${t('gpio:pin')} ${gpio.pin}`}
+            secondary={gpio.environments.length ? gpio.environments.map(env => env.title).join(', ') : t('gpio:no_associated_environments')}
           />
           <ListItemSecondaryAction>
             <ConfirmButton

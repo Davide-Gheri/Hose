@@ -4,12 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "postinstall": "patch-package",
-    "convert-po": "node po-to-json.js"
+    "i18n-scan": "node i18n-scanner.js"
   },
   "dependencies": {
-    "i18next-conv": "^9.1.0",
-    "patch-package": "^6.1.2",
-    "postinstall-postinstall": "^2.0.0"
+    "gulp-sort": "^2.0.0",
+    "i18next-scanner": "^2.10.2",
+    "vinyl-fs": "^3.0.3"
   }
 }

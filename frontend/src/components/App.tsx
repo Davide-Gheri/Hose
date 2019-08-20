@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { configureStore } from '../store';
@@ -65,7 +65,9 @@ const App: React.FC = () => {
 };
 
 export default () => (
-  <NotificationsProvider>
-    <App/>
-  </NotificationsProvider>
+  <Suspense fallback={<div>Loading...</div>}>
+    <NotificationsProvider>
+      <App/>
+    </NotificationsProvider>
+  </Suspense>
 );

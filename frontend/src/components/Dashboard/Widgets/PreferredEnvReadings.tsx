@@ -7,10 +7,11 @@ import { Loading } from '../../Loading';
 import { CardActions, Link } from '@material-ui/core';
 import { AppLink } from '../../common';
 import { resetRecords } from '../../../store/records';
+import { useTranslation } from 'react-i18next';
 
 export const PreferredEnvReadings: React.FC = () => {
   const environment = useSelector(getPreferredEnv);
-
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,12 +23,12 @@ export const PreferredEnvReadings: React.FC = () => {
   return (
     <Widget
       sm={12}
-      title={environment ? environment.title : 'No preferred environment set'}
+      title={environment ? environment.title : t('environment:no_preferred_set')}
       rightTitle={environment ? environment.board ? environment.board.id : '' : ''}
     >
       {environment ? <RecordsTable environment={environment} take={5}/> : <Loading/>}
       <CardActions>
-        {environment && <Link component={AppLink} to={`/environments/${environment.id}/records`}>See all</Link>}
+        {environment && <Link component={AppLink} to={`/environments/${environment.id}/records`}>{t('common:see_all')}</Link>}
       </CardActions>
     </Widget>
   );

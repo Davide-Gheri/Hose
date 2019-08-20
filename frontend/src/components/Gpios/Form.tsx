@@ -6,6 +6,7 @@ import { AppTextField } from '../common';
 import { useThunkDispatch } from '../../store';
 import { createGpio } from '../../store/gpios';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
+import { useTranslation } from 'react-i18next';
 
 interface FormData {
   pin: string;
@@ -18,6 +19,7 @@ export interface GpioFormProps {
 
 export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel}) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const [submit, setSubmit] = useState(false);
 
   const {formValues, resetFormValues, updateInputValue} = useFormValues<FormData>({
@@ -50,7 +52,7 @@ export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel}) => {
       dispatch(createGpio(formValues)).then(() => {
         openNotification({
           ...commonNotificationOpts,
-          text: 'Gpio created',
+          text: t('gpio:created'),
         });
         setSubmit(false);
         if (typeof onSubmit === 'function') {
@@ -58,7 +60,7 @@ export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel}) => {
         }
       }).catch(console.error); // TODO show errors
     }
-  }, [validateForm, formValues, onSubmit]);
+  }, [validateForm, formValues, onSubmit, t]);
 
   const onFormCancel = useCallback((e: SyntheticEvent) => {
     e.preventDefault();
@@ -76,7 +78,7 @@ export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel}) => {
           variant="outlined"
           value={formValues.pin}
           name="pin"
-          label="Pin"
+          label={t('gpio:pin')}
           errors={formErrors.pin}
           onChange={onInputChange}
           fullWidth
@@ -84,11 +86,11 @@ export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel}) => {
       </fieldset>
       <DialogActions>
         <Button color="primary" onClick={onFormCancel} disabled={submit}>
-          Cancel
+          {t('common:cancel')}
         </Button>
         <div className={classes.confirmButtonWrapper}>
           <Button color="primary" onClick={onFormSubmit} disabled={submit}>
-            Submit
+            {t('common:submit')}
           </Button>
           {submit && <CircularProgress size={24} className={classes.confirmButtonLoader}/>}
         </div>

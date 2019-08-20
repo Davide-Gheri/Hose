@@ -9,6 +9,7 @@ import { getRecords, makeGetByEnvSelector } from '../../store/records';
 import { useSelector } from 'react-redux';
 import { AppState, useThunkDispatch } from '../../store';
 import { getLoading } from '../../store/selectors';
+import { useTranslation } from 'react-i18next';
 
 export interface RecordsWidgetsProps {
   environment: EnvironmentModel;
@@ -18,7 +19,7 @@ const take = 50;
 
 export const RecordsWidget: React.FC<RecordsWidgetsProps> = ({environment}) => {
   const classes = useStyles();
-
+  const { t } = useTranslation();
   const getByEnv = useMemo(makeGetByEnvSelector, []);
 
   const [skip, setSkip] = useState(0);
@@ -49,7 +50,7 @@ export const RecordsWidget: React.FC<RecordsWidgetsProps> = ({environment}) => {
 
   return (
     <>
-      <Widget title="Last records" sm={12}>
+      <Widget title={t('record:last_records')} sm={12}>
         <>
           <div className={classes.chartContainer}>
             {loading ? <Loading/> : <RecordsChart
@@ -70,7 +71,7 @@ export const RecordsWidget: React.FC<RecordsWidgetsProps> = ({environment}) => {
           </div>
         </>
       </Widget>
-      <Widget title="Records" sm={6}>
+      <Widget title={t('record:record', {count: 100})} sm={6}>
         <div style={{height: 300}}>
           <InfiniteRecordTable records={records} onLoadMore={loadMore}/>
         </div>

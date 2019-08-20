@@ -1,0 +1,16 @@
+{
+  "cannot_delete": "Cannot delete a board associated with an Environment. You have to delete the Environment!",
+  "edit": "Edit board",
+  "updated": "Board updated",
+  "created": "Board created",
+  "id": "Board id",
+  "ip": "Board IP address",
+  "board": "Board",
+  "board_plural": "Boards",
+  "deleted": "Board deleted",
+  "no_boards_set": "No Boards set",
+  "add_new": "Add a new board",
+  "add_new_description": "Register a new sensor board\n<br/>\nFind the board id on the sensor.\n<br/>\nOptionally (recommended) add the board IP to enable board health check",
+  "healthcheck": "Heath check",
+  "last_check": "Last check"
+}

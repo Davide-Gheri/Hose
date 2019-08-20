@@ -3,13 +3,13 @@ import { isNil } from '../lib/util';
 
 export function required(value: string) {
   if (isNil(value)) {
-    return 'Field required';
+    return 'error:required';
   }
 }
 
 export function email(value: string) {
   if (isNil(value)) return undefined;
-  const message = 'Invalid email';
+  const message = 'error:email';
   const lengthValid = value.length >= 1 && value.length <= 255;
   if (!lengthValid) {
     return message;
@@ -49,21 +49,21 @@ export function makeOneOf(toCheck: any[]) {
 export function numeric(value: string) {
   if (isNil(value)) return undefined;
   if (!/[0-9]/.test(value)) {
-    return 'Field must be numeric';
+    return 'error:numeric';
   }
 }
 
 export function alpha(value: string) {
   if (isNil(value)) return undefined;
   if (!/[a-zA-Z]/.test(value)) {
-    return 'Field must be only letters';
+    return 'error:letters';
   }
 }
 
 export function confirmed(value: string, check: string) {
   if (isNil(value)) return undefined;
   if (value !== check) {
-    return 'Field does not match';
+    return 'error:match';
   }
 }
 
@@ -76,7 +76,7 @@ export function isUrl(value: string) {
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
     '(\\#[-a-z\\d_]*)?$','i');
   if (!pattern.test(value)) {
-    return 'Field must be a valid Url';
+    return 'error:url';
   }
 }
 

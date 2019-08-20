@@ -1,8 +1,10 @@
 import React, { useCallback } from 'react';
 import { createStyles, makeStyles, Typography, Button } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 
 export const Error: React.FC = () => {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const onReload = useCallback(() => {
     window.location.reload();
@@ -10,9 +12,9 @@ export const Error: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <Typography color="error" variant="h5">An error occurred</Typography>
+      <Typography color="error" variant="h5">{t('error:generic_error')}</Typography>
       <Button onClick={onReload} variant="outlined" className={classes.reloadBtn}>
-        Reload
+        {t('error:reload')}
       </Button>
     </div>
   )

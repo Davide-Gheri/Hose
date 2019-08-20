@@ -14,6 +14,7 @@ import { getLoading } from '../../store/selectors';
 import { Loading } from '../Loading';
 import { AppLink, ListItemLink } from '../common';
 import { useThunkDispatch } from '../../store';
+import { useTranslation } from 'react-i18next';
 
 export interface EnvListProps {
   take?: number;
@@ -21,6 +22,7 @@ export interface EnvListProps {
 
 export const EnvList: React.FC<EnvListProps> = ({take}) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const environments = useSelector(asArray);
   const loading = useSelector(getLoading('environments'));
   const dispatch = useThunkDispatch();
@@ -41,10 +43,10 @@ export const EnvList: React.FC<EnvListProps> = ({take}) => {
     <List dense>
       {environments.length === 0 && (
         <ListItem>
-          <ListItemText primary="No environments set"/>
+          <ListItemText primary={t('environment:no_environments_set')}/>
           <ListItemSecondaryAction>
             <Button color="primary" component={AppLink} to="/environments/new">
-              Create new
+              {t('common:create_new')}
             </Button>
           </ListItemSecondaryAction>
         </ListItem>

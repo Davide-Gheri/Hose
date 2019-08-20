@@ -8,6 +8,7 @@ import { createStyles, makeStyles, Table, TableBody, TableCell, TableHead, Table
 import { format } from 'date-fns';
 import clsx from 'clsx';
 import { EnvironmentModel, RecordModel } from '../../store/models';
+import { useTranslation } from 'react-i18next';
 
 export interface RecordsTableProps {
   environment: EnvironmentModel;
@@ -16,6 +17,7 @@ export interface RecordsTableProps {
 
 export const RecordsTable: React.FC<RecordsTableProps> = ({environment, take}) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const getByEnv = useMemo(makeGetByEnvSelector, []);
 
   const records = useSelector((state: AppState) => getByEnv(state, environment.id));
@@ -39,8 +41,8 @@ export const RecordsTable: React.FC<RecordsTableProps> = ({environment, take}) =
       <Table className={classes.table} size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Time</TableCell>
-            <TableCell align="right">Reading</TableCell>
+            <TableCell>{t('record:time')}</TableCell>
+            <TableCell align="right">{t('record:reading')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

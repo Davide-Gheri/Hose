@@ -1,0 +1,16 @@
+{
+  "environment": "Environment",
+  "environment_plural": "Environments",
+  "no_preferred_set": "No preferred environment set",
+  "edit": "Edit environment",
+  "no_associated_pins": "This Environment does not have any associated GPIOs",
+  "updated": "Environment updated",
+  "created": "Environment created",
+  "deleted": "Environment deleted",
+  "title": "Title",
+  "description": "Description",
+  "select_rule": "Select a rule",
+  "no_environments_set": "No environments set",
+  "add_new": "Add new environment",
+  "add_new_description": "Create a new Environment associated with 1 moisture sensor board.\n<br/>\nAdd a Rule and 1 or more GPIO pins to activate auto irrigation"
+}

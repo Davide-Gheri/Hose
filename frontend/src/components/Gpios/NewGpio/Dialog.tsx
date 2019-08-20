@@ -2,9 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import { GpioForm } from '../Form';
 import { RouteComponentProps } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 export const NewGpioDialog: React.FC<RouteComponentProps> = ({history}) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setOpen(true);
@@ -17,10 +19,10 @@ export const NewGpioDialog: React.FC<RouteComponentProps> = ({history}) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add a new GPIO</DialogTitle>
+      <DialogTitle>{t('gpio:add_new')}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Register a new GPIO pin of the Raspberry Pi
+          {t('gpio:add_new_description')}
         </DialogContentText>
         <GpioForm onSubmit={onClose} onCancel={onClose}/>
       </DialogContent>

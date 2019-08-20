@@ -1,0 +1,16 @@
+{
+  "cannot_delete": "Impossibile eliminare una scheda associata a un ambiente. È necessario eliminare l'ambiente!",
+  "edit": "Modifica scheda",
+  "updated": "Scheda modificata con successo",
+  "created": "Scheda creata con successo",
+  "id": "Id",
+  "ip": "Indirizzo IP della scheda",
+  "board": "Scheda",
+  "board_plural": "Schede",
+  "deleted": "Scheda eliminata",
+  "no_boards_set": "Nesusna scheda impostata",
+  "add_new": "Aggiungi una nuova scheda",
+  "add_new_description": "Registra una nuova scheda\n<br/>\nL’id è stampato sulla scheda stessa.\n<br/>\nFacoltativo (consigliato) aggiungi l’indirizzo IP della scheda per abilitare il check salute",
+  "healthcheck": "Check salute",
+  "last_check": "Ultimo check"
+}

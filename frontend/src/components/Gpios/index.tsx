@@ -5,16 +5,19 @@ import { AppLink, PageContent, PageHeader } from '../common';
 import { Add } from '@material-ui/icons';
 import { GpioList } from './List';
 import { asyncLoader } from '../asyncLoader';
+import { useTranslation } from 'react-i18next';
 
 const AsyncNewGpio = asyncLoader(() => import('./NewGpio/Dialog'));
 
 export const GpiosPage: React.FC<RouteComponentProps> = () => {
+  const { t } = useTranslation();
+
   return (
     <>
-      <PageHeader title="Gpio pins">
+      <PageHeader title={t('gpio:gpio_pin', {count: 100})}>
         <Button variant="outlined" color="inherit" component={AppLink} to="/gpios/new">
           <Add />
-          Add new
+          {t('common:add_new')}
         </Button>
       </PageHeader>
       <PageContent>

@@ -8,19 +8,21 @@ import { asyncLoader } from '../asyncLoader';
 import { useSelector } from 'react-redux';
 import { boardsSelector } from '../../store/boards';
 import { isEmpty } from '../../lib/util';
+import { useTranslation } from 'react-i18next';
 
 const AsyncNewBoard = asyncLoader(() => import('./NewBoard/Dialog'));
 const AsyncEditBoard = asyncLoader(() => import('./EditBoard/Dialog'));
 
 export const BoardsPage: React.FC<RouteComponentProps> = () => {
   const boards = useSelector(boardsSelector);
+  const { t } = useTranslation();
 
   return (
     <>
-      <PageHeader title="Boards">
+      <PageHeader title={t('board:board', {count: 100})}>
         <Button variant="outlined" color="inherit" component={AppLink} to="/boards/new">
           <Add />
-          Add new
+          {t('common:add_new')}
           </Button>
       </PageHeader>
       <PageContent>

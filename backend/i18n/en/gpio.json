@@ -1,0 +1,14 @@
+{
+  "gpio_pin": "GPIO pin",
+  "gpio_pin_plural": "GPIO pins",
+  "gpio": "GPIO",
+  "gpio_plural": "Gpios",
+  "created": "GPIO created",
+  "pin": "Pin",
+  "pin_plural": "Pins",
+  "deleted": "GPIO deleted",
+  "no_gpio_set": "No GPIO set",
+  "no_associated_environments": "No associated environments",
+  "add_new": "Add a new GPIO",
+  "add_new_description": "Register a new GPIO pin of the Raspberry Pi"
+}

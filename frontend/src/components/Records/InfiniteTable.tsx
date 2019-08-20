@@ -2,6 +2,7 @@ import React from 'react';
 import { RecordModel } from '../../store/models';
 import { VirtualTable } from '../common';
 import { InfiniteLoader } from 'react-virtualized';
+import { useTranslation } from 'react-i18next';
 
 export interface InfiniterecordTableProps {
   records: RecordModel[];
@@ -9,6 +10,8 @@ export interface InfiniterecordTableProps {
 }
 
 export const InfiniteRecordTable: React.FC<InfiniterecordTableProps> = ({records, onLoadMore}) => {
+  const { t } = useTranslation();
+
   return (
     <InfiniteLoader
       loadMoreRows={onLoadMore}
@@ -23,11 +26,11 @@ export const InfiniteRecordTable: React.FC<InfiniterecordTableProps> = ({records
           rowGetter={({index}: any) => records[index]}
           columns={[
             {
-              label: 'Time',
+              label: t('record:time'),
               dataKey: 'time',
             },
             {
-              label: 'Record',
+              label: t('record:reading'),
               dataKey: 'record',
               numeric: true,
             },

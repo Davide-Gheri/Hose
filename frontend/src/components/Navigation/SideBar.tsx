@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import { ChevronLeft, Dashboard, Place, DeveloperBoard, SettingsInputComponent, Menu } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export interface SideBarProps {
   open: boolean;
@@ -24,34 +25,39 @@ interface LinkItem {
   title: string;
   icon: any;
   href: string;
+  transProp?: object;
 }
 
 const links: LinkItem[] = [
   {
-    title: 'Dashboard',
+    title: 'common:dashboard',
     icon: <Dashboard/>,
     href: '/',
   },
   {
-    title: 'Environments',
+    title: 'environment:environment',
     icon: <Place/>,
     href: '/environments',
+    transProp: {count: 100},
   },
   {
-    title: 'Gpios',
+    title: 'gpio:gpio',
     icon: <SettingsInputComponent/>,
     href: '/gpios',
+    transProp: {count: 100},
   },
   {
-    title: 'Boards',
+    title: 'board:board',
     icon: <DeveloperBoard/>,
     href: '/boards',
+    transProp: {count: 100},
   },
 ];
 
 
 export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer, openDrawer}) => {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <Drawer
@@ -88,12 +94,12 @@ export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer, openDrawer})
           >
             <ListItemIcon>
               {!open ? (
-                <Tooltip title={link.title} placement="right">
+                <Tooltip title={t(link.title, link.transProp)} placement="right">
                   {link.icon}
                 </Tooltip>
               ) : link.icon}
             </ListItemIcon>
-            <ListItemText primary={link.title}/>
+            <ListItemText primary={t(link.title, link.transProp)}/>
           </ListItem>
         ))}
       </List>

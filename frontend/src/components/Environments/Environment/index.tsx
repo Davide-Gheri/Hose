@@ -12,11 +12,13 @@ import { uuidregexp } from '../../../lib/pathRegexp';
 import { asyncLoader } from '../../asyncLoader';
 import { RecordsWidget } from '../../Records/RecordsWidgets';
 import { WateringsWidgets } from '../../Waterings/WateringsWidgets';
+import { useTranslation } from 'react-i18next';
 
 const AsyncEditEnvironment = asyncLoader(() => import('../EditEnvironment/Dialog'));
 
 export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = props => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const getById = useMemo(makeByIdSelector, []);
   const id = props.match.params.id;
 
@@ -43,23 +45,25 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
   return (
     <>
       <PageHeader title={(
-        <span>Environment <b>{environment.title}</b></span>
+        <span>{t('environment:environment')} <b>{environment.title}</b></span>
       )}>
         <Button
           variant="outlined" color="inherit"
           component={AppLink} to={`/environments/${environment.id}/edit`}
-        >Edit</Button>
+        >
+          {t('common:edit')}
+        </Button>
       </PageHeader>
       <PageContent>
         <div className={classes.description}>
           {environment.gpios.length > 0 ? (
             <div className={classes.chips}>
-              <Typography variant="h6">GPIO pins:</Typography>
+              <Typography variant="h6">{t('gpio:gpio_pin', {count: 100})}:</Typography>
               {environment.gpios.map(gpio => (
                 <Chip key={gpio.id} label={gpio.pin} className={classes.chip} />
               ))}
             </div>
-          ) : 'This Environment does not have any associated GPIOs'}
+          ) : t('environment:no_associated_pins')}
         </div>
         {environment.description && (
           <div className={classes.description}>

@@ -15,6 +15,7 @@ import { useThunkDispatch } from '../../store';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
 import { getBoards } from '../../store/boards';
 import { boardCheckingMessage } from '../../lib/messages';
+import { useTranslation } from 'react-i18next';
 
 interface FormData {
   title: string;
@@ -32,7 +33,7 @@ export interface EnvironmentFormProps {
 
 export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCancel, environment}) => {
   const classes = useFormStyles();
-
+  const { t } = useTranslation();
   const [submit, setSubmit] = useState(false);
 
   const {
@@ -92,14 +93,14 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
         submitPromise = dispatch(updateEnvironment(environment!.id, formValues)).then(() => {
           openNotification({
             ...commonNotificationOpts,
-            text: 'Environment updated',
+            text: t('environment:updated'),
           });
         });
       } else {
         submitPromise = dispatch(createEnvironment(formValues)).then(() => {
           openNotification({
             ...commonNotificationOpts,
-            text: 'Environment created',
+            text: t('environment:created'),
           });
         });
       }
@@ -110,7 +111,7 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
         }
       }).catch(console.error); //TODO show errors
     }
-  }, [validateForm, formValues, onSubmit, environment]);
+  }, [validateForm, formValues, onSubmit, environment, t]);
 
   const onFormCancel = useCallback((e: SyntheticEvent) => {
     e.preventDefault();
@@ -126,11 +127,11 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
         .then(() => {
           openNotification({
             ...commonNotificationOpts,
-            text: 'Environment deleted',
+            text: t('environment:deleted'),
           })
         })
     }
-  }, [environment]);
+  }, [environment, t]);
 
   useEffect(() => {
     dispatch(getRules()).catch(console.error);
@@ -147,7 +148,7 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
           variant="outlined"
           value={formValues.title}
           name="title"
-          label="Title"
+          label={t('environment:title')}
           errors={formErrors.title}
           onChange={onInputChange}
           fullWidth
@@ -157,7 +158,7 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
           variant="outlined"
           value={formValues.description}
           name="description"
-          label="Description"
+          label={t('environment:description')}
           errors={formErrors.description}
           onChange={onInputChange}
           fullWidth
@@ -169,7 +170,7 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
           variant="outlined"
           value={formValues.board}
           onChange={onInputChange}
-          label="Board"
+          label={t('board:board')}
           id="boardSelect"
           fullWidth
           inputProps={{
@@ -186,14 +187,14 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
           variant="outlined"
           value={formValues.rule}
           onChange={onInputChange}
-          label="Rule"
+          label={t('rule:rule')}
           id="ruleSelect"
           fullWidth
           inputProps={{
             name: 'rule',
           }}
         >
-          <MenuItem value="">Select a rule</MenuItem>
+          <MenuItem value="">{t('environment:select_rule')}</MenuItem>
           {rules.map(rule => (
             <MenuItem key={rule.id} value={rule.id}>{rule.title} ({rule.minHumidity})</MenuItem>
           ))}
@@ -204,7 +205,7 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
           variant="outlined"
           value={formValues.gpios}
           onChange={onInputChange}
-          label="Gpios"
+          label={t('gpio:gpio', {count: 100})}
           id="gpiosSelect"
           fullWidth
           inputProps={{
@@ -233,15 +234,15 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
             disabled={submit}
             onClick={onDelete}
           >
-            Delete
+            {t('common:delete')}
           </ConfirmButton>
         )}
         <Button color="primary" onClick={onFormCancel} disabled={submit}>
-          Cancel
+          {t('common:cancel')}
         </Button>
         <div className={classes.confirmButtonWrapper}>
           <Button color="primary" onClick={onFormSubmit} disabled={submit}>
-            Submit
+            {t('common:submit')}
           </Button>
           {submit && <CircularProgress size={24} className={classes.confirmButtonLoader}/>}
         </div>

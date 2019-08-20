@@ -13,6 +13,7 @@ import { AppLink, ConfirmButton } from '../common';
 import { formatDate } from '../../lib/dates';
 import { useErrorHandler } from '../../hooks/error';
 import { DisabledDeleteButton } from './DisabledDeleteButton';
+import { useTranslation } from 'react-i18next';
 
 export interface BoardTableProps {
   take?: number;
@@ -20,6 +21,7 @@ export interface BoardTableProps {
 
 export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const boards = useSelector(asArray);
   const {loading, error} = useSelector(getLoadingError('boards'));
 
@@ -37,10 +39,10 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
       .then(() => {
         openNotification({
           ...commonNotificationOpts,
-          text: 'Board deleted',
+          text: t('board:deleted'),
         });
       }).catch(errorHandler);
-  }, []);
+  }, [t]);
 
   if (loading) {
     return <div className={classes.root}><Loading/></div>;
@@ -55,10 +57,10 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell>Healthcheck</TableCell>
-            <TableCell>Last check</TableCell>
-            <TableCell>Delete</TableCell>
+            <TableCell>{t('board:id')}</TableCell>
+            <TableCell>{t('board:healthcheck')}</TableCell>
+            <TableCell>{t('board:last_check')}</TableCell>
+            <TableCell>{t('common:delete')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -71,7 +73,7 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
                 {boardCheckingMessage(board)}
               </TableCell>
               <TableCell>
-                {formatDate(board.lastCheckedAt) || 'Never'}
+                {formatDate(board.lastCheckedAt) || t('common:never')}
               </TableCell>
               <TableCell>
                 {!!board.environment ?

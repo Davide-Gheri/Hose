@@ -2,9 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import { BoardForm } from '../Form';
 import { RouteComponentProps } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 export const NewBoardDialog: React.FC<RouteComponentProps> = ({history}) => {
   const [open, setOpen] = useState(false);
+  const {t} = useTranslation();
 
   useEffect(() => {
     setOpen(true);
@@ -17,14 +19,10 @@ export const NewBoardDialog: React.FC<RouteComponentProps> = ({history}) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add a new Board</DialogTitle>
+      <DialogTitle>{t('board:add_new')}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Register a new sensor board
-          <br/>
-          Find the board id on the sensor.
-          <br/>
-          Optionally (recommended) add the board IP to enable board health check
+          {t('board:add_new_description')}
         </DialogContentText>
         <BoardForm onSubmit={onClose} onCancel={onClose}/>
       </DialogContent>

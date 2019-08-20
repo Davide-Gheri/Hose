@@ -3,11 +3,13 @@ import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import { BoardForm } from '../Form';
 import { RouteComponentProps } from 'react-router';
 import { BoardModel } from '../../../store/models';
+import { useTranslation } from 'react-i18next';
 
 export type EditBoardDialogProps = RouteComponentProps & {board: BoardModel};
 
 export const EditBoardDialog: React.FC<EditBoardDialogProps> = ({history, board}) => {
   const [open, setOpen] = useState(false);
+  const {t} = useTranslation();
 
   useEffect(() => {
     setOpen(true);
@@ -20,7 +22,7 @@ export const EditBoardDialog: React.FC<EditBoardDialogProps> = ({history, board}
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Edit board</DialogTitle>
+      <DialogTitle>{t('board:edit')}</DialogTitle>
       <DialogContent>
         <BoardForm onSubmit={onClose} onCancel={onClose} board={board}/>
       </DialogContent>

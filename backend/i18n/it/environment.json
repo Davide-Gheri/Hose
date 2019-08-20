@@ -1,0 +1,17 @@
+{
+  "environment": "Ambiente",
+  "environment_plural": "Ambienti",
+  "no_preferred_set": "Nessun ambiente preferito impostato",
+  "edit": "Modifica ambiente",
+  "no_associated_pins": "Questo ambiente non ha nessun GPIO associato",
+  "updated": "Ambiente modificato con successo",
+  "created": "Ambiente creato con successo",
+  "deleted": "Ambiente eliminato",
+  "title": "Titolo",
+  "description": "Descrizione",
+  "select_rule": "Selezione regola",
+  "no_environment_set": "Nessuno ambiente impostato",
+  "add_new": "Aggiungi un nuovo ambiente",
+  "add_new_description": "Crea un nuovo ambiente associato ad un sensore di umidità.\n<br/>\nAggiungi una regola ed uno o più pin GPIO per attivare l'irrigazione automatica",
+  "no_environments_set": ""
+}

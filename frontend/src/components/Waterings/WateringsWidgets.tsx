@@ -6,6 +6,7 @@ import { getWaterings, makeGetByEnvSelector } from '../../store/waterings';
 import { useSelector } from 'react-redux';
 import { AppState, useThunkDispatch } from '../../store';
 import { getLoading } from '../../store/selectors';
+import { useTranslation } from 'react-i18next';
 
 export interface WateringsWidgets {
   environment: EnvironmentModel;
@@ -15,6 +16,7 @@ const take = 10;
 
 export const WateringsWidgets: React.FC<WateringsWidgets> = ({environment}) => {
   const getByEnv = useMemo(makeGetByEnvSelector, []);
+  const { t } = useTranslation();
   const [skip, setSkip] = useState(0);
 
   const waterings = useSelector((state: AppState) => getByEnv(state, environment.id));
@@ -33,7 +35,7 @@ export const WateringsWidgets: React.FC<WateringsWidgets> = ({environment}) => {
 
   return (
     <>
-      <Widget title="Waterings" sm={6}>
+      <Widget title={t('watering:watering', {count: 100})} sm={6}>
         <div style={{height: 300}}>
           <InfiniteWateringTable waterings={waterings.reverse()} onLoadMore={loadMore}/>
         </div>

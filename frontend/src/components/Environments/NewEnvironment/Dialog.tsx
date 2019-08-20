@@ -2,9 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import { EnvironmentForm } from '../Form';
 import { RouteComponentProps } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 export const NewEnvironmentDialog: React.FC<RouteComponentProps> = ({history}) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setOpen(true);
@@ -17,12 +19,10 @@ export const NewEnvironmentDialog: React.FC<RouteComponentProps> = ({history}) =
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add a new Environment</DialogTitle>
+      <DialogTitle>{t('environment:add_new')}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Create a new Environment associated with 1 moisture sensor board.
-          <br/>
-          Add a Rule and 1 or more GPIO pins to activate auto irrigation
+          {t('environment:add_new_description')}
         </DialogContentText>
         <EnvironmentForm onSubmit={onClose} onCancel={onClose}/>
       </DialogContent>
