@@ -61,6 +61,6 @@ export class RuleController {
     await this.repository.findOneOrFail(id);
     await this.repository.delete(id);
 
-    return null;
+    return {};
   }
 }
