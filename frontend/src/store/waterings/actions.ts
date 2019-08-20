@@ -1,5 +1,4 @@
 import { modelApi, PaginationOptions } from '../../lib/modelFetcher';
-import { RecordModel } from '../models';
 import { parseDates } from '../../lib/commonPipes';
 import { PayloadAction } from '../index';
 import { types, Types } from './reducer';

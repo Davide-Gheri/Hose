@@ -4,6 +4,7 @@ import { get, del, patch, post } from './fetcher';
 export interface PaginationOptions {
   skip?: number;
   take?: number;
+  [key: string]: any;
 }
 
 const PARENT_PLACEHOLDER = ':parentId';

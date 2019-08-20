@@ -16,6 +16,9 @@ const AsyncEnvironment = asyncLoader(() => import('./Environments/Environment'))
 const AsyncGpios = asyncLoader(() => import('./Gpios'));
 const AsyncBoards = asyncLoader(() => import('./Boards'));
 
+const AsyncRules = asyncLoader(() => import('./Rules'));
+const AsyncRule = asyncLoader(() => import('./Rules/Rule'));
+
 export const Main: React.FC = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -35,6 +38,8 @@ export const Main: React.FC = () => {
             <Route path="/environments" component={AsyncEnvironments}/>
             <Route path="/gpios" component={AsyncGpios}/>
             <Route path="/boards" component={AsyncBoards}/>
+            <Route path={`/rules/:id(${uuidregexp})`} component={AsyncRule}/>
+            <Route path="/rules" component={AsyncRules}/>
             <Route path="/" exact component={AsyncDashboard}/>
             <Route path={'*'} component={Async404}/>
           </Switch>

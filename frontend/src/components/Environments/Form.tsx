@@ -1,7 +1,7 @@
 import React, { ChangeEvent, SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { FormValidations, useFormErrors, useFormValues, useFormStyles, safeValue } from '../../hooks/form';
 import { alpha, array, makeMaxLength, numeric, required } from '../../validations';
-import { createStyles, makeStyles, Button, DialogActions, MenuItem, CircularProgress, Chip } from '@material-ui/core';
+import { Button, DialogActions, MenuItem, CircularProgress, Chip } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { asArray as rulesAsArray, getRules } from '../../store/rules';
 import { asArray as gpiosAsArray, getGpios } from '../../store/gpios';

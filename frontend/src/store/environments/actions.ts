@@ -14,9 +14,10 @@ const setLoading = (bool: boolean): PayloadAction<Types['SET_ENVS_LOADING'], boo
   payload: bool,
 });
 
-const getEnvironmentsSuccess = (envs: EnvironmentModel[]): PayloadAction<Types['GET_ENVS_SUCCESS'], EnvironmentModel[]> => ({
+const getEnvironmentsSuccess = (envs: EnvironmentModel[], reset: boolean = false): PayloadAction<Types['GET_ENVS_SUCCESS'], EnvironmentModel[]> => ({
   type: types.GET_ENVS_SUCCESS,
   payload: envs,
+  reset,
 });
 
 const getEnvironmentsError = (error: any): PayloadAction<Types['GET_ENVS_ERROR'], any> => ({
@@ -49,6 +50,8 @@ export const getEnvironments = (options?: PaginationOptions): ThunkAction<Promis
     })
     .finally(() => dispatch(setLoading(false)));
 };
+
+export const resetEnvironments = getEnvironmentsSuccess([], true);
 
 export const getEnvironment = (id: string): ThunkAction<Promise<any>, {}, {}, PayloadAction> => dispatch => {
   dispatch(setLoading(true));

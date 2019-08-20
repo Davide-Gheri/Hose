@@ -7,3 +7,4 @@ export * from './ConfirmButton';
 export * from './VirtualTable';
 export * from './PageHeader';
 export * from './PageContent';
+export * from './DisabledDeleteButton';

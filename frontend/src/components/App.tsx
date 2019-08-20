@@ -2,12 +2,12 @@ import React, { useState, Suspense } from 'react';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { configureStore } from '../store';
-import { CssBaseline, makeStyles, Snackbar, Button, createMuiTheme } from '@material-ui/core';
+import { CssBaseline, makeStyles, Snackbar, Button } from '@material-ui/core';
 import { Route, Router, Switch } from 'react-router';
 import { Main } from './Main';
 import { NotificationsProvider, useNotifications } from '../contexts/Notifications';
 import { ThemeProvider } from '@material-ui/styles';
-import { firebase } from '../theme';
+import { firebaseDark, firebaseLight } from '../theme';
 
 const history = createBrowserHistory();
 const store = configureStore();
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const App: React.FC = () => {
-  const [theme, setTheme] = useState(firebase);
+  const [theme] = useState(firebaseDark);
   const styles = useStyles();
   const { message, closeNotification } = useNotifications();
 

@@ -33,7 +33,7 @@ export const RecordsTable: React.FC<RecordsTableProps> = ({environment, take}) =
   }, [environment.rule.minHumidity]);
 
   if (loading) {
-    return <Loading/>;
+    return <Loading minHeight={100}/>;
   }
 
   return (

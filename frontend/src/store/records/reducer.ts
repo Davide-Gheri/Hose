@@ -35,7 +35,7 @@ export function reducer(state: RecordsState = initialState, action: PayloadActio
       case types.GET_RECORDS_SUCCESS:
         draft.loading = false;
         draft.error = null;
-        if (action.payload.reset) {
+        if (action.reset) {
           draft.records[action.payload.id] = action.payload.records;
         } else {
           draft.records[action.payload.id] = [

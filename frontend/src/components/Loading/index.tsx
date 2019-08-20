@@ -1,13 +1,14 @@
 import React from 'react';
 import { CircularProgress, createStyles, makeStyles } from '@material-ui/core';
+import Box, { BoxProps } from '@material-ui/core/Box';
 
-export const Loading: React.FC = () => {
+export const Loading: React.FC<BoxProps> = (props) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <Box className={classes.root} {...props}>
       <CircularProgress/>
-    </div>
+    </Box>
   );
 };
 

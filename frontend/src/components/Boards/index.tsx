@@ -23,7 +23,7 @@ export const BoardsPage: React.FC<RouteComponentProps> = () => {
         <Button variant="outlined" color="inherit" component={AppLink} to="/boards/new">
           <Add />
           {t('common:add_new')}
-          </Button>
+        </Button>
       </PageHeader>
       <PageContent>
         <Grid container spacing={2}>

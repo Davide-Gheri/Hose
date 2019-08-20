@@ -6,8 +6,6 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Button,
-  makeStyles,
-  createStyles
 } from '@material-ui/core';
 import { asArray, getEnvironments } from '../../store/environments';
 import { getLoading } from '../../store/selectors';
@@ -18,25 +16,21 @@ import { useTranslation } from 'react-i18next';
 
 export interface EnvListProps {
   take?: number;
+  filter?: any;
 }
 
-export const EnvList: React.FC<EnvListProps> = ({take}) => {
-  const classes = useStyles();
+export const EnvList: React.FC<EnvListProps> = ({take, filter}) => {
   const { t } = useTranslation();
   const environments = useSelector(asArray);
   const loading = useSelector(getLoading('environments'));
   const dispatch = useThunkDispatch();
 
   useEffect(() => {
-    dispatch(getEnvironments({take})).catch(console.error);
+    dispatch(getEnvironments({take, ...filter})).catch(console.error);
   }, [dispatch]);
 
   if (loading) {
-    return (
-      <div className={classes.loading}>
-        <Loading/>
-      </div>
-    );
+    return <Loading minHeight={100}/>;
   }
 
   return (
@@ -59,12 +53,3 @@ export const EnvList: React.FC<EnvListProps> = ({take}) => {
     </List>
   );
 };
-
-const useStyles = makeStyles(theme => createStyles({
-  loading: {
-    width: '100%',
-    minHeight: 200,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-}));

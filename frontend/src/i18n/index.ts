@@ -20,7 +20,6 @@ i18next
     fallbackLng: 'en',
     ns: ['board', 'environment', 'gpio', 'watering', 'record', 'rule', 'error', 'common'],
     defaultNS: 'common',
-    debug: true,
     backend: {
       backends: [LocalStorage, XHR],
       backendOptions: [

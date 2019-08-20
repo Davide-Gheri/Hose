@@ -1,15 +1,8 @@
-import { createSelector } from 'reselect';
 import { AppState } from '../index';
+import { makeAsArray, makeMakeById } from '../selectors';
 
 const environmentsSelector = (state: AppState) => state.environments.environments;
 
-export const asArray = createSelector(
-  environmentsSelector,
-  envs => Object.keys(envs).map(id => envs[id]),
-);
+export const asArray = makeAsArray(environmentsSelector);
 
-export const makeByIdSelector = () => createSelector(
-  environmentsSelector,
-  (_: any, id: string) => id,
-  (envs, id) => envs[id]
-);
+export const makeByIdSelector = makeMakeById(environmentsSelector);

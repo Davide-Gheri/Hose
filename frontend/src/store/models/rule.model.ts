@@ -5,4 +5,5 @@ export interface RuleModel extends BaseModel<string> {
   minHumidity: number;
   wateringSeconds: number;
   updatedAt: any;
+  environmentIds: string[];
 }

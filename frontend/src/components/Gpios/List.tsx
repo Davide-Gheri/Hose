@@ -6,7 +6,6 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   IconButton,
-  makeStyles, createStyles
 } from '@material-ui/core';
 import { DeleteForever } from '@material-ui/icons';
 import { AppLink, ConfirmButton } from '../common';
@@ -25,7 +24,6 @@ export interface GpioListProps {
 }
 
 export const GpioList: React.FC<GpioListProps> = ({take}) => {
-  const classes = useStyles();
   const { t } = useTranslation();
   const gpios = useSelector(asArray);
   const {loading, error} = useSelector(getLoadingError('gpios'));
@@ -50,11 +48,7 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
   }, [dispatch, t]);
 
   if (loading) {
-    return (
-      <div className={classes.loading}>
-        <Loading/>
-      </div>
-    );
+    return <Loading minHeight={100}/>;
   }
 
   if (error) {
@@ -92,12 +86,3 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
     </List>
   )
 };
-
-const useStyles = makeStyles(theme => createStyles({
-  loading: {
-    width: '100%',
-    minHeight: 200,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-}));

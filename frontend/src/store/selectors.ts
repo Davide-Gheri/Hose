@@ -23,3 +23,9 @@ export const makeAsArray = <M extends BaseModel<any> = any>(storeSelector: (stor
   storeSelector,
   models => Object.keys(models).map(id => models[id]),
 );
+
+export const makeMakeById = <M extends BaseModel<any> = any>(storeSelector: (store: AppState) => Record<string, M>) => () => createSelector(
+  storeSelector,
+  (_: any, id: string) => id,
+  (models, id) => models[id]
+);

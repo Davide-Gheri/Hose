@@ -6,28 +6,28 @@ import { useThunkDispatch } from '../../store';
 import { Loading } from '../Loading';
 import { Error } from '../Error';
 import { Button, IconButton, List, ListItem, ListItemSecondaryAction, ListItemText, makeStyles, createStyles } from '@material-ui/core';
-import { AppLink, ConfirmButton, ListItemLink } from '../common';
+import { AppLink, ConfirmButton, ListItemLink, DisabledDeleteButton } from '../common';
 import { DeleteForever } from '@material-ui/icons';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
-import { DisabledDeleteButton } from './DisabledDeleteButton';
 import { useTranslation } from 'react-i18next';
+import { useErrorHandler } from '../../hooks';
 
 export interface BoardListProps {
   take?: number;
 }
 
 export const BoardList: React.FC<BoardListProps> = ({take}) => {
-  const classes = useStyles();
   const { t } = useTranslation();
   const boards = useSelector(asArray);
   const {loading, error} = useSelector(getLoadingError('boards'));
+  const handleError = useErrorHandler();
 
   const dispatch = useThunkDispatch();
 
   const {openNotification} = useNotifications();
 
   useEffect(() => {
-    dispatch(getBoards({take})).catch(console.error);
+    dispatch(getBoards({take})).catch(handleError);
   }, [dispatch]);
 
   const onDelete = useCallback((id: string) => {
@@ -41,7 +41,7 @@ export const BoardList: React.FC<BoardListProps> = ({take}) => {
   }, [dispatch, t]);
 
   if (loading) {
-    return <div className={classes.loading}><Loading/></div>;
+    return <Loading minHeight={100}/>;
   }
 
   if (error) {
@@ -66,27 +66,20 @@ export const BoardList: React.FC<BoardListProps> = ({take}) => {
             primary={`${board.id}`}
           />
           <ListItemSecondaryAction>
-            {!!board.environment ? 
-              <DisabledDeleteButton board={board}/> :
+            {!!board.environmentId ? (
+                <DisabledDeleteButton text={t('board:cannot_delete')}/>
+              ) : (
               <ConfirmButton
+                size="small"
                 renderButton={props => <IconButton {...props}/>}
                 onClick={() => onDelete(board.id)}
               >
                 <DeleteForever/>
               </ConfirmButton>
-            }
+            )}
           </ListItemSecondaryAction>
         </ListItemLink>
       ))}
     </List>
   )
-}
-
-const useStyles = makeStyles(theme => createStyles({
-  loading: {
-    width: '100%',
-    minHeight: 300,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-}));
+};

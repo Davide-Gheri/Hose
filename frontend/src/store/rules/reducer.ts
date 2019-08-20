@@ -12,6 +12,9 @@ export const types = {
   SET_RULES_LOADING: 'SET_RULES_LOADING',
   GET_RULES_SUCCESS: 'GET_RULES_SUCCESS',
   GET_RULES_ERROR: 'GET_RULES_ERROR',
+  GET_RULE_SUCCESS: 'GET_RULE_SUCCESS',
+  GET_RULE_ERROR: 'GET_RULE_ERROR',
+  DELETE_RULE_SUCCESS: 'DELETE_RULE_SUCCESS',
 };
 
 export type Types = typeof types;
@@ -39,6 +42,15 @@ export function reducer(state: RulesState = initialState, action: PayloadAction)
         action.payload.forEach((rule: RuleModel) => {
           draft.rules[rule.id] = rule;
         });
+        break;
+      case types.GET_RULE_SUCCESS:
+        draft.loading = false;
+        draft.error = null;
+        draft.rules[action.payload.id] = action.payload;
+        break;
+      case types.GET_RULE_ERROR:
+        draft.loading = false;
+        draft.error = action.payload;
         break;
     }
   });

@@ -52,7 +52,7 @@ export interface AppState {
   [key: string]: any;
 }
 
-const logger = makeLogger('redux', true);
+const logger = makeLogger('redux', false);
 
 export const configureStore = () => {
   const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

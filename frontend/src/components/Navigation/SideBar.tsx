@@ -11,7 +11,7 @@ import {
   ListItemText,
   makeStyles, Tooltip
 } from '@material-ui/core';
-import { ChevronLeft, Dashboard, Place, DeveloperBoard, SettingsInputComponent, Menu } from '@material-ui/icons';
+import { ChevronLeft, Dashboard, Place, DeveloperBoard, SettingsInputComponent, Menu, Tune } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -52,6 +52,12 @@ const links: LinkItem[] = [
     href: '/boards',
     transProp: {count: 100},
   },
+  {
+    title: 'rule:rule',
+    icon: <Tune/>,
+    href: '/rules',
+    transProp: {count: 100},
+  }
 ];
 
 

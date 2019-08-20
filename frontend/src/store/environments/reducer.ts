@@ -34,8 +34,11 @@ export function reducer(state: EnvironmentState = initialState, action: PayloadA
         draft.loading = action.payload;
         break;
       case types.GET_ENVS_SUCCESS:
-        draft.loading = false;
+        // draft.loading = false;
         draft.error = null;
+        if (action.reset) {
+          draft.environments = {};
+        }
         action.payload.forEach((env: EnvironmentModel) => {
           draft.environments[env.id] = env;
         });

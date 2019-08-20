@@ -5,7 +5,6 @@ import { InfiniteWateringTable } from './InfiniteTable';
 import { getWaterings, makeGetByEnvSelector } from '../../store/waterings';
 import { useSelector } from 'react-redux';
 import { AppState, useThunkDispatch } from '../../store';
-import { getLoading } from '../../store/selectors';
 import { useTranslation } from 'react-i18next';
 
 export interface WateringsWidgets {
@@ -20,7 +19,6 @@ export const WateringsWidgets: React.FC<WateringsWidgets> = ({environment}) => {
   const [skip, setSkip] = useState(0);
 
   const waterings = useSelector((state: AppState) => getByEnv(state, environment.id));
-  const loading = useSelector(getLoading('waterings'));
   const dispatch = useThunkDispatch();
   const loadMore = useCallback(() => {
     return dispatch(getWaterings(environment.id, {take, skip}))

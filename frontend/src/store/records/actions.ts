@@ -16,7 +16,8 @@ const setLoading = (bool: boolean): PayloadAction<Types['SET_RECORDS_LOADING'], 
 
 const getRecordsSuccess = (id: string, records: RecordModel[], reset?: boolean): PayloadAction<Types['GET_RECORDS_SUCCESS']> => ({
   type: types.GET_RECORDS_SUCCESS,
-  payload: {id, records, reset},
+  payload: {id, records},
+  reset,
 });
 
 const getRecordsError = (error: any): PayloadAction<Types['GET_RECORDS_ERROR'], any> => ({

@@ -1,4 +1,4 @@
-import { AppAction, PayloadAction } from '../index';
+import { PayloadAction } from '../index';
 import { types, Types } from './reducer';
 
 // export const getPreferredEnv = (): AppAction<Types['GET_PREFERRED_ENV']> => ({

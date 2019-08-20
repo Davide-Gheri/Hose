@@ -6,5 +6,5 @@ export interface BoardModel extends BaseModel<string> {
   createdAt: any;
   lastCheckedAt: any;
   isDown: null | boolean;
-  environment?: null | EnvironmentModel;
+  environmentId?: null | string;
 }

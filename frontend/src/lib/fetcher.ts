@@ -47,7 +47,7 @@ const callFetch = <T = any>(url: string, options?: RequestInit) => {
       .then(parseResponse)
       .then(setCache(url, options!.method || 'GET'))
     })
-    .then(sleep(2000)) // TODO remove this
+    .then(sleep(500)) // TODO remove this
 };
 
 const optionsWithBody = (method: string, body?: any) => Object.assign({
@@ -72,6 +72,7 @@ const parseResponse = (res: Response) => {
 
 export class FetchError extends Error {
   public description: any;
+  public statusCode: number;
 
   constructor(errorObj: any) {
     super(errorObj.message || 'An error occurred');
@@ -81,5 +82,6 @@ export class FetchError extends Error {
     }
     this.name = 'FetchError';
     this.description = errorObj;
+    this.statusCode = errorObj.statusCode || 500;
   }
 }

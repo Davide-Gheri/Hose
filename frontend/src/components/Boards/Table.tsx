@@ -9,10 +9,9 @@ import { Error } from '../Error';
 import { createStyles, makeStyles, Table, TableBody, TableCell, TableHead, TableRow, IconButton, Link } from '@material-ui/core';
 import { DeleteForever } from '@material-ui/icons';
 import { boardCheckingMessage } from '../../lib/messages';
-import { AppLink, ConfirmButton } from '../common';
+import { AppLink, ConfirmButton, DisabledDeleteButton } from '../common';
 import { formatDate } from '../../lib/dates';
 import { useErrorHandler } from '../../hooks/error';
-import { DisabledDeleteButton } from './DisabledDeleteButton';
 import { useTranslation } from 'react-i18next';
 
 export interface BoardTableProps {
@@ -31,7 +30,7 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
-    dispatch(getBoards({take})).catch(console.error);
+    dispatch(getBoards({take})).catch(errorHandler);
   }, [dispatch]);
 
   const onDelete = useCallback((id: string) => {
@@ -42,10 +41,10 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
           text: t('board:deleted'),
         });
       }).catch(errorHandler);
-  }, [t]);
+  }, [t, dispatch]);
 
   if (loading) {
-    return <div className={classes.root}><Loading/></div>;
+    return <Loading minHeight={100}/>;
   }
 
   if (error) {
@@ -53,54 +52,47 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
   }
 
   return (
-    <div className={classes.root}>
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <TableCell>{t('board:id')}</TableCell>
-            <TableCell>{t('board:healthcheck')}</TableCell>
-            <TableCell>{t('board:last_check')}</TableCell>
-            <TableCell>{t('common:delete')}</TableCell>
+    <Table className={classes.table}>
+      <TableHead>
+        <TableRow>
+          <TableCell>{t('board:id')}</TableCell>
+          <TableCell>{t('board:healthcheck')}</TableCell>
+          <TableCell>{t('board:last_check')}</TableCell>
+          <TableCell>{t('common:delete')}</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {boards.map(board => (
+          <TableRow key={board.id} hover>
+            <TableCell component="th" scope="row">
+              <Link component={AppLink} to={`/boards/${board.id}`}>{board.id}</Link>
+            </TableCell>
+            <TableCell>
+              {boardCheckingMessage(board)}
+            </TableCell>
+            <TableCell>
+              {formatDate(board.lastCheckedAt) || t('common:never')}
+            </TableCell>
+            <TableCell>
+              {!!board.environmentId ? (
+                <DisabledDeleteButton text={t('board:cannot_delete')}/>
+              ) : (
+                <ConfirmButton
+                  size="small"
+                  onClick={() => onDelete(board.id)}
+                  renderButton={props => <IconButton {...props}/>}>
+                  <DeleteForever/>
+                </ConfirmButton>
+              )}
+            </TableCell>
           </TableRow>
-        </TableHead>
-        <TableBody>
-          {boards.map(board => (
-            <TableRow key={board.id} hover>
-              <TableCell component="th" scope="row">
-                <Link component={AppLink} to={`/boards/${board.id}`}>{board.id}</Link>
-              </TableCell>
-              <TableCell>
-                {boardCheckingMessage(board)}
-              </TableCell>
-              <TableCell>
-                {formatDate(board.lastCheckedAt) || t('common:never')}
-              </TableCell>
-              <TableCell>
-                {!!board.environment ?
-                  <DisabledDeleteButton board={board}/> :
-                  <ConfirmButton
-                    size="small"
-                    onClick={() => onDelete(board.id)}
-                    renderButton={props => <IconButton {...props}/>}>
-                    <DeleteForever/>
-                  </ConfirmButton>
-                }
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+        ))}
+      </TableBody>
+    </Table>
   )
 };
 
 const useStyles = makeStyles(theme => createStyles({
-  root: {
-    width: '100%',
-    minHeight: 300,
-    display: 'flex',
-    flexDirection: 'column',
-  },
   table: {},
   errorCell: {
     color: theme.palette.error.main,

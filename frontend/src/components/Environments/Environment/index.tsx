@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Route, RouteComponentProps } from 'react-router';
 import { useSelector } from 'react-redux';
 import { getEnvironment, makeByIdSelector } from '../../../store/environments';
 import { AppState, useThunkDispatch } from '../../../store';
 import { getLoading } from '../../../store/selectors';
 import { Loading } from '../../Loading';
-import { createStyles, makeStyles, Typography, Button, Chip } from '@material-ui/core';
+import { createStyles, makeStyles, Typography, Button, Chip, Link } from '@material-ui/core';
 import { WidgetArea } from '../../Dashboard/WidgetArea';
 import { AppLink, PageHeader, PageContent } from '../../common';
 import { uuidregexp } from '../../../lib/pathRegexp';
@@ -25,8 +25,6 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
   const environment = useSelector((state: AppState) => getById(state, id));
   const loading = useSelector(getLoading('environments'));
   const dispatch = useThunkDispatch();
-
-  const [take, setTake] = useState(20);
 
   useEffect(() => {
     if (!environment) {
@@ -65,6 +63,14 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
             </div>
           ) : t('environment:no_associated_pins')}
         </div>
+        {environment.rule && (
+          <div className={classes.description}>
+            <Typography>
+              {t('rule:rule')}:
+              <Link component={AppLink} to={`/rules/${environment.rule.id}`}>{environment.rule.title}</Link>
+            </Typography>
+          </div>
+        )}
         {environment.description && (
           <div className={classes.description}>
             <Typography color="textSecondary">{environment.description}</Typography>
