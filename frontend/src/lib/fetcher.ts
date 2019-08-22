@@ -32,11 +32,11 @@ export const del = (url: string) => callFetch(url, {method: 'DELETE'});
 const callFetch = <T = any>(url: string, options?: RequestInit) => {
   return getFromCache(url, options)
     .then(res => {
-      logger.log('Cache HIT');
+      logger.log('Cache HIT', url);
       return res;
     })
     .catch(() => {
-      logger.log('Cache miss');
+      logger.log('Cache miss', url);
       return fetch(url, {
         ...options,
         headers: {

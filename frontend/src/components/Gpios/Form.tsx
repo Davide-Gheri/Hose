@@ -64,7 +64,7 @@ export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel}) => {
       }).catch(console.error) // TODO show errors
         .finally(() => setSubmit(false));
     }
-  }, [validateForm, formValues, onSubmit, t, openNotification, dispatch]);
+  }, [validateForm, formValues, onSubmit, t]);
 
   const onFormCancel = useCallback((e: SyntheticEvent) => {
     e.preventDefault();

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Route, RouteComponentProps } from 'react-router';
 import { useSelector } from 'react-redux';
 import { getEnvironment, makeByIdSelector } from '../../../store/environments';
@@ -14,10 +14,12 @@ import { RecordsWidget } from '../../Records/RecordsWidgets';
 import { WateringsWidgets } from '../../Waterings/WateringsWidgets';
 import { useTranslation } from 'react-i18next';
 import { minSleep } from '../../../lib/sleep';
+import { useErrorHandler } from '../../../hooks/error';
 
 const AsyncEditEnvironment = asyncLoader(() => minSleep(import('../EditEnvironment/Dialog')));
 
 export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = props => {
+  const [ready, setReady] = useState(false);
   const classes = useStyles();
   const { t } = useTranslation();
   const getById = useMemo(makeByIdSelector, []);
@@ -26,14 +28,16 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
   const environment = useSelector((state: AppState) => getById(state, id));
   const loading = useSelector(getLoading('environments'));
   const dispatch = useThunkDispatch();
+  const errorHandler = useErrorHandler();
 
   useEffect(() => {
-    if (!environment) {
-      dispatch(getEnvironment(id)).catch(console.error);
-    }
-  }, [id, environment, dispatch]);
+    setReady(false);
+    dispatch(getEnvironment(id))
+      .then(() => setReady(true))
+      .catch(errorHandler);
+  }, [id]);
 
-  if (loading) {
+  if (loading || !ready) {
     return <Loading/>;
   }
 
@@ -78,7 +82,7 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
           </div>
         )}
         <WidgetArea>
-          <RecordsWidget environment={environment} />
+          {/*<RecordsWidget environment={environment} />*/}
           <WateringsWidgets environment={environment} />
         </WidgetArea>
       </PageContent>

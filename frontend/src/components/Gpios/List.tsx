@@ -35,7 +35,7 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
 
   useEffect(() => {
     dispatch(getGpios({take})).catch(errorHandler);
-  }, [take, dispatch]);
+  }, [take]);
 
   const onDelete = useCallback((id: string) => {
     dispatch(deleteGpio(id))
@@ -45,7 +45,7 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
           text: t('gpio:deleted'),
         });
       }).catch(errorHandler);
-  }, [t, dispatch]);
+  }, [t]);
 
   if (loading) {
     return <Loading minHeight={100}/>;

@@ -13,8 +13,8 @@ export const NewGpioDialog: React.FC<RouteComponentProps> = ({history}) => {
   }, []);
 
   const onClose = useCallback(() => {
-    history.push('/gpios');
     setOpen(false);
+    history.push('/gpios');
   }, [history]);
 
   return (

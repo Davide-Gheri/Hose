@@ -16,8 +16,8 @@ export const EditEnvironmentDialog: React.FC<EditEnvironmentDialogProps> = ({his
   }, []);
 
   const onClose = useCallback(() => {
-    history.push(`/environments/${environment.id}`);
     setOpen(false);
+    history.push(`/environments/${environment.id}`);
   }, [history, environment]);
 
   return (

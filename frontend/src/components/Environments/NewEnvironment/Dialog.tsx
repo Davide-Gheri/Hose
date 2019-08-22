@@ -13,8 +13,8 @@ export const NewEnvironmentDialog: React.FC<RouteComponentProps> = ({history}) =
   }, []);
 
   const onClose = useCallback(() => {
-    history.push('/environments');
     setOpen(false);
+    history.push('/environments');
   }, [history]);
 
   return (

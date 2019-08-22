@@ -91,7 +91,7 @@ export const RuleForm: React.FC<RuleFormProps> = ({onSubmit, onCancel, rule}) =>
         }
       }).catch(console.error); //TODO show errors
     }
-  }, [validateForm, formValues, onSubmit, rule, t, openNotification, dispatch]);
+  }, [validateForm, formValues, onSubmit, rule, t]);
 
   const onFormCancel = useCallback((e: SyntheticEvent) => {
     e.preventDefault();
@@ -111,7 +111,7 @@ export const RuleForm: React.FC<RuleFormProps> = ({onSubmit, onCancel, rule}) =>
         })
       })
     }
-  }, [rule, t, dispatch, openNotification]);
+  }, [rule, t]);
 
   return (
     <form onSubmit={onSubmit} noValidate>

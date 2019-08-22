@@ -14,7 +14,7 @@ export const ThemeSwitch: React.FC = () => {
   const changeTheme = useCallback((name: string) => {
     dispatch(setCurrentTheme(name));
     removeAnchorEl();
-  }, [dispatch, removeAnchorEl]);
+  }, [removeAnchorEl]);
 
   return (
     <>

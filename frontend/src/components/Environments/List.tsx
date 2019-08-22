@@ -29,7 +29,7 @@ export const EnvList: React.FC<EnvListProps> = ({take, filter}) => {
 
   useEffect(() => {
     dispatch(getEnvironments({take, ...filter})).catch(errorHandler);
-  }, [dispatch, take, filter]);
+  }, [take]);
 
   if (loading) {
     return <Loading minHeight={100}/>;

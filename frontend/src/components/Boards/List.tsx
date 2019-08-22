@@ -28,7 +28,7 @@ export const BoardList: React.FC<BoardListProps> = ({take}) => {
 
   useEffect(() => {
     dispatch(getBoards({take})).catch(handleError);
-  }, [dispatch]);
+  }, []);
 
   const onDelete = useCallback((id: string) => {
     dispatch(deleteBoard(id))
@@ -38,7 +38,7 @@ export const BoardList: React.FC<BoardListProps> = ({take}) => {
           text: t('board:deleted'),
         });
       });
-  }, [dispatch, t]);
+  }, [t]);
 
   if (loading) {
     return <Loading minHeight={100}/>;

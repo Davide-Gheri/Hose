@@ -16,8 +16,8 @@ export const EditRuleDialog: React.FC<EditRuleDialog> = ({history, rule}) => {
   }, []);
 
   const onClose = useCallback(() => {
-    history.push(`/rules/${rule.id}`);
     setOpen(false);
+    history.push(`/rules/${rule.id}`);
   }, [history, rule]);
 
   return (

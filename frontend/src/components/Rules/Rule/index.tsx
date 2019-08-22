@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Route, RouteComponentProps } from 'react-router';
 import { useSelector } from 'react-redux';
 import { Button, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
@@ -20,6 +20,7 @@ import { minSleep } from '../../../lib/sleep';
 const AsyncEditRule = asyncLoader(() => minSleep(import('../EditRule/Dialog')));
 
 export const RulePage: React.FC<RouteComponentProps<{id: string}>> = (props) => {
+  const [ready, setReady] = useState(false);
   const { t } = useTranslation();
   const getById = useMemo(makeByIdSelector, []);
   const id = props.match.params.id;
@@ -30,16 +31,14 @@ export const RulePage: React.FC<RouteComponentProps<{id: string}>> = (props) => 
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
-    if (!rule) {
-      dispatch(getRule(id)).catch(errorHandler);
-    }
-  }, [id, rule, dispatch]);
-
-  useEffect(() => {
+    setReady(false);
     dispatch(resetEnvironments);
-  }, [id, dispatch]);
+    dispatch(getRule(id))
+      .then(() => setReady(true))
+      .catch(errorHandler);
+  }, [id]);
 
-  if (loading) {
+  if (loading || !ready) {
     return <Loading/>;
   }
 

@@ -11,8 +11,10 @@ export const setCache = (url: string, method: string) => (res: any) => {
   if (!CACHE_ENABLED) return res;
   if (method === 'GET') { // Cache only GET calls
     cache.set(url, res);
-  } else { // Remove from cache for POST, PUT, PATCH, DELETE calls
-    cache.delete(url);
+  } else {
+    // Clear ALL cache if not a GET request (related entities could have embedded the same requested object, now obsolete)
+    cache.reset();
+    // cache.delete(url);
   }
   return res;
 };

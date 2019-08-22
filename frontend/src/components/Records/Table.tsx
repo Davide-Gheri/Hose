@@ -26,7 +26,7 @@ export const RecordsTable: React.FC<RecordsTableProps> = ({environment, take}) =
 
   useEffect(() => {
     dispatch(getRecords(environment.id, {take})).catch(console.error);
-  }, [environment.id, dispatch, take]);
+  }, [environment.id, take]);
 
   const isError = useCallback((record: RecordModel) => {
     return record.record <= environment.rule.minHumidity;

@@ -14,6 +14,7 @@ import {
 import { ChevronLeft, Dashboard, Place, DeveloperBoard, SettingsInputComponent, Menu, Tune } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from '../../hooks/router';
 
 export interface SideBarProps {
   open: boolean;
@@ -64,6 +65,7 @@ const links: LinkItem[] = [
 export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer, openDrawer}) => {
   const classes = useStyles();
   const { t } = useTranslation();
+  const { location: { pathname } } = useRouter();
 
   return (
     <Drawer
@@ -95,6 +97,7 @@ export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer, openDrawer})
             button
             component={Link}
             to={link.href}
+            selected={pathname === link.href}
             className={classes.item}
             classes={{gutters: clsx(classes.gutters)}}
           >

@@ -18,7 +18,7 @@ export const PreferredEnvReadings: React.FC = () => {
     if (environment) {
       dispatch(resetRecords(environment.id));
     }
-  }, [environment, dispatch]);
+  }, [environment]);
 
   return (
     <Widget

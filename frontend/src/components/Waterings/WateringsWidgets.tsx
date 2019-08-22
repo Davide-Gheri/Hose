@@ -25,7 +25,7 @@ export const WateringsWidgets: React.FC<WateringsWidgets> = ({environment}) => {
     .then(() => {
       setSkip(take + skip);
     }).catch(console.error);
-  }, [skip, setSkip, environment.id, dispatch]);
+  }, [skip, setSkip, environment.id]);
 
   useEffect(() => {
     loadMore();

@@ -34,7 +34,7 @@ export const RecordsWidget: React.FC<RecordsWidgetsProps> = ({environment}) => {
     .then(() => {
       setSkip(take + skip);
     }).catch(console.error);
-  }, [skip, setSkip, environment.id, dispatch]);
+  }, [skip, setSkip, environment.id]);
 
   const onSliderChange = useCallback((e: ChangeEvent<{}>, value: any) => {
     setChartShow(value as number);
