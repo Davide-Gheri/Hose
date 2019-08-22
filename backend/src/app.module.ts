@@ -9,8 +9,9 @@ import { InstallCommand } from './commands/install.command';
 import { GpioModule } from './modules/gpio/gpio.module';
 import { InfluxModule } from './modules/influx/influx.module';
 import { BoardModule } from './modules/board/board.module';
-import Config from 'config';
 import { ScheduleModule } from 'nest-schedule';
+import { ThemeModule } from './modules/theme/theme.module';
+import Config from 'config';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ScheduleModule } from 'nest-schedule';
     GpioModule,
     InfluxModule,
     BoardModule,
+    ThemeModule,
   ],
   controllers: [AppController],
   providers: [
