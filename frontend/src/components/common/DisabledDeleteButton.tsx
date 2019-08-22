@@ -16,7 +16,7 @@ export const DisabledDeleteButton: React.FC<DisabledDeleteButtonProps> = ({text}
       autoHide: 4000,
       text,
     });
-  }, []);
+  }, [openNotification, text]);
 
   return (
     <IconButton onClick={onClick} size="small">

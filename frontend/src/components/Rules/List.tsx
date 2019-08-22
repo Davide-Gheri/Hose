@@ -27,7 +27,7 @@ export const RuleList: React.FC<RuleListProps> = ({take}) => {
 
   useEffect(() => {
     dispatch(getRules({take})).catch(errorHandler);
-  }, [dispatch]);
+  }, [dispatch, take]);
 
   const onDelete = useCallback((id: string) => {
     dispatch(deleteRule(id))
@@ -37,7 +37,7 @@ export const RuleList: React.FC<RuleListProps> = ({take}) => {
           text: t('rule:deleted'),
         });
       }).catch(errorHandler);
-  }, [t, dispatch]);
+  }, [t, dispatch, openNotification]);
 
   if (loading) {
     return <Loading minHeight={100}/>;

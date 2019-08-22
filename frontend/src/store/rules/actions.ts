@@ -1,10 +1,10 @@
 import { ThunkAction } from 'redux-thunk';
 import { modelApi, PaginationOptions } from '../../lib/modelFetcher';
 import { RuleModel } from '../models';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 import { types, Types } from './reducer';
 
-const Api = modelApi<RuleModel>('http://localhost:5000/rules');
+const Api = modelApi<RuleModel>('/rules');
 
 const setLoading = (bool: boolean): PayloadAction<Types['SET_RULES_LOADING'], boolean> => ({
   type: types.SET_RULES_LOADING,

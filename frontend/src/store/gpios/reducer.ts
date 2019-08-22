@@ -1,6 +1,6 @@
 import produce from 'immer';
 import { GpioModel } from '../models';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 
 export interface GpiosState {
   loading: boolean;

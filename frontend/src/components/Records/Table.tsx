@@ -26,7 +26,7 @@ export const RecordsTable: React.FC<RecordsTableProps> = ({environment, take}) =
 
   useEffect(() => {
     dispatch(getRecords(environment.id, {take})).catch(console.error);
-  }, [environment.id]);
+  }, [environment.id, dispatch, take]);
 
   const isError = useCallback((record: RecordModel) => {
     return record.record <= environment.rule.minHumidity;
@@ -49,7 +49,7 @@ export const RecordsTable: React.FC<RecordsTableProps> = ({environment, take}) =
           {records.map(record => {
             const errored = isError(record);
             return (
-              <TableRow key={`record-${environment.id}-${record.time}`} hover>
+              <TableRow key={`record-${environment.id}-${record.time}-${record.record}`} hover>
                 <TableCell
                   className={clsx({
                     [classes.errorCell]: errored,

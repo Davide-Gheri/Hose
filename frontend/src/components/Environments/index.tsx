@@ -6,8 +6,9 @@ import { Route } from 'react-router';
 import { asyncLoader } from '../asyncLoader';
 import { AppLink, PageHeader, PageContent } from '../common';
 import { useTranslation } from 'react-i18next';
+import { minSleep } from '../../lib/sleep';
 
-const AsyncNewEnvironment = asyncLoader(() => import('./NewEnvironment/Dialog'));
+const AsyncNewEnvironment = asyncLoader(() => minSleep(import('./NewEnvironment/Dialog')));
 
 export const EnvironmentsPage: React.FC = () => {
   const { t } = useTranslation();

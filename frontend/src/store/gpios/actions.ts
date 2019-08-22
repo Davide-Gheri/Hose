@@ -1,10 +1,10 @@
 import { ThunkAction } from 'redux-thunk';
 import { modelApi, PaginationOptions } from '../../lib/modelFetcher';
 import { GpioModel } from '../models';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 import { types, Types } from './reducer';
 
-const Api = modelApi<GpioModel>('http://localhost:5000/gpios');
+const Api = modelApi<GpioModel>('/gpios');
 
 const setLoading = (bool: boolean): PayloadAction<Types['SET_GPIOS_LOADING'], boolean> => ({
   type: types.SET_GPIOS_LOADING,
@@ -51,14 +51,17 @@ export const createGpio = (data: Partial<GpioModel>): ThunkAction<Promise<any>, 
   return Api.create(data)
     .then(gpio => dispatch(getGpioSuccess(gpio)))
     .catch(err => {
-      dispatch(getGpioError(err));
       throw err;
     });
 };
 
 export const deleteGpio = (id: string): ThunkAction<Promise<any>, {}, {}, PayloadAction> => dispatch => {
+  console.log('Deleting gpio');
   dispatch(setLoading(true));
   return Api.delete(id)
     .then(() => dispatch(deleteGpioSuccess(id)))
-    .finally(() => dispatch(setLoading(false)));
+    .finally(() => {
+      console.log('set loading FALSE from finally()')
+      dispatch(setLoading(false))
+    });
 };

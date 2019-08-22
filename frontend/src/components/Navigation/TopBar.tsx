@@ -2,6 +2,8 @@ import React from 'react'
 import clsx from 'clsx';
 import { AppBar, createStyles, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import { LanguageSwitch } from '../LanguageSwitch';
+import { ThemeSwitch } from '../ThemeSwitch';
+import { Spacer } from '../common';
 
 export interface TopBarProps {
   open: boolean;
@@ -25,7 +27,9 @@ export const TopBar: React.FC<TopBarProps> = ({open}) => {
         <Typography component="h1" variant="h6" noWrap>
           Hose
         </Typography>
+        <Spacer/>
         <LanguageSwitch/>
+        <ThemeSwitch/>
       </Toolbar>
     </AppBar>
   )
@@ -50,7 +54,6 @@ const useStyles = makeStyles(theme => createStyles({
   },
   toolbar: {
     paddingLeft: theme.spacing(7) + 1 + theme.spacing(2),
-    justifyContent: 'space-between',
     [theme.breakpoints.up('sm')]: {
       paddingLeft: theme.spacing(9) + 1 + theme.spacing(2),
     },

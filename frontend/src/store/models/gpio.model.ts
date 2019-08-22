@@ -1,4 +1,4 @@
-import { BaseModel } from '../index';
+import { BaseModel } from '../interfaces';
 import { EnvironmentModel } from './environment.model';
 
 export interface GpioModel extends BaseModel<string> {

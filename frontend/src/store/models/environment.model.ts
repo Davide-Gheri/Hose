@@ -1,4 +1,4 @@
-import { BaseModel } from '../index';
+import { BaseModel } from '../interfaces';
 import { GpioModel } from './gpio.model';
 import { RuleModel } from './rule.model';
 import { BoardModel } from './board.model';

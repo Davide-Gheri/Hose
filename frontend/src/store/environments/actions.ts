@@ -1,11 +1,11 @@
 import { ThunkAction } from 'redux-thunk';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 import { types, Types } from './reducer';
 import { modelApi, PaginationOptions } from '../../lib/modelFetcher';
 import { parseDates } from '../../lib/commonPipes';
 import { EnvironmentModel } from '../models';
 
-const Api = modelApi<EnvironmentModel>('http://localhost:5000/environments', [
+const Api = modelApi<EnvironmentModel>('/environments', [
   parseDates(),
 ]);
 

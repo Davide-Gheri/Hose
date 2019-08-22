@@ -1,10 +1,11 @@
 import { sleep } from './sleep';
 import { getFromCache, setCache } from './cache';
 import { makeLogger } from './logger';
+import { Config } from './Config';
 
-const debug = true; // TODO from env or config
+const debug = Config.get<boolean>('fetch.debug', false);
 
-const logger = makeLogger('fetcher', true);
+const logger = makeLogger('fetcher', Config.get<boolean>('logger.loggers.fetch'));
 
 const headers: Record<string, string> = {
   'content-type': 'application/json'

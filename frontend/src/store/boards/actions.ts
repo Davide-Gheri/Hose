@@ -1,11 +1,11 @@
 import { ThunkAction } from 'redux-thunk';
 import { modelApi, PaginationOptions } from '../../lib/modelFetcher';
 import { BoardModel, EnvironmentModel } from '../models';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 import { types, Types } from './reducer';
 import { parseDates } from '../../lib/commonPipes';
 
-const Api = modelApi<BoardModel>('http://localhost:5000/boards', [
+const Api = modelApi<BoardModel>('/boards', [
   parseDates('createdAt', 'lastCheckedAt'),
 ]);
 

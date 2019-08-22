@@ -1,6 +1,6 @@
 import produce from 'immer';
 import { RuleModel } from '../models';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 
 export interface RulesState {
   loading: boolean;

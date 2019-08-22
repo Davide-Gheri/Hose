@@ -1,0 +1,32 @@
+{
+  "appName": "Hose",
+  "rootId": "root",
+  "persist": {
+    "dbName": "hose"
+  },
+  "i18n": {
+    "defaultLanguage": "en",
+    "fallbackLanguage": "en",
+    "currentLanguageKey": "hose_i18n_current_language",
+    "cache": {
+      "storeName": "hose_i18n"
+    }
+  },
+  "redux": {
+    "persist": [
+      "themes",
+      "dashboard"
+    ]
+  },
+  "logger": {
+    "enabled": true,
+    "loggers": {
+      "redux": true,
+      "fetch": true
+    }
+  },
+  "fetch": {
+    "apiUrl": "http://localhost:5000",
+    "debug": true
+  }
+}

@@ -87,7 +87,7 @@ export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board})
         }
       }).catch(console.error); //TODO show errors
     }
-  }, [validateForm, formValues, onSubmit, board, t]);
+  }, [validateForm, formValues, onSubmit, board, t, openNotification, dispatch]);
 
   const onFormCancel = useCallback((e: SyntheticEvent) => {
     e.preventDefault();

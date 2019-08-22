@@ -35,7 +35,7 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
 
   useEffect(() => {
     dispatch(getGpios({take})).catch(errorHandler);
-  }, [dispatch]);
+  }, [take, dispatch]);
 
   const onDelete = useCallback((id: string) => {
     dispatch(deleteGpio(id))
@@ -45,7 +45,7 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
           text: t('gpio:deleted'),
         });
       }).catch(errorHandler);
-  }, [dispatch, t]);
+  }, [t, dispatch]);
 
   if (loading) {
     return <Loading minHeight={100}/>;
@@ -71,7 +71,7 @@ export const GpioList: React.FC<GpioListProps> = ({take}) => {
         <ListItem key={gpio.id} divider={i < gpios.length - 1}>
           <ListItemText
             primary={`${t('gpio:pin')} ${gpio.pin}`}
-            secondary={gpio.environments.length ? gpio.environments.map(env => env.title).join(', ') : t('gpio:no_associated_environments')}
+            secondary={gpio.environments ? gpio.environments.length ? gpio.environments.map(env => env.title).join(', ') : t('gpio:no_associated_environments') : t('gpio:no_associated_environments')}
           />
           <ListItemSecondaryAction>
             <ConfirmButton

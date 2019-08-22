@@ -18,7 +18,7 @@ export const PreferredEnvReadings: React.FC = () => {
     if (environment) {
       dispatch(resetRecords(environment.id));
     }
-  }, [environment]);
+  }, [environment, dispatch]);
 
   return (
     <Widget
@@ -26,7 +26,7 @@ export const PreferredEnvReadings: React.FC = () => {
       title={environment ? environment.title : t('environment:no_preferred_set')}
       rightTitle={environment ? environment.board ? environment.board.id : '' : ''}
     >
-      {environment ? <RecordsTable environment={environment} take={5}/> : <Loading/>}
+      {environment ? <RecordsTable environment={environment} take={5}/> : <Loading minHeight={100}/>}
       <CardActions>
         {environment && <Link component={AppLink} to={`/environments/${environment.id}/records`}>{t('common:see_all')}</Link>}
       </CardActions>

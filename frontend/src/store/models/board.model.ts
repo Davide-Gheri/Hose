@@ -1,5 +1,4 @@
-import { BaseModel } from '../index';
-import { EnvironmentModel } from './environment.model';
+import { BaseModel } from '../interfaces';
 
 export interface BoardModel extends BaseModel<string> {
   checkUrl: null | string;

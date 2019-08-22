@@ -1,11 +1,11 @@
 import { modelApi, PaginationOptions } from '../../lib/modelFetcher';
 import { parseDates } from '../../lib/commonPipes';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 import { types, Types } from './reducer';
 import { ThunkAction } from 'redux-thunk';
 import { WateringModel } from '../models/watering.model';
 
-const Api = modelApi<WateringModel>('http://localhost:5000/environments/:parentId/waterings', [
+const Api = modelApi<WateringModel>('/environments/:parentId/waterings', [
   parseDates('createdAt', 'processedAt'),
 ]);
 

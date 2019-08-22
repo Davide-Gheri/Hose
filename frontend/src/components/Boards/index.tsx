@@ -9,9 +9,10 @@ import { useSelector } from 'react-redux';
 import { boardsSelector } from '../../store/boards';
 import { isEmpty } from '../../lib/util';
 import { useTranslation } from 'react-i18next';
+import { minSleep } from '../../lib/sleep';
 
-const AsyncNewBoard = asyncLoader(() => import('./NewBoard/Dialog'));
-const AsyncEditBoard = asyncLoader(() => import('./EditBoard/Dialog'));
+const AsyncNewBoard = asyncLoader(() => minSleep(import('./NewBoard/Dialog')));
+const AsyncEditBoard = asyncLoader(() => minSleep(import('./EditBoard/Dialog')));
 
 export const BoardsPage: React.FC<RouteComponentProps> = () => {
   const boards = useSelector(boardsSelector);

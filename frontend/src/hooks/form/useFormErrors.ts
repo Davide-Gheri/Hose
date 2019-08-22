@@ -15,7 +15,7 @@ export type FormErrors<F = any> = {
 export function useFormErrors<F = any>(formValidations: FormValidations<F> = {} as any) {
   const initialFormErrors = useMemo(
     () => getInitialFormErrors(formValidations),
-    [],
+    [], // eslint-disable-line
   );
 
   const [formErrors, setFormErrors] = useState<FormErrors<F>>(initialFormErrors);

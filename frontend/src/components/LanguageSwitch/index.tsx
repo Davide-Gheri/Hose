@@ -22,7 +22,7 @@ export const LanguageSwitch: React.FC = () => {
     const changeLanguage = useCallback((key: string) => {
         i18n.changeLanguage(key);
         removeAnchorEl();
-    }, [i18n.language]);
+    }, [i18n.language, removeAnchorEl]); // eslint-disable-line
 
     return (
       <>

@@ -89,6 +89,7 @@ export function array(...validators: ValidationFn[]) {
           return res;
         }
       }
+      return undefined;
     }).filter(Boolean);
 
     return errors.length ? errors[0] : undefined;

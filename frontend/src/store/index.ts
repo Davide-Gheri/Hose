@@ -1,8 +1,9 @@
-import { AnyAction, combineReducers, createStore, applyMiddleware, compose } from 'redux';
+import { combineReducers, createStore, applyMiddleware, compose, Reducer, Store } from 'redux';
 import { createLogger } from 'redux-logger';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { useDispatch } from 'react-redux';
-import { makeLogger } from '../lib/logger';
+import { persistReducer, persistStore } from 'redux-persist';
+import localforage from 'localforage';
 import { environmentsReducer } from './environments';
 import { EnvironmentState } from './environments/reducer';
 import { dashboardReducer } from './dashboard';
@@ -17,53 +18,80 @@ import { wateringsReducer } from './waterings';
 import { WateringState } from './waterings/reducer';
 import { boardsReducer } from './boards';
 import { BoardsState } from './boards/reducer';
+import { themesReducer } from './theme';
+import { ThemeState } from './theme/reducer';
+import { PayloadAction } from './interfaces';
+import { Persistor } from 'redux-persist/es/types';
+import { Config } from '../lib/Config';
+import { makeLogger } from '../lib/logger';
 
-export interface AppAction<T extends string = any> extends AnyAction {
-  type: T;
+const DB_NAME = 'hose';
+
+function makePersistConfig(name: string, blacklist = ['error', 'loading']) {
+  const key = `${DB_NAME}_${name}`;
+  return {
+    key,
+    blacklist,
+    storage: localforage.createInstance({
+      storeName: key,
+      name: DB_NAME,
+    }),
+  }
 }
-
-export interface PayloadAction<T extends string = any, P = any> extends AppAction<T> {
-  payload: P;
-}
-
-export interface BaseModel<I = number> {
-  id: I;
-  createdAt: Date;
-}
-
-const rootReducer = combineReducers({
-  environments: environmentsReducer,
-  dashboard: dashboardReducer,
-  records: recordsReducer,
-  rules: rulesReducer,
-  gpios: gpiosReducer,
-  waterings: wateringsReducer,
-  boards: boardsReducer,
-});
 
 export interface AppState {
   environments: EnvironmentState;
-  dashboard: DashboardState;
   records: RecordsState;
   rules: RulesState;
   gpios: GpiosState;
   waterings: WateringState;
   boards: BoardsState;
+  themes: ThemeState;
+  dashboard: DashboardState;
   [key: string]: any;
 }
 
-const logger = makeLogger('redux', false);
+export interface StoreAndPersisor {
+  store: Store<AppState>;
+  persistor: Persistor;
+}
 
-export const configureStore = () => {
+export const configureReducer = (): Reducer<AppState> => {
+  const toPersist = Config.get<string[]>('redux.persist', []);
+  const reducers: any = {
+    environments: environmentsReducer,
+    records: recordsReducer,
+    rules: rulesReducer,
+    gpios: gpiosReducer,
+    waterings: wateringsReducer,
+    boards: boardsReducer,
+    themes: themesReducer,
+    dashboard: dashboardReducer,
+  };
+  return combineReducers<AppState>(Object.keys(reducers).reduce((obj, name) => {
+    if (toPersist.includes(name)) {
+      obj[name] = persistReducer(makePersistConfig(name), obj[name])
+    }
+    return obj;
+  }, reducers));
+};
+
+export const configureStore = (reducer: Reducer<AppState>): StoreAndPersisor => {
+  const logger = makeLogger('redux', Config.get<boolean>('logger.loggers.redux', false));
   const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const loggerMiddleware = createLogger({
     logger,
   });
   const middleware = applyMiddleware(thunk, loggerMiddleware);
-  return createStore(
-    rootReducer,
+
+  const store = createStore(
+    reducer,
     composeEnhancers(middleware),
   );
+
+  const persistor = persistStore(store);
+
+  return { store, persistor };
 };
 
 export const useThunkDispatch = () => useDispatch<ThunkDispatch<{}, {}, PayloadAction>>();

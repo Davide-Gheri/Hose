@@ -13,6 +13,7 @@ import { Loading } from '../Loading';
 import { AppLink, ListItemLink } from '../common';
 import { useThunkDispatch } from '../../store';
 import { useTranslation } from 'react-i18next';
+import { useErrorHandler } from '../../hooks/error';
 
 export interface EnvListProps {
   take?: number;
@@ -24,10 +25,11 @@ export const EnvList: React.FC<EnvListProps> = ({take, filter}) => {
   const environments = useSelector(asArray);
   const loading = useSelector(getLoading('environments'));
   const dispatch = useThunkDispatch();
+  const errorHandler = useErrorHandler();
 
   useEffect(() => {
-    dispatch(getEnvironments({take, ...filter})).catch(console.error);
-  }, [dispatch]);
+    dispatch(getEnvironments({take, ...filter})).catch(errorHandler);
+  }, [dispatch, take, filter]);
 
   if (loading) {
     return <Loading minHeight={100}/>;

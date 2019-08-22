@@ -111,7 +111,7 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
         }
       }).catch(console.error); //TODO show errors
     }
-  }, [validateForm, formValues, onSubmit, environment, t]);
+  }, [validateForm, formValues, onSubmit, environment, t, dispatch, openNotification]);
 
   const onFormCancel = useCallback((e: SyntheticEvent) => {
     e.preventDefault();
@@ -131,7 +131,7 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
           })
         })
     }
-  }, [environment, t]);
+  }, [environment, t, dispatch, openNotification]);
 
   useEffect(() => {
     dispatch(getRules()).catch(console.error);

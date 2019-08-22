@@ -6,8 +6,9 @@ import { Add } from '@material-ui/icons';
 import { GpioList } from './List';
 import { asyncLoader } from '../asyncLoader';
 import { useTranslation } from 'react-i18next';
+import { minSleep } from '../../lib/sleep';
 
-const AsyncNewGpio = asyncLoader(() => import('./NewGpio/Dialog'));
+const AsyncNewGpio = asyncLoader(() => minSleep(import('./NewGpio/Dialog')));
 
 export const GpiosPage: React.FC<RouteComponentProps> = () => {
   const { t } = useTranslation();

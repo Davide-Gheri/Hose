@@ -1,4 +1,5 @@
 import qs from 'qs';
+import { Config } from './Config';
 import { get, del, patch, post } from './fetcher';
 
 export interface PaginationOptions {
@@ -7,7 +8,11 @@ export interface PaginationOptions {
   [key: string]: any;
 }
 
+const baseApiUrl = Config.get<string>('fetch.apiUrl');
+
 const PARENT_PLACEHOLDER = ':parentId';
+
+const isAbsoluteUrl = (url: string) => /^https?:\/\//i.test(url);
 
 const removeTrailingSlash = (str: string) => str.replace(/\/+$/, '');
 
@@ -32,6 +37,9 @@ const addQuerystring = (url: string, options?: PaginationOptions): string => {
 };
 
 export const modelApi = <T = any>(baseUrl: string, pipes: Function[] = []) => {
+  if (!isAbsoluteUrl(baseUrl)) {
+    baseUrl = baseApiUrl + baseUrl;
+  }
   const pipesCallback = runPipes(pipes);
   return {
     getMany: (options?: PaginationOptions, parentId?: string) =>

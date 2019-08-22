@@ -25,11 +25,11 @@ export const WateringsWidgets: React.FC<WateringsWidgets> = ({environment}) => {
     .then(() => {
       setSkip(take + skip);
     }).catch(console.error);
-  }, [take, skip, setSkip, environment.id]);
+  }, [skip, setSkip, environment.id, dispatch]);
 
   useEffect(() => {
     loadMore();
-  }, []);
+  }, []); // eslint-disable-line
 
   return (
     <>

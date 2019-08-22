@@ -42,5 +42,5 @@ export const useErrorHandler = () => {
         text: t<string>('error:reload')
       },
     })
-  }, [openNotification]);
+  }, [openNotification, t]);
 };

@@ -1,11 +1,11 @@
 import { modelApi, PaginationOptions } from '../../lib/modelFetcher';
 import { RecordModel } from '../models';
 import { parseDates } from '../../lib/commonPipes';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 import { types, Types } from './reducer';
 import { ThunkAction } from 'redux-thunk';
 
-const Api = modelApi<RecordModel>('http://localhost:5000/environments/:parentId/records', [
+const Api = modelApi<RecordModel>('/environments/:parentId/records', [
   parseDates('time'),
 ]);
 

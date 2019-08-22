@@ -1,6 +1,6 @@
 import produce from 'immer';
 import { BoardModel } from '../models';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 
 export interface BoardsState {
   loading: boolean;

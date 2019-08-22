@@ -15,8 +15,9 @@ import { asyncLoader } from '../../asyncLoader';
 import { uuidregexp } from '../../../lib/pathRegexp';
 import { Widget } from '../../Dashboard/Widget';
 import { useErrorHandler } from '../../../hooks/error';
+import { minSleep } from '../../../lib/sleep';
 
-const AsyncEditRule = asyncLoader(() => import('../EditRule/Dialog'));
+const AsyncEditRule = asyncLoader(() => minSleep(import('../EditRule/Dialog')));
 
 export const RulePage: React.FC<RouteComponentProps<{id: string}>> = (props) => {
   const { t } = useTranslation();
@@ -32,11 +33,11 @@ export const RulePage: React.FC<RouteComponentProps<{id: string}>> = (props) => 
     if (!rule) {
       dispatch(getRule(id)).catch(errorHandler);
     }
-  }, [id, rule]);
+  }, [id, rule, dispatch]);
 
   useEffect(() => {
     dispatch(resetEnvironments);
-  }, [id]);
+  }, [id, dispatch]);
 
   if (loading) {
     return <Loading/>;

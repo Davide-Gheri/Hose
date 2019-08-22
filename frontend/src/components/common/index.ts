@@ -8,3 +8,4 @@ export * from './VirtualTable';
 export * from './PageHeader';
 export * from './PageContent';
 export * from './DisabledDeleteButton';
+export * from './Spacer';

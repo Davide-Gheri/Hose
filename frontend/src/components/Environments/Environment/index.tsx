@@ -13,8 +13,9 @@ import { asyncLoader } from '../../asyncLoader';
 import { RecordsWidget } from '../../Records/RecordsWidgets';
 import { WateringsWidgets } from '../../Waterings/WateringsWidgets';
 import { useTranslation } from 'react-i18next';
+import { minSleep } from '../../../lib/sleep';
 
-const AsyncEditEnvironment = asyncLoader(() => import('../EditEnvironment/Dialog'));
+const AsyncEditEnvironment = asyncLoader(() => minSleep(import('../EditEnvironment/Dialog')));
 
 export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = props => {
   const classes = useStyles();
@@ -30,7 +31,7 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
     if (!environment) {
       dispatch(getEnvironment(id)).catch(console.error);
     }
-  }, [id, environment]);
+  }, [id, environment, dispatch]);
 
   if (loading) {
     return <Loading/>;

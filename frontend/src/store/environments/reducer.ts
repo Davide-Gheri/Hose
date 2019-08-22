@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 import { EnvironmentModel } from '../models';
 
 export interface EnvironmentState {

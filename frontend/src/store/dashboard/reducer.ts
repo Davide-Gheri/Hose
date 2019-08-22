@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 
 export interface DashboardState {
   preferredEnv: string | null;

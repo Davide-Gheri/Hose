@@ -1,13 +1,11 @@
 
-const GLOBAL_LOG_ENABLED = true;
-
 class Logger {
   constructor(
     public enabled: boolean,
   ) {}
 
   get isEnabled() {
-    return GLOBAL_LOG_ENABLED && this.enabled;
+    return LoggerManager.enabled && this.enabled;
   }
 
   getConsole() {
@@ -23,6 +21,8 @@ class Logger {
 }
 
 export class LoggerManager {
+  static enabled: boolean;
+
   static loggers: Record<string, Logger> = {};
 
   static addLogger(name: string, enabled: boolean) {

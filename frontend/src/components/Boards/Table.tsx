@@ -31,7 +31,7 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
 
   useEffect(() => {
     dispatch(getBoards({take})).catch(errorHandler);
-  }, [dispatch]);
+  }, [dispatch, take]);
 
   const onDelete = useCallback((id: string) => {
     dispatch(deleteBoard(id))
@@ -41,7 +41,7 @@ export const BoardTable: React.FC<BoardTableProps> = ({take}) => {
           text: t('board:deleted'),
         });
       }).catch(errorHandler);
-  }, [t, dispatch]);
+  }, [t, dispatch, openNotification]);
 
   if (loading) {
     return <Loading minHeight={100}/>;

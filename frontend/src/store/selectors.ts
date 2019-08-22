@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
-import { AppState, BaseModel } from './index';
+import { AppState } from './index';
+import { BaseModel } from './interfaces';
 
 export const getLoading = (store: string) => createSelector(
   (state: AppState) => state[store],

@@ -6,18 +6,19 @@ import { Route, Switch } from 'react-router';
 import { asyncLoader } from './asyncLoader';
 import { uuidregexp } from '../lib/pathRegexp';
 import { ErrorBoundary } from './ErrorBoundary';
+import { minSleep } from '../lib/sleep';
 
-const Async404 = asyncLoader(() => import('./ErrorPages/Error404'));
-const AsyncDashboard = asyncLoader(() => import('./Dashboard'));
+const Async404 = asyncLoader(() => minSleep(import('./ErrorPages/Error404')));
+const AsyncDashboard = asyncLoader(() => minSleep(import('./Dashboard')));
 
-const AsyncEnvironments = asyncLoader(() => import('./Environments'));
-const AsyncEnvironment = asyncLoader(() => import('./Environments/Environment'));
+const AsyncEnvironments = asyncLoader(() => minSleep(import('./Environments')));
+const AsyncEnvironment = asyncLoader(() => minSleep(import('./Environments/Environment')));
 
-const AsyncGpios = asyncLoader(() => import('./Gpios'));
-const AsyncBoards = asyncLoader(() => import('./Boards'));
+const AsyncGpios = asyncLoader(() => minSleep(import('./Gpios')));
+const AsyncBoards = asyncLoader(() => minSleep(import('./Boards')));
 
-const AsyncRules = asyncLoader(() => import('./Rules'));
-const AsyncRule = asyncLoader(() => import('./Rules/Rule'));
+const AsyncRules = asyncLoader(() => minSleep(import('./Rules')));
+const AsyncRule = asyncLoader(() => minSleep(import('./Rules/Rule')));
 
 export const Main: React.FC = () => {
   const classes = useStyles();

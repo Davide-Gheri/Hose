@@ -49,7 +49,10 @@ export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel}) => {
     setSubmit(true);
 
     if (validateForm(formValues)) {
-      dispatch(createGpio(formValues)).then(() => {
+      dispatch(createGpio({
+        ...formValues,
+        pin: parseInt(formValues.pin, 10),
+      })).then(() => {
         openNotification({
           ...commonNotificationOpts,
           text: t('gpio:created'),
@@ -58,9 +61,10 @@ export const GpioForm: React.FC<GpioFormProps> = ({onSubmit, onCancel}) => {
         if (typeof onSubmit === 'function') {
           onSubmit(e);
         }
-      }).catch(console.error); // TODO show errors
+      }).catch(console.error) // TODO show errors
+        .finally(() => setSubmit(false));
     }
-  }, [validateForm, formValues, onSubmit, t]);
+  }, [validateForm, formValues, onSubmit, t, openNotification, dispatch]);
 
   const onFormCancel = useCallback((e: SyntheticEvent) => {
     e.preventDefault();

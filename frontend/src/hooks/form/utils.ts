@@ -23,8 +23,6 @@ export function validateForm<E = any>(formValues: FormValues, setFormErrors: Dis
     );
   });
 
-  console.log(updatedFormErrors);
-
   setFormErrors(updatedFormErrors);
 
   return Object.values(updatedFormErrors).filter((value: any) => value.length > 0)

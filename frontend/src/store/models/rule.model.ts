@@ -1,4 +1,4 @@
-import { BaseModel } from '../index';
+import { BaseModel } from '../interfaces';
 
 export interface RuleModel extends BaseModel<string> {
   title: string;

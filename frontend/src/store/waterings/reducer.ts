@@ -1,6 +1,6 @@
 import produce from 'immer';
 import { WateringModel } from '../models/watering.model';
-import { PayloadAction } from '../index';
+import { PayloadAction } from '../interfaces';
 
 export interface WateringState {
   loading: boolean;
