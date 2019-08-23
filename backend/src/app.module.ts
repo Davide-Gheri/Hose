@@ -11,6 +11,7 @@ import { InfluxModule } from './modules/influx/influx.module';
 import { BoardModule } from './modules/board/board.module';
 import { ScheduleModule } from 'nest-schedule';
 import { ThemeModule } from './modules/theme/theme.module';
+import { NotificationModule } from './modules/notification/notification.module';
 import Config from 'config';
 
 @Module({
@@ -32,6 +33,7 @@ import Config from 'config';
     InfluxModule,
     BoardModule,
     ThemeModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [
