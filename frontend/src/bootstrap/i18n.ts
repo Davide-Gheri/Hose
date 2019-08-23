@@ -25,7 +25,7 @@ export function bootI18n() {
     .init({
       lng: currentLanguage,
       fallbackLng: fallbackLanguage,
-      ns: ['board', 'environment', 'gpio', 'watering', 'record', 'rule', 'error', 'common'],
+      ns: ['board', 'environment', 'gpio', 'watering', 'record', 'rule', 'error', 'common', 'notifications'],
       defaultNS: 'common',
       backend: {
         backends: [LocalForage, XHR],

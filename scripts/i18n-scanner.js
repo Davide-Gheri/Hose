@@ -14,7 +14,7 @@ const parserOptions = {
         list: ['t'],
         extensions: ['.ts', '.tsx'],
     },
-    ns: ['board', 'environment', 'gpio', 'watering', 'record', 'rule', 'error', 'common'],
+    ns: ['board', 'environment', 'gpio', 'watering', 'record', 'rule', 'error', 'common', 'notifications'],
     defaultNs: 'common',
     lngs: ['en', 'it'],
     resource: {

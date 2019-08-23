@@ -3,7 +3,11 @@ import { createLogger } from 'redux-logger';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { useDispatch } from 'react-redux';
 import { persistReducer, persistStore } from 'redux-persist';
+import { Persistor } from 'redux-persist/es/types';
 import localforage from 'localforage';
+import { PayloadAction } from './interfaces';
+import { Config } from '../lib/Config';
+import { makeLogger } from '../lib/logger';
 import { environmentsReducer } from './environments';
 import { EnvironmentState } from './environments/reducer';
 import { dashboardReducer } from './dashboard';
@@ -20,10 +24,8 @@ import { boardsReducer } from './boards';
 import { BoardsState } from './boards/reducer';
 import { themesReducer } from './theme';
 import { ThemeState } from './theme/reducer';
-import { PayloadAction } from './interfaces';
-import { Persistor } from 'redux-persist/es/types';
-import { Config } from '../lib/Config';
-import { makeLogger } from '../lib/logger';
+import { notificationsReducer } from './notifications';
+import { NotificationState } from './notifications/reducer';
 
 const DB_NAME = 'hose';
 
@@ -48,6 +50,7 @@ export interface AppState {
   boards: BoardsState;
   themes: ThemeState;
   dashboard: DashboardState;
+  notifications: NotificationState;
   [key: string]: any;
 }
 
@@ -67,6 +70,7 @@ export const configureReducer = (): Reducer<AppState> => {
     boards: boardsReducer,
     themes: themesReducer,
     dashboard: dashboardReducer,
+    notifications: notificationsReducer,
   };
   return combineReducers<AppState>(Object.keys(reducers).reduce((obj, name) => {
     if (toPersist.includes(name)) {

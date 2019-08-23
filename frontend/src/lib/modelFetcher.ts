@@ -1,6 +1,7 @@
 import qs from 'qs';
 import { Config } from './Config';
 import { get, del, patch, post } from './fetcher';
+import { isAbsoluteUrl, runPipes, removeTrailingSlash } from './util';
 
 export interface PaginationOptions {
   skip?: number;
@@ -11,10 +12,6 @@ export interface PaginationOptions {
 const baseApiUrl = Config.get<string>('fetch.apiUrl');
 
 const PARENT_PLACEHOLDER = ':parentId';
-
-const isAbsoluteUrl = (url: string) => /^https?:\/\//i.test(url);
-
-const removeTrailingSlash = (str: string) => str.replace(/\/+$/, '');
 
 const formatUrl = (baseUrl: string, id: string | null | undefined, parentId?: string, trailing?: string): string => {
   let base  = baseUrl;
@@ -57,13 +54,4 @@ export const modelApi = <T = any>(baseUrl: string, pipes: Function[] = []) => {
     delete: (id: string, parentId?: string) =>
       del(formatUrl(baseUrl, id, parentId)).then(pipesCallback),
   }
-};
-
-
-const runPipes = (pipes: Function[]) => async (res: any) => {
-  let newRes = res;
-  for (const pipe of pipes) {
-    newRes = await pipe(newRes);
-  }
-  return newRes;
 };
