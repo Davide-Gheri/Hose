@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import clsx from 'clsx';
 import {
   createStyles,
@@ -9,7 +9,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles, Tooltip
+  makeStyles, Theme, Tooltip, useMediaQuery
 } from '@material-ui/core';
 import { ChevronLeft, Dashboard, Place, DeveloperBoard, SettingsInputComponent, Menu, Tune } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
@@ -61,15 +61,21 @@ const links: LinkItem[] = [
   }
 ];
 
-
 export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer, openDrawer}) => {
   const classes = useStyles();
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
   const { t } = useTranslation();
   const { location: { pathname } } = useRouter();
 
+  const onClick = useCallback(() => {
+    if (isMobile) {
+      closeDrawer();
+    }
+  }, [isMobile, closeDrawer]);
+
   return (
     <Drawer
-      variant="permanent"
+      variant={isMobile ? 'temporary' : 'permanent'}
       className={clsx(classes.drawer, {
         [classes.drawerOpen]: open,
         [classes.drawerClose]: !open,
@@ -81,6 +87,7 @@ export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer, openDrawer})
         }),
       }}
       open={open}
+      onClose={closeDrawer}
     >
       <div className={clsx(classes.toolbar, {
         [classes.toolbarClose]: !open,
@@ -97,6 +104,7 @@ export const SideBar: React.FC<SideBarProps> = ({open, closeDrawer, openDrawer})
             button
             component={Link}
             to={link.href}
+            onClick={onClick}
             selected={pathname === link.href}
             className={classes.item}
             classes={{gutters: clsx(classes.gutters)}}

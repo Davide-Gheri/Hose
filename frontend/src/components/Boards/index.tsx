@@ -29,7 +29,7 @@ export const BoardsPage: React.FC<RouteComponentProps> = () => {
       <PageContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Paper>
+            <Paper style={{overflow: 'scroll'}}>
               <BoardTable />
             </Paper>
           </Grid>

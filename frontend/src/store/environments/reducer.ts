@@ -57,6 +57,11 @@ export function reducer(state: EnvironmentState = initialState, action: PayloadA
         draft.loading = false;
         draft.error = action.payload;
         break;
+      case types.DELETE_ENV_SUCCESS:
+        draft.loading = false;
+        draft.error = null;
+        delete draft.environments[action.payload];
+        break;
     }
   });
 }

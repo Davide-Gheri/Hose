@@ -1,20 +1,22 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Route, RouteComponentProps } from 'react-router';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { createStyles, makeStyles, Typography, Button, Chip, Link, IconButton, Tooltip } from '@material-ui/core';
+import { StarBorder, Star } from '@material-ui/icons';
 import { getEnvironment, makeByIdSelector } from '../../../store/environments';
 import { AppState, useThunkDispatch } from '../../../store';
 import { getLoading } from '../../../store/selectors';
 import { Loading } from '../../Loading';
-import { createStyles, makeStyles, Typography, Button, Chip, Link } from '@material-ui/core';
 import { WidgetArea } from '../../Dashboard/WidgetArea';
 import { AppLink, PageHeader, PageContent } from '../../common';
 import { uuidregexp } from '../../../lib/pathRegexp';
 import { asyncLoader } from '../../asyncLoader';
 import { RecordsWidget } from '../../Records/RecordsWidgets';
 import { WateringsWidgets } from '../../Waterings/WateringsWidgets';
-import { useTranslation } from 'react-i18next';
 import { minSleep } from '../../../lib/sleep';
 import { useErrorHandler } from '../../../hooks/error';
+import { preferredEnvSelector, setPreferredEnv } from '../../../store/dashboard';
 
 const AsyncEditEnvironment = asyncLoader(() => minSleep(import('../EditEnvironment/Dialog')));
 
@@ -27,8 +29,19 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
 
   const environment = useSelector((state: AppState) => getById(state, id));
   const loading = useSelector(getLoading('environments'));
+
+  const preferredEnv = useSelector(preferredEnvSelector);
+
   const dispatch = useThunkDispatch();
   const errorHandler = useErrorHandler();
+
+  const setPreferred = useCallback(() => {
+    if (preferredEnv === environment.id) {
+      dispatch(setPreferredEnv(null));
+    } else {
+      dispatch(setPreferredEnv(environment.id));
+    }
+  }, [environment, preferredEnv]);
 
   useEffect(() => {
     setReady(false);
@@ -48,7 +61,14 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
   return (
     <>
       <PageHeader title={(
-        <span>{t('environment:environment')} <b>{environment.title}</b></span>
+        <>
+          <IconButton onClick={setPreferred}>
+            <Tooltip title={t('dashboard:set_preferred_env')}>
+              {preferredEnv === environment.id ? <Star/> : <StarBorder/>}
+            </Tooltip>
+          </IconButton>
+          <span>{t('environment:environment')} <b>{environment.title}</b></span>
+        </>
       )}>
         <Button
           variant="outlined" color="inherit"
@@ -82,7 +102,7 @@ export const EnvironmentPage: React.FC<RouteComponentProps<{id: string}>> = prop
           </div>
         )}
         <WidgetArea>
-          {/*<RecordsWidget environment={environment} />*/}
+          <RecordsWidget environment={environment} />
           <WateringsWidgets environment={environment} />
         </WidgetArea>
       </PageContent>

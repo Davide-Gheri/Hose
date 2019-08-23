@@ -1,6 +1,8 @@
 import { createSelector } from 'reselect';
 import { AppState } from '../index';
 
+export const preferredEnvSelector = (state: AppState) => state.dashboard.preferredEnv;
+
 export const getPreferredEnv = createSelector(
   (state: AppState) => ({
     preferredId: state.dashboard.preferredEnv,

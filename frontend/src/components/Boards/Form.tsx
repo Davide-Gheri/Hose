@@ -6,8 +6,9 @@ import { isUrl, makeMaxLength, required } from '../../validations';
 import { useThunkDispatch } from '../../store';
 import { commonNotificationOpts, useNotifications } from '../../contexts/Notifications';
 import { AppTextField, ConfirmButton } from '../common';
-import { createBoard, updateBoard } from '../../store/boards';
+import { createBoard, deleteBoard, updateBoard } from '../../store/boards';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from '../../hooks/router';
 
 interface FormData {
   id: string;
@@ -23,6 +24,7 @@ export interface BoardFormProps {
 export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board}) => {
   const classes = useFormStyles();
   const { t } = useTranslation();
+  const { history } = useRouter();
 
   const [submit, setSubmit] = useState(false);
 
@@ -89,6 +91,19 @@ export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board})
     }
   }, [validateForm, formValues, onSubmit, board, t]);
 
+  const onDelete = useCallback(() => {
+    if (board) {
+      dispatch(deleteBoard(board.id))
+        .then(() => {
+          openNotification({
+            ...commonNotificationOpts,
+            text: t('board:deleted'),
+          });
+          history.replace('/boards');
+        });
+    }
+  }, [board]);
+
   const onFormCancel = useCallback((e: SyntheticEvent) => {
     e.preventDefault();
     onFormReset();
@@ -127,6 +142,7 @@ export const BoardForm: React.FC<BoardFormProps> = ({onSubmit, onCancel, board})
             color="secondary"
             className={classes.deleteBtn}
             disabled={submit}
+            onClick={onDelete}
           >
             {t("common:delete")}
           </ConfirmButton>

@@ -10,12 +10,17 @@ import { useThunkDispatch } from '../store';
 import { getLoadingError } from '../store/selectors';
 import { Loading } from './Loading';
 import { Error } from './Error';
+import { Config } from '../lib/Config';
 
 const history = createBrowserHistory();
 
 const App: React.FC = () => {
   const styles = useStyles();
   const { message, closeNotification } = useNotifications();
+
+  useEffect(() => {
+    document.title = Config.get<string>('appName');
+  }, []);
 
   return (
     <>

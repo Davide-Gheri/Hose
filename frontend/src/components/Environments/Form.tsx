@@ -16,6 +16,7 @@ import { commonNotificationOpts, useNotifications } from '../../contexts/Notific
 import { getBoards } from '../../store/boards';
 import { boardCheckingMessage } from '../../lib/messages';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from '../../hooks/router';
 
 interface FormData {
   title: string;
@@ -35,6 +36,7 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
   const classes = useFormStyles();
   const { t } = useTranslation();
   const [submit, setSubmit] = useState(false);
+  const { history } = useRouter();
 
   const {
     formValues,
@@ -128,8 +130,9 @@ export const EnvironmentForm: React.FC<EnvironmentFormProps> = ({onSubmit, onCan
           openNotification({
             ...commonNotificationOpts,
             text: t('environment:deleted'),
-          })
-        })
+          });
+          history.replace('/environments');
+        });
     }
   }, [environment, t, openNotification]);
 

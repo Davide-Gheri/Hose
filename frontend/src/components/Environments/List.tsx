@@ -39,7 +39,7 @@ export const EnvList: React.FC<EnvListProps> = ({take, filter}) => {
     <List dense>
       {environments.length === 0 && (
         <ListItem>
-          <ListItemText primary={t('environment:no_environments_set')}/>
+          <ListItemText primary={t('environment:no_environment_set')}/>
           <ListItemSecondaryAction>
             <Button color="primary" component={AppLink} to="/environments/new">
               {t('common:create_new')}

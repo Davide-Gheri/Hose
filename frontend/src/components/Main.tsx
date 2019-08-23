@@ -29,7 +29,7 @@ export const Main: React.FC = () => {
 
   return (
     <>
-      <TopBar open={open}/>
+      <TopBar open={open} openDrawer={openDrawer}/>
       <SideBar open={open} closeDrawer={closeDrawer} openDrawer={openDrawer}/>
       <main className={classes.content}>
         <div className={classes.toolbar}/>
@@ -53,7 +53,7 @@ export const Main: React.FC = () => {
 const useStyles = makeStyles(theme => createStyles({
   content: {
     flexGrow: 1,
-    // padding: theme.spacing(3),
+    width: '100%',
   },
   toolbar: {
     display: 'flex',

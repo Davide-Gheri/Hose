@@ -1,35 +1,57 @@
 import React from 'react'
 import clsx from 'clsx';
-import { AppBar, createStyles, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import {
+  AppBar,
+  createStyles,
+  IconButton,
+  makeStyles,
+  Theme,
+  Toolbar,
+  Typography,
+  useMediaQuery
+} from '@material-ui/core';
 import { LanguageSwitch } from '../LanguageSwitch';
 import { ThemeSwitch } from '../ThemeSwitch';
 import { Spacer } from '../common';
+import { NotificationsTopBarWidget } from '../Notifications/TopBarWidget';
+import { Config } from '../../lib/Config';
+import HiddenCss from '@material-ui/core/Hidden/HiddenCss';
+import { Menu } from '@material-ui/icons';
 
 export interface TopBarProps {
   open: boolean;
+  openDrawer: () => void;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({open}) => {
+export const TopBar: React.FC<TopBarProps> = ({open, openDrawer}) => {
   const classes = useStyles();
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
+
   return (
     <AppBar
       elevation={0}
       position="fixed"
       className={clsx(classes.appBar, {
-        [classes.appBarShift]: open,
+        [classes.appBarShift]: open && !isMobile,
       })}
     >
       <Toolbar
         className={clsx(classes.toolbar, {
-          [classes.toolbarShift]: open,
+          [classes.toolbarShift]: open && !isMobile,
         })}
       >
+        <HiddenCss smUp>
+          <IconButton onClick={openDrawer} color="inherit" edge="start">
+            <Menu />
+          </IconButton>
+        </HiddenCss>
         <Typography component="h1" variant="h6" noWrap>
-          Hose
+          {Config.get<string>('appName', 'Hose')}
         </Typography>
         <Spacer/>
         <LanguageSwitch/>
         <ThemeSwitch/>
+        <NotificationsTopBarWidget/>
       </Toolbar>
     </AppBar>
   )
@@ -53,7 +75,7 @@ const useStyles = makeStyles(theme => createStyles({
     }),
   },
   toolbar: {
-    paddingLeft: theme.spacing(7) + 1 + theme.spacing(2),
+    // paddingLeft: theme.spacing(7) + 1 + theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
       paddingLeft: theme.spacing(9) + 1 + theme.spacing(2),
     },

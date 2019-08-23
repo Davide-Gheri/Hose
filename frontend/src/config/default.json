@@ -22,11 +22,16 @@
     "enabled": true,
     "loggers": {
       "redux": true,
-      "fetch": true
+      "fetch": true,
+      "io": true
     }
   },
   "fetch": {
     "apiUrl": "http://localhost:5000",
+    "debug": true
+  },
+  "io": {
+    "wsUrl": "http://localhost:8888",
     "debug": true
   }
 }
