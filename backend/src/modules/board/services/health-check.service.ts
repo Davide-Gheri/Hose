@@ -5,6 +5,7 @@ import { Logger } from '../../../Logger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from '../entities/board.entity';
 import { Repository } from 'typeorm';
+import { NotificationService } from '../../notification/services/notification.service';
 
 @Injectable()
 export class HealthCheckService extends NestSchedule {
@@ -14,6 +15,7 @@ export class HealthCheckService extends NestSchedule {
     @InjectRepository(Board)
     private readonly repository: Repository<Board>,
     private readonly http: HttpService,
+    private readonly notification: NotificationService,
   ) {
     super();
   }
@@ -51,11 +53,19 @@ export class HealthCheckService extends NestSchedule {
         board.isDown = false;
         return this.repository.save(board);
       })
-      .catch(err => {
+      .catch(async (err) => {
         this.logger.error(`Health check for board ${board.id} FAILED`);
         board.lastCheckedAt = new Date();
         board.isDown = true;
+        await this.notify({
+          title: 'notifications:failed_healthcheck',
+          description: board.checkUrl,
+        });
         return this.repository.save(board);
       });
+  }
+
+  private async notify(data: any) {
+    return this.notification.emit(data);
   }
 }

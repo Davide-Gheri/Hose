@@ -1,5 +1,6 @@
 {
   "empty": "No new notifications",
   "notification": "Notification",
-  "notification_plural": "Notifications"
+  "notification_plural": "Notifications",
+  "failed_healthcheck": "Healthcheck failed"
 }

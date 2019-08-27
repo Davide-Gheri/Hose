@@ -8,6 +8,11 @@ import { InstallBoardCommand } from '../modules/board/commands/install-board.com
 import { RecordSeedCommand } from '../modules/environment/commands/record-seed.command';
 import { BoardSeedCommand } from '../modules/board/commands/board-seed.command';
 
+/**
+ * Install the app
+ * Remove all old records
+ * Optionally seeds the db
+ */
 @Injectable()
 export class InstallCommand {
 

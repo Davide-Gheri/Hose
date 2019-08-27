@@ -1,3 +1,6 @@
+/**
+ * Supported filters
+ */
 export enum LookupFilter {
   EXACT = 'exact',
   CONTAINS = 'like',

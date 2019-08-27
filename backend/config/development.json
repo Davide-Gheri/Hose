@@ -3,6 +3,15 @@
     "debug": false,
     "loggerFormat": "dev"
   },
+  "database": {
+    "type": "mysql",
+    "database": "hose",
+    "host": "mysql",
+    "port": 3306,
+    "logging": "all",
+    "username": "root",
+    "password": "secret"
+  },
   "influx": {
     "host": "influx",
     "database": "hose_records"

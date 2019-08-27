@@ -6,6 +6,9 @@ import { Connection, Repository } from 'typeorm';
 import { FreshOption } from '../../../commands/FreshOption';
 import { BaseCommand } from '../../../commands/base.command';
 
+/**
+ * Create a fake example board
+ */
 @Injectable()
 export class InstallBoardCommand extends BaseCommand {
   protected logNamespace = 'InstallBoardCommand';

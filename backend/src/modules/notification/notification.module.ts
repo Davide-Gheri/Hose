@@ -9,6 +9,9 @@ import { NotController } from './not.controller';
   imports: [
     TypeOrmModule.forFeature([NotificationEntity]),
   ],
+  exports: [
+    NotificationService,
+  ],
   providers: [NotificationService, NotificationGateway],
   controllers: [NotController],
 })

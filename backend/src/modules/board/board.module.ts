@@ -7,6 +7,7 @@ import { InstallBoardCommand } from './commands/install-board.command';
 import { BoardSeedCommand } from './commands/board-seed.command';
 import { HealthCheckService } from './services/health-check.service';
 import { ScheduleModule } from 'nest-schedule';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ScheduleModule } from 'nest-schedule';
     HttpModule,
     TypeOrmModule.forFeature([Board]),
     CommandModule,
+    NotificationModule,
   ],
   providers: [
     InstallBoardCommand,

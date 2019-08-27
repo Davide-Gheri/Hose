@@ -31,6 +31,6 @@ export class NotificationGateway {
   @SubscribeMessage('readAll')
   handleReadAll() {
     // A payload is needed, else the client callback is not fired
-    return this.repository.clear().then(() => 'ok');
+    return this.repository.clear().then(() => ({}));
   }
 }

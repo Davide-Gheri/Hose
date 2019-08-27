@@ -14,15 +14,24 @@ async function bootstrap() {
     logger: new Logger(),
   });
 
+  // Add global validations pipe
   app.useGlobalPipes(new ValidationPipe());
+  // Add global exception filters
   app.useGlobalFilters(new NotFoundExceptionFilter());
-
+  // Set prefix for all controllers
+  app.setGlobalPrefix('api');
+  // Set http logging
   app.use(morgan(Config.get('settings.loggerFormat')));
-
+  // Statically serve translations
   app.useStaticAssets(path.join(__dirname, '..', 'i18n'), {
     dotfiles: 'ignore',
     prefix: '/locales',
   });
+  // Serve frontend build files
+  app.useStaticAssets(path.join(__dirname, '..', 'client'));
+
+  // Misc
+  app.disable('x-powered-by');
 
   await app.listen(Config.get('port'));
   Logger.debug(`Server listening on port ${Config.get('port')}`);

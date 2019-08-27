@@ -23,4 +23,8 @@ export class NotificationService {
   remove(id: string) {
     return this.repository.delete(id);
   }
+
+  removeAll() {
+    return this.repository.clear().then(() => ({}));
+  }
 }

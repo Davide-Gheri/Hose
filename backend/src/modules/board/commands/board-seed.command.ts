@@ -7,6 +7,9 @@ import { Board } from '../entities/board.entity';
 import { FreshOption } from '../../../commands/FreshOption';
 import { BaseCommand } from '../../../commands/base.command';
 
+/**
+ * Seed database with fake data
+ */
 @Injectable()
 export class BoardSeedCommand extends BaseCommand {
   protected logNamespace = 'BoardSeedCommand';

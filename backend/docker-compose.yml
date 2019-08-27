@@ -21,6 +21,16 @@ services:
       - 8086:8086
     networks:
       - shared
+  mysql:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: hose
+    networks:
+      - shared
 networks:
   shared:
     driver: bridge

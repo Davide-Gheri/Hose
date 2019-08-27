@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Cron, NestSchedule } from 'nest-schedule';
 import Config from 'config';
-import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Environment } from '../entities/environment.entity';
-import { Connection, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Logger } from '../../../Logger';
 import { Watering } from '../entities/watering.entity';
 import { GpioService } from '../../gpio/services/gpio.service';

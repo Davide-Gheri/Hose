@@ -1,5 +1,6 @@
 {
   "empty": "Nessuna nuova notifica",
   "notification": "Notifica",
-  "notification_plural": "Notifiche"
+  "notification_plural": "Notifiche",
+  "failed_healthcheck": "Check salute fallito"
 }

@@ -1,7 +1,12 @@
 import { Logger } from '../Logger';
 import { OnModuleInit } from '@nestjs/common';
 import { Connection, Repository } from 'typeorm';
+import { DbChecker } from '../lib/db-checker';
 
+/**
+ * Abstract command class
+ * All commands could extend this class to inherit common settings
+ */
 export abstract class BaseCommand implements OnModuleInit {
   protected abstract logNamespace: string;
 
@@ -11,16 +16,21 @@ export abstract class BaseCommand implements OnModuleInit {
 
   protected logger: Logger;
 
-  onModuleInit(): any {
+  onModuleInit(): void {
+    // Create a new logger instance with a custom namespace (usually the class name)
     this.logger = new Logger(this.logNamespace);
   }
 
-  protected async deleteOldRecords() {
+  /**
+   * Delete all existing records
+   * Needs to disable foreign keys check
+   */
+  protected async deleteOldRecords(): Promise<void> {
     this.logger.log('Deleting old records');
-    await this.connection.query('PRAGMA foreign_keys = OFF');
+    await this.connection.query(DbChecker.disableFkCheck());
     await this.repository.createQueryBuilder()
-    .delete()
-    .execute();
-    await this.connection.query('PRAGMA foreign_keys = ON');
+      .delete()
+      .execute();
+    await this.connection.query(DbChecker.enableFkCheck());
   }
 }

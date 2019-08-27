@@ -5,9 +5,12 @@
     "loggerFormat": "tiny"
   },
   "database": {
+    "type": "sqlite",
     "database": "./db.sqlite3",
     "synchronize": true,
-    "dropSchema": false
+    "dropSchema": false,
+    "logging": ["error"],
+    "logger": "advanced-console"
   },
   "influx": {
     "host": "influx",
