@@ -15,7 +15,6 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Menu,
-  MenuItem,
   ListItem,
   Button,
   ListSubheader, makeStyles, createStyles
@@ -25,6 +24,9 @@ import { useAnchorEl } from '../../hooks/anchor';
 import { NotificationModel } from '../../store/models/notification.model';
 import { Config } from '../../lib/Config';
 import { useTranslation } from 'react-i18next';
+import { formatDate } from '../../lib/dates';
+
+ const MAX_NOTIFICATIONS_COUNT = 99;
 
 export const NotificationsTopBarWidget: React.FC = () => {
   const classes = useStyles();
@@ -54,7 +56,9 @@ export const NotificationsTopBarWidget: React.FC = () => {
 
   useEffect(() => {
     if (hasNewNotifications) {
-      document.title = `(${hasNewNotifications}) ${Config.get<string>('appName')}`;
+      document.title = `(${
+        hasNewNotifications > MAX_NOTIFICATIONS_COUNT ? MAX_NOTIFICATIONS_COUNT + '+' : hasNewNotifications
+      }) ${Config.get<string>('appName')}`;
     } else {
       document.title = Config.get<string>('appName');
     }
@@ -107,8 +111,14 @@ export const NotificationsTopBarWidget: React.FC = () => {
               {notifications.map((notification, i) => (
                 <ListItem divider={i < notifications.length - 1} key={notification.id}>
                   <ListItemText
-                    primary={notification.title}
-                    secondary={notification.description}
+                    primary={t(notification.title)}
+                    secondary={(
+                      <>
+                        <span>{formatDate(notification.createdAt)}</span>
+                        <br/>
+                        <span>{t(notification.description || '')}</span>
+                      </>
+                    )}
                   />
                   <ListItemSecondaryAction>
                     <IconButton onClick={() => onClick(notification)} edge="end" color="inherit">
@@ -139,6 +149,7 @@ const useStyles = makeStyles(theme => createStyles({
   root: {
     maxHeight: 300,
     overflowY: 'scroll',
+    minWidth: 250,
   },
   header: {
     background: theme.palette.background.paper,

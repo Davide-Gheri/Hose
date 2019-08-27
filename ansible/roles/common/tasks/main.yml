@@ -1,0 +1,15 @@
+---
+
+- name: Update packages info if too old
+  apt: update_cache=yes cache_valid_time=7200
+
+- name: Install general packages
+    apt: name={{ item }}
+    vars:
+      item:
+        - aptitude
+        - apt-transport-https
+        - curl
+        - git
+        - python-setuptools
+        - build-essential
