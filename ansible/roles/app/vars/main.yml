@@ -1,0 +1,6 @@
+---
+
+app_git_repo: "https://github.com/Davide-Gheri/Hose.git"
+app_git_version: master
+
+app_git_dest: /opt/hose_src

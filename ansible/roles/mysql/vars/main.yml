@@ -1,0 +1,6 @@
+---
+
+mysql_root_password: secret
+mysql_hose_password: secret
+mysql_hose_user: hose
+mysql_hose_database: hose

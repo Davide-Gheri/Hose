@@ -1,0 +1,25 @@
+---
+
+- name: Clone repository
+  git:
+    repo: "{{ app_git_repo }}"
+    dest: "{{ app_git_dest }}"
+    version: "{{ app_git_version }}"
+
+- name: Install Frontend dependencies
+  npm:
+    path: "{{ app_git_dest }}/frontend"
+
+- name: Build Frontend
+  shell: npm run build
+  args:
+    chdir: "{{ app_git_dest }}/frontend"
+
+- name: Install backend dependencies
+  npm:
+    path: "{{ app_git_dest }}/backend"
+
+- name: Build Backend
+  shell: npm run build
+  args:
+    chdir: "{{ app_git_dest }}/backend"
