@@ -27,8 +27,6 @@ async function bootstrap() {
     dotfiles: 'ignore',
     prefix: '/locales',
   });
-  // Serve frontend build files
-  app.useStaticAssets(path.join(__dirname, '..', 'client'));
 
   // Misc
   app.disable('x-powered-by');
@@ -36,4 +34,4 @@ async function bootstrap() {
   await app.listen(Config.get('port'));
   Logger.debug(`Server listening on port ${Config.get('port')}`);
 }
-bootstrap();
+bootstrap().catch(Logger.log);

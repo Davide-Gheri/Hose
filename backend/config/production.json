@@ -1,25 +1,29 @@
 {
   "settings": {
-    "debug": true,
-    "loggerFormat": "dev"
+    "debug": false,
+    "loggerFormat": "tiny"
   },
   "database": {
     "type": "mysql",
     "database": "hose",
     "host": "mysql",
     "port": 3306,
-    "logging": "all",
-    "username": "root",
+    "logging": ["error"],
+    "logger": "simple-console",
+    "username": "hose",
     "password": "secret"
   },
   "influx": {
     "host": "influx",
     "database": "hose_records"
   },
+  "gpio": {
+    "managerUrl": "http://gpio:5050/gpio/:id"
+  },
   "watering": {
-    "cron": "* * * * *"
+    "cron": "1 20 * * *"
   },
   "board": {
-    "healthCheckCron": "* * * * *"
+    "healthCheckCron": "0 20 * * *"
   }
 }

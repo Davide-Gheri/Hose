@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { CommandModule } from 'nestjs-command';
 import { ScheduleModule } from 'nest-schedule';
 import Config from 'config';
+import path from 'path';
 import { EnvironmentModule } from './modules/environment/environment.module';
 import { RuleModule } from './modules/rule/rule.module';
 import { InstallCommand } from './commands/install.command';
@@ -39,6 +41,9 @@ databaseOptions.entities = [__dirname + '/**/*.entity{.ts,.js}'];
     BoardModule,
     ThemeModule,
     NotificationModule,
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'client'),
+    }),
   ],
   providers: [
     InstallCommand,
