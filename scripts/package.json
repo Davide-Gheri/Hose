@@ -7,6 +7,7 @@
     "i18n-scan": "node i18n-scanner.js"
   },
   "dependencies": {
+    "fs-extra": "^8.1.0",
     "gulp-sort": "^2.0.0",
     "i18next-scanner": "^2.10.2",
     "vinyl-fs": "^3.0.3"
