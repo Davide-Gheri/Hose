@@ -1,11 +1,11 @@
 ---
 
-- name: Install InfluxDB gpg key
+- name: Add InfluxDB gpg key
   apt_key:
     url: https://repos.influxdata.com/influxdb.key
     state: present
 
-- name: Install InfluxDB repo
+- name: Add InfluxDB repo
   apt_repository:
     repo: "deb https://repos.influxdata.com/ubuntu trusty stable"
     state: present

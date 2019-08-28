@@ -1,0 +1,16 @@
+---
+
+- name: Add Yarn gpg key
+  apt_key:
+    url: https://dl.yarnpkg.com/debian/pubkey.gpg
+    state: present
+
+- name: Add Yarn repo
+  apt_repository:
+    repo: "deb https://dl.yarnpkg.com/debian/ stable main"
+    filename: yarn
+    state: present
+
+- name: Install Yarn
+  apt:
+    name: yarn
