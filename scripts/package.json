@@ -10,6 +10,7 @@
     "fs-extra": "^8.1.0",
     "gulp-sort": "^2.0.0",
     "i18next-scanner": "^2.10.2",
+    "tar": "^4.4.10",
     "vinyl-fs": "^3.0.3"
   }
 }

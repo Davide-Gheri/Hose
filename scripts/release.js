@@ -1,10 +1,12 @@
 const path = require('path');
 const { spawn } = require('child_process');
 const fs = require('fs-extra');
+const tar = require('tar');
+
+const releaseDir = path.resolve(__dirname, '..', 'release', 'app');
+const releaseFile = 'hose.tgz';
 
 const distDirname = 'build';
-const releaseDir = path.resolve(__dirname, '..', 'release', 'app');
-
 const backendDir = path.resolve(__dirname, '..', 'backend');
 const frontendDir = path.resolve(__dirname, '..', 'frontend');
 
@@ -18,6 +20,8 @@ const frontendDir = path.resolve(__dirname, '..', 'frontend');
     // Build and move frontend
     await buildSrc(frontendDir)
         .then(moveFrontendToRelease);
+
+    await createTarball();
 })();
 
 function spawnAsync(command, args = [], options = {}) {
@@ -38,9 +42,10 @@ function spawnAsync(command, args = [], options = {}) {
     })
 }
 
-function clearRelease() {
-    return fs.remove(releaseDir)
+async function clearRelease() {
+    await fs.remove(releaseDir)
         .then(() => fs.ensureDir(releaseDir));
+    await fs.remove(path.join(releaseDir, '..', releaseFile));
 }
 
 function buildSrc(cwd) {
@@ -98,6 +103,10 @@ function moveFrontendToRelease() {
     });
 }
 
-function installBackendRuntimeDeps() {
-    return spawnAsync('yarn install', ['--prod'], {cwd: releaseDir});
+function createTarball() {
+    return tar.c({
+        gzip: true,
+        file: path.join(releaseDir, '..', releaseFile),
+        cwd: path.join(releaseDir, '..'),
+    }, ['app']);
 }
