@@ -56,12 +56,8 @@ export const createGpio = (data: Partial<GpioModel>): ThunkAction<Promise<any>, 
 };
 
 export const deleteGpio = (id: string): ThunkAction<Promise<any>, {}, {}, PayloadAction> => dispatch => {
-  console.log('Deleting gpio');
   dispatch(setLoading(true));
   return Api.delete(id)
     .then(() => dispatch(deleteGpioSuccess(id)))
-    .finally(() => {
-      console.log('set loading FALSE from finally()')
-      dispatch(setLoading(false))
-    });
+    .finally(() => dispatch(setLoading(false)));
 };

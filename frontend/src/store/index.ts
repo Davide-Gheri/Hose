@@ -81,12 +81,21 @@ export const configureReducer = (): Reducer<AppState> => {
 };
 
 export const configureStore = (reducer: Reducer<AppState>): StoreAndPersisor => {
-  const logger = makeLogger('redux', Config.get<boolean>('logger.loggers.redux', false));
-  const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-  const loggerMiddleware = createLogger({
-    logger,
-  });
-  const middleware = applyMiddleware(thunk, loggerMiddleware);
+  const canLog = Config.get<boolean>('logger.loggers.redux');
+  const canDevtool = Config.get<boolean>('redux.devtools');
+
+  const composeEnhancers = canDevtool && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+  let loggerMiddleware: any;
+  if (canLog) {
+    loggerMiddleware = createLogger({
+      logger: makeLogger('redux', canLog, false),
+    });
+  }
+  const middleware = applyMiddleware(...[
+    thunk,
+    loggerMiddleware,
+  ].filter(Boolean));
 
   const store = createStore(
     reducer,

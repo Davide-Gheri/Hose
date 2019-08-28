@@ -11,6 +11,7 @@ export function bootI18n() {
     fallbackLanguage = 'en',
     defaultLanguage = 'en',
     cache = {storeName: 'hose_i18n'},
+    backendUrl,
   } = Config.get<ConfigI18n>('i18n');
 
   const currentLanguage = localStorage.getItem(currentLanguageKey) || defaultLanguage;
@@ -35,7 +36,7 @@ export function bootI18n() {
             ...cache,
           },
           {
-            loadPath: `${Config.get<string>('fetch.apiUrl')}/locales/{{lng}}/{{ns}}.json`,
+            loadPath: `${backendUrl}/{{lng}}/{{ns}}.json`,
             crossDomain: true
           }
         ]

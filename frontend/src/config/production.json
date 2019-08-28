@@ -1,0 +1,16 @@
+{
+  "i18n": {
+    "backendUrl": "http://localhost:5000/locales"
+  },
+  "logger": {
+    "enabled": false
+  },
+  "fetch": {
+    "apiUrl": "http://localhost:5000/api",
+    "debug": false
+  },
+  "io": {
+    "wsUrl": "http://localhost:8888",
+    "debug": false
+  }
+}

@@ -1,10 +1,12 @@
 import get from 'lodash/get';
+import merge from 'lodash/merge';
 
 export interface ConfigPersist {
   dbName: string;
 }
 
 export interface ConfigI18n {
+  backendUrl: string;
   defaultLanguage: string;
   fallbackLanguage: string;
   currentLanguageKey: string;
@@ -38,17 +40,35 @@ export interface ConfigObject {
 }
 
 class ConfigManager {
+  private defaultConfigObj: ConfigObject = require('../config/default.json');
+
+  private mergedConfig: ConfigObject;
+
   constructor(
-    private configObj: ConfigObject,
-  ) {}
+    private environment?: string,
+  ) {
+    this.mergedConfig = merge(
+      this.defaultConfigObj,
+      this.getCurrentEnvConfig(),
+    );
+  }
+
+  private getCurrentEnvConfig(): Partial<ConfigObject> {
+    try {
+      return require(`../config/${this.environment}.json`);
+    } catch (e) {
+      console.warn(e.message);
+      return {};
+    }
+  }
 
   get<T = any>(key: string, fallback: any = null): T {
-    let value = get(this.configObj, key, fallback);
+    let value = get(this.mergedConfig, key, fallback);
     if (typeof value === 'function') {
-      value = value(this.configObj);
+      value = value(this.mergedConfig);
     }
     return value;
   }
 }
 
-export const Config = new ConfigManager(require('../config/default.json'));
+export const Config = new ConfigManager(process.env.NODE_ENV);

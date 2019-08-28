@@ -1,9 +1,7 @@
-import { sleep } from './sleep';
+import { debugSleep } from './sleep';
 import { getFromCache, setCache } from './cache';
 import { makeLogger } from './logger';
 import { Config } from './Config';
-
-const debug = Config.get<boolean>('fetch.debug', false);
 
 const logger = makeLogger('fetcher', Config.get<boolean>('logger.loggers.fetch'));
 
@@ -13,8 +11,10 @@ const headers: Record<string, string> = {
 
 export const setHeader = (name: string, value: string | null) => {
   if (value) {
+    logger.debug('Setting Header', `${name}: ${value}`);
     headers[name] = value;
   } else {
+    logger.debug('Deleting Header', name);
     delete headers[name];
   }
 };
@@ -32,23 +32,24 @@ export const del = (url: string) => callFetch(url, {method: 'DELETE'});
 const callFetch = <T = any>(url: string, options?: RequestInit) => {
   return getFromCache(url, options)
     .then(res => {
-      logger.log('Cache HIT', url);
+      logger.debug('Cache HIT', url);
       return res;
     })
     .catch(() => {
-      logger.log('Cache miss', url);
-      return fetch(url, {
+      const requestOptions = {
         ...options,
         headers: {
           ...headers,
           ...(options || {}).headers,
         },
-      })
-      .then(logResponse)
-      .then(parseResponse)
-      .then(setCache(url, options!.method || 'GET'))
+      };
+      logger.debug('Cache miss, fetching', [url, requestOptions]);
+      return fetch(url, requestOptions)
+        .then(logResponse)
+        .then(parseResponse)
+        .then(setCache(url, options!.method || 'GET'))
+        .then(debugSleep(500))
     })
-    .then(sleep(500)) // TODO remove this
 };
 
 const optionsWithBody = (method: string, body?: any) => Object.assign({
@@ -56,7 +57,7 @@ const optionsWithBody = (method: string, body?: any) => Object.assign({
 }, body && {body: JSON.stringify(body)});
 
 const logResponse = (res: Response) => {
-  if (debug) logger.log(res);
+  logger.debug(res);
   return res;
 };
 
@@ -64,7 +65,7 @@ const parseResponse = (res: Response) => {
   return res.json()
     .then(json => {
       if (!res.ok) {
-        console.log(json);
+        logger.debug(json);
         throw new FetchError(json);
       }
       return json;

@@ -5,6 +5,7 @@
     "dbName": "hose"
   },
   "i18n": {
+    "backendUrl": "http://localhost:5000/locales",
     "defaultLanguage": "en",
     "fallbackLanguage": "en",
     "currentLanguageKey": "hose_i18n_current_language",
@@ -13,6 +14,7 @@
     }
   },
   "redux": {
+    "devtools": true,
     "persist": [
       "themes",
       "dashboard"
@@ -21,14 +23,16 @@
   "logger": {
     "enabled": true,
     "loggers": {
-      "redux": true,
+      "redux": false,
       "fetch": true,
-      "io": true
+      "io": true,
+      "cache": true
     }
   },
   "fetch": {
     "apiUrl": "http://localhost:5000/api",
-    "debug": true
+    "debug": true,
+    "cache": true
   },
   "io": {
     "wsUrl": "http://localhost:8888",
