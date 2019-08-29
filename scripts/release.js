@@ -3,30 +3,62 @@ const { spawn } = require('child_process');
 const fs = require('fs-extra');
 const tar = require('tar');
 
-const releaseDir = path.resolve(__dirname, '..', 'release', 'app');
-const releaseFile = 'hose.tgz';
+const verbose = process.argv[2] && (process.argv[2] === '-v' || process.argv[2] === '--verbose');
+
+const releaseDir = path.resolve(__dirname, '..', 'release');
+
+const releasePath = p => path.join(releaseDir, p);
+const srcPath = p => path.join('..', p);
+
+const paths = {
+    release: {
+        tar: releasePath('hose.tgz'),
+        app: releasePath('app'),
+        gpio: releasePath('gpio'),
+    },
+    src: {
+        frontend: srcPath('frontend'),
+        backend: srcPath('backend'),
+        gpio: srcPath('gpioManager'),
+    },
+};
 
 const distDirname = 'build';
-const backendDir = path.resolve(__dirname, '..', 'backend');
-const frontendDir = path.resolve(__dirname, '..', 'frontend');
 
 (async function build() {
+    const { log, spinner, logStart, logEnd } = require('./logger')('Release');
+
+    logStart('Starting Release process');
     // Clear release folder
+    log('Clearing release folder of previous release');
     await clearRelease();
+
     // Build and move backend
-    await buildSrc(backendDir)
-        .then(moveBackendToRelease);
-        // .then(installBackendRuntimeDeps);
+    let stop = spinner('Building Backend source code');
+    await buildSrc(paths.src.backend);
+    stop('Backend built');
+    await moveBackendToRelease();
+    log('Backend files moved to release');
+
     // Build and move frontend
-    await buildSrc(frontendDir)
-        .then(moveFrontendToRelease);
+    stop = spinner('Building Frontend source code');
+    await buildSrc(paths.src.frontend);
+    stop('Frontend built');
+    await moveFrontendToRelease();
+    log('Frontend files moved to release');
+
+    await moveGpioManagerToRelease();
+    log('Gpio Manager files moved to release');
 
     await createTarball();
+    log('Release tarball created (hose.tgz)');
+
+    logEnd('Release process complete');
 })();
 
 function spawnAsync(command, args = [], options = {}) {
     const config = {
-        stdio: 'inherit',
+        stdio: verbose ? 'inherit' : 'ignore',
         shell: true,
         ...options,
     };
@@ -43,9 +75,11 @@ function spawnAsync(command, args = [], options = {}) {
 }
 
 async function clearRelease() {
-    await fs.remove(releaseDir)
-        .then(() => fs.ensureDir(releaseDir));
-    await fs.remove(path.join(releaseDir, '..', releaseFile));
+    await fs.remove(paths.release.app)
+        .then(() => fs.ensureDir(paths.release.app));
+    await fs.remove(paths.release.gpio)
+        .then(() => fs.ensureDir(paths.release.gpio));
+    await fs.remove(paths.release.tar);
 }
 
 function buildSrc(cwd) {
@@ -64,16 +98,16 @@ function moveBackendToRelease() {
         'yarn.lock',
     ];
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         for (const file of backendFiles) {
-            const fullPath = path.join(backendDir, file);
+            const fullPath = path.join(paths.src.backend, file);
             if (!fs.existsSync(fullPath)) {
                 return reject(
                     new Error(`${file} not found in Backend directory`)
                 );
             }
             try {
-                fs.copySync(fullPath, path.join(releaseDir, file));
+                await fs.copy(fullPath, path.join(paths.release.app, file));
             } catch (e) {
                 return reject(e);
             }
@@ -83,8 +117,8 @@ function moveBackendToRelease() {
 }
 
 function moveFrontendToRelease() {
-    const buildDir = path.join(frontendDir, distDirname);
-    const releaseDestDir = path.join(releaseDir, 'client');
+    const buildDir = path.join(paths.src.frontend, distDirname);
+    const releaseDestDir = path.join(paths.release.app, 'client');
     return new Promise((resolve, reject) => {
         if (!fs.existsSync(buildDir)) {
             return reject(
@@ -103,10 +137,33 @@ function moveFrontendToRelease() {
     });
 }
 
+function moveGpioManagerToRelease() {
+    const gpioFiles = [
+        'main.py',
+    ];
+
+    return new Promise(async (resolve, reject) => {
+        for (const file of gpioFiles) {
+            const fullPath = path.join(paths.src.gpio, file);
+            if (!fs.existsSync(fullPath)) {
+                return reject(
+                    new Error(`${file} not found in GpioManager directory`)
+                );
+            }
+            try {
+                await fs.copy(fullPath, path.join(paths.release.gpio, file));
+            } catch (e) {
+                return reject(e);
+            }
+        }
+        resolve();
+    });
+}
+
 function createTarball() {
     return tar.c({
         gzip: true,
-        file: path.join(releaseDir, '..', releaseFile),
-        cwd: path.join(releaseDir, '..'),
-    }, ['app']);
+        file: paths.release.tar,
+        cwd: path.join(releaseDir),
+    }, ['app', 'gpio']);
 }
