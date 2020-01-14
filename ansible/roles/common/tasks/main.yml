@@ -4,7 +4,7 @@
   apt: update_cache=yes cache_valid_time=7200
 
 - name: Install general packages
-  apt: name={{ item }}
+  apt: name={{ item }} state=present
   vars:
     item:
       - aptitude
@@ -13,3 +13,12 @@
       - git
       - python-setuptools
       - build-essential
+      - python-pip
+
+- name: Install Python modules
+  pip:
+    name: "{{ item }}"
+    state: present
+  vars:
+    item:
+      - requests

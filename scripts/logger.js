@@ -48,6 +48,7 @@ function logger(namespace) {
         return mess => {
             const message = mess
                 ? formatMessage(mess) + (lastTimestamp ? formatTimestamp(lastTimestamp) : '') : null;
+            lastTimestamp = Date.now();
             spin.succeed(message);
         };
     }

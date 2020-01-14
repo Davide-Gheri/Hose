@@ -7,7 +7,7 @@
 
 - name: Add InfluxDB repo
   apt_repository:
-    repo: "deb https://repos.influxdata.com/ubuntu trusty stable"
+    repo: "deb https://repos.influxdata.com/debian {{ debian_version }} stable"
     state: present
     update_cache: yes
 
@@ -16,14 +16,35 @@
     name: influxdb
     state: present
 
+- name: Start InfluxDB
+  service:
+    name: influxdb
+    state: restarted
 
-- name: Update InfluxDB hostname
-  replace:
-    dest=/etc/influxdb/influxdb.conf
-    regexp='hostname = "localhost"'
-    replace='hostname = "{{ ansible_hostname }}"'
-    backup=yes
-  notify:
-    - restart influxdb
+- name: Install required Python InfluxDB modules
+  pip:
+    name: "{{ item }}"
+    state: present
+  vars:
+    item:
+      - influxdb
 
+- name: Create InfluxDB database
+  influxdb_database:
+    database_name: "{{ influxdb_database }}"
+    state: present
 
+- name: Create InfluxDB user
+  influxdb_user:
+    user_name: "{{ influxdb_user }}"
+    user_password: "{{ influxdb_password }}"
+    state: present
+
+#- name: Update InfluxDB hostname
+#  replace:
+#    dest=/etc/influxdb/influxdb.conf
+#    regexp='hostname = "localhost"'
+#    replace='hostname = "{{ ansible_hostname }}"'
+#    backup=yes
+#  notify:
+#    - restart influxdb

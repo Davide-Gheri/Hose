@@ -1,0 +1,4 @@
+
+influxdb_user: hose
+influxdb_password: secret
+influxdb_database: hose

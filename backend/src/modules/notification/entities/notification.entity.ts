@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class NotificationEntity {
+export class Notification {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

@@ -1,12 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import Config from 'config';
 import morgan from 'morgan';
 import path from 'path';
 import { Logger } from './Logger';
 import { ValidationPipe } from '@nestjs/common';
 import { NotFoundExceptionFilter } from './filters';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import Config from 'config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {

@@ -2,13 +2,13 @@ import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/web
 import { Server, Client } from 'socket.io';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NotificationEntity } from '../entities/notification.entity';
+import { Notification } from '../entities/notification.entity';
 
 @WebSocketGateway(8888, {namespace: 'notifications'})
 export class NotificationGateway {
   constructor(
-    @InjectRepository(NotificationEntity)
-    private readonly repository: Repository<NotificationEntity>,
+    @InjectRepository(Notification)
+    private readonly repository: Repository<Notification>,
   ) {}
 
   @WebSocketServer()
@@ -19,7 +19,7 @@ export class NotificationGateway {
   }
 
   @SubscribeMessage('get')
-  handleGet(): Promise<NotificationEntity[]> {
+  handleGet(): Promise<Notification[]> {
     return this.repository.find();
   }
 

@@ -4,10 +4,10 @@ import { Environment } from '../../environment/entities/environment.entity';
 @Entity()
 export class Board {
   @Index()
-  @PrimaryColumn({unique: true})
+  @PrimaryColumn({unique: true, type: 'varchar', length: 16})
   id: string;
 
-  @Column({nullable: true})
+  @Column({nullable: true, type: 'varchar', length: 36})
   checkUrl: string;
 
   @CreateDateColumn()

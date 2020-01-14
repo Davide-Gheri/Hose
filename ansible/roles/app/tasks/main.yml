@@ -1,13 +1,23 @@
 ---
 
-- name: Clone repository
-  git:
-    repo: "{{ app_git_repo }}"
-    dest: "{{ app_git_dest }}"
-    version: "{{ app_git_version }}"
+#- name: Clone repository
+#  git:
+#    repo: "{{ app_git_repo }}"
+#    dest: "{{ app_git_dest }}"
+#    version: "{{ app_git_version }}"
 
-- name: Install backend dependencies
+- name: Ensure dest directory exists
+  file:
+    path: "{{ app_git_dest }}"
+    state: directory
+    mode: '0755'
+
+- name: Extract release archive
+  unarchive:
+    src: "{{ app_git_release_url }}/{{ app_git_release_version }}/{{ app_git_release_tarball }}"
+    dest: "{{ app_git_dest }}"
+    remote_src: yes
+
+- name: Install production dependencies
   yarn:
-    path: "{{ app_git_dest }}/backend"
-    production: yes
-    state: present
+    path: "{{ app_git_dest }}/app"

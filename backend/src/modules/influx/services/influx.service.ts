@@ -11,8 +11,7 @@ export class InfluxService implements OnModuleInit {
     @Inject(INFLUX_SCHEMA) schema: ISchemaOptions[],
   ) {
     this.instance = new InfluxDB({
-      host: Config.get('influx.host'),
-      database: Config.get('influx.database'),
+      ...Config.get('influx'),
       schema,
     });
   }

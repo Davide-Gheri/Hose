@@ -3,4 +3,10 @@
 app_git_repo: "https://github.com/Davide-Gheri/Hose.git"
 app_git_version: master
 
-app_git_dest: /opt/hose_src
+app_git_dest: /opt/hose
+
+app_git_release_url: "https://github.com/Davide-Gheri/Hose/releases/download"
+
+app_git_release_tarball: "hose.tgz"
+
+app_git_release_version: "v0.0.1"

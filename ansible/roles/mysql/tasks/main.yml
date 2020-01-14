@@ -5,14 +5,14 @@
   vars:
     item:
       - python-mysqldb
-      - mysql-server
-  notify:
-    - start mysql
+      - default-mysql-server
+#  notify:
+#    - start mysql
 
-- name: Create default Database
-  mysql_db:
-    name: "{{ mysql_hose_database }}"
-    state: present
+- name: Start MySQL
+  service:
+    name: mysql
+    state: started
 
 - name: Set MySQL root password
   mysql_user:
@@ -29,9 +29,17 @@
   notify:
     - restart mysql
 
+- name: Create default Database
+  mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: "{{ mysql_hose_database }}"
+    state: present
+
 - name: Create default user
   mysql_user:
     login_user: root
+    login_password: "{{ mysql_root_password }}"
     name: "{{ mysql_hose_user }}"
     password: "{{ mysql_hose_password }}"
     priv: '*.*:ALL,GRANT'
