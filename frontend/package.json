@@ -27,7 +27,7 @@
     "i18next-chained-backend": "^2.0.0",
     "i18next-localforage-backend": "^2.0.0",
     "i18next-xhr-backend": "^3.1.2",
-    "immer": "^3.1.3",
+    "immer": "^9.0.6",
     "localforage": "^1.7.3",
     "material-ui": "^0.20.2",
     "qs": "^6.7.0",
