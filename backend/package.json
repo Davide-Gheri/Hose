@@ -34,7 +34,7 @@
     "@nestjs/websockets": "^6.5.3",
     "@types/config": "^0.0.34",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.9.1",
+    "class-validator": "^0.14.0",
     "config": "^3.2.1",
     "faker": "^4.1.0",
     "helmet": "^3.19.0",
